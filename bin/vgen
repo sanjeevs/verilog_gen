@@ -1,2 +1,32 @@
 #!/usr/bin/env ruby
-puts "Verilog Rtl Generator"
+
+require 'optparse'
+
+options = {}
+option_parser = OptionParser.new do |opts|
+  executable_name = File.basename($PROGRAM_NAME)
+  opts.banner = "Verilog RTL Generator
+
+    Usage: #{executable_name} [options] ruby_hdl_design
+  "
+  opts.on("-t", "--top", "top level module name") do |top|
+    options[:top_module_name] =  top
+  end
+  opts.on("-o", "--output", "output verilog file name") do |output|
+    options[:output_filename] = output
+  end
+end
+
+option_parser.parse!
+
+options[:output_filename] = "#{options[:top_module_name]}.v" unless options.has_key?(options[:output_filename])
+
+hdl_modules = []
+if ARGV.empty?
+  puts "error: you must supply a list of hdl modules in ruby format"
+  exit 1
+else
+  hdl_modules = @ARGV
+end
+
+VerilogGen.main(options, hdl_modules)

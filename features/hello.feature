@@ -2,7 +2,8 @@ Feature: Hello World
 
   Scenario: print banner
   When I run `vgen`
-  Then it should pass with:
+  Then it should fail with:
   """
-  Verilog Rtl Generator
+  error: you must supply a list of hdl modules in ruby format
+
   """
