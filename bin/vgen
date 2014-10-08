@@ -21,12 +21,12 @@ option_parser.parse!
 
 options[:output_filename] = "#{options[:top_module_name]}.v" unless options.has_key?(options[:output_filename])
 
-hdl_modules = []
+hdl_files = []
 if ARGV.empty?
-  puts "error: you must supply a list of hdl modules in ruby format"
+  puts "error: you must supply a list of hdl files in ruby format"
   exit 1
 else
-  hdl_modules = @ARGV
+  hdl_files = @ARGV
 end
 
-VerilogGen.main(options, hdl_modules)
+VerilogGen.main(options, hdl_files)

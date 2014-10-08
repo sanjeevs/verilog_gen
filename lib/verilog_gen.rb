@@ -3,9 +3,9 @@ require "verilog_gen/port"
 
 module VerilogGen
 
-  def self.main(options, hdl_modules)
-    hdl_modules.each do |hdl_design|
-      eval(File.open(hdl_design).read)
+  def self.main(options, hdl_files)
+    hdl_files.each do |hdl_file|
+      eval(File.open(hdl_file).read)
     end
   end
 
