@@ -1,4 +1,4 @@
-Feature: Construct the simplest possible wrapper
+Feature: Rename the input and output pins
 
   Scenario: connect one leaf
   Given a file named "leaf.rb" with: 
@@ -13,9 +13,18 @@ Feature: Construct the simplest possible wrapper
   And a file named "dut.rb" with:
   """
   class Dut < HdlModule
-    def build
+
+    def build_instances
        add_instance Leaf, "leaf1"
+
     end
+
+    def connect_pins
+       #Create the pin
+       connect leaf1.in1, "in" 
+       connect leaf1.out1, "out" 
+    end
+
   end
   """
 
@@ -23,12 +32,15 @@ Feature: Construct the simplest possible wrapper
   Then the file "dut.v" should contain:
     """
 
-      module dut(in1, out1);
-      input in1;
-      output out1;
+      module dut(in, out);
+      input in;
+      output out;
 
-      Leaf leaf1(.in1(in1),
-                 .out1(out1));
+      wire in;
+      wire out;
+
+      Leaf leaf1(.in1(in),
+                 .out1(out));
 
       endmodule
     """

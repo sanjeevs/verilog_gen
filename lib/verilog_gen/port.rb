@@ -16,20 +16,19 @@ module VerilogGen
       raise ArgumentError, "direction is not valid" unless @direction == "input" or @direction == "output"
     end
 
+    #Value checking
     def ==(other)
-      return false unless other.kind_of?(self.class)
       name == other.name && direction == other.direction && width == other.width
     end
 
+    #Value checking + Type checking
     def eql?(other)
-      return false unless other.kind_of?(self.class)
-      name.eql?(other.name) and direction.eql?(other.direction) and width.eql?(other.width)
+      other.kind_of?(self.class) and self.==(other)
     end
     
     def hash
       return name.hash ^ direction.hash ^ width.hash
     end
-
 
   end
 end
