@@ -5,10 +5,10 @@ Feature: Create a simple fifo.
   """
   class Cntlr < HdlModule
     def build
-      add_port Port.new("rst")
-      add_port Port.new("clk")
-      add_port Port.new("push", direction: "input")
-      add_port Port.new("wen", direction: "output")
+      add_port "rst"
+      add_port "clk"
+      add_port "push"
+      add_port "wena"
     end
   end
   """

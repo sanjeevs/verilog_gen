@@ -5,8 +5,8 @@ Feature: Rename the input and output pins
   """
   class Leaf < HdlModule
     def build
-      add_port Port.new("in1"),
-               Port.new("out1", direction: "output"))
+      add_port "in1"
+      add_port "out1", direction: "output"
     end
   end
   """
@@ -14,15 +14,10 @@ Feature: Rename the input and output pins
   """
   class Dut < HdlModule
 
-    def build_instances
+    def build
        add_instance Leaf, "leaf1"
-
-    end
-
-    def connect_pins
-       #Create the pin
-       connect leaf1.in1, "in" 
-       connect leaf1.out1, "out" 
+       connect_port_to_pin leaf1.in1, "in" 
+       connect_port_to_pin leaf1.out1, "out" 
     end
 
   end

@@ -1,11 +1,11 @@
 Feature: A vector port can have multiple sub ranges.
 
-Scenario: inhibit a sub input from appearing as primary input
+Scenario: Split a vector input port
   Given a file named "leaf.rb" with: 
   """
   class Leaf < HdlModule
-    def build_phase
-      add_port Port.new("in1", direction: "input", width: 10)
+    def build
+      add_port "in1", direction: "input", width: 10
     end
   end
   """
@@ -15,9 +15,9 @@ Scenario: inhibit a sub input from appearing as primary input
 
     def build
        add_instance Leaf, "leaf1"
-       unused leaf1.in1.range(3,1)
-       connect leaf1.in1.range(0) i0
-       connect leaf1.in1.range(9, 4) in
+       leaf1.in1.range(0).connect_pin "i0"
+       leaf1.in1.range(3,1).unused
+       leaf1.in1.range(9, 4).connect_pin "in"
     end
 
   end

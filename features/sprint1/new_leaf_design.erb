@@ -1,0 +1,52 @@
+Feature: new design template
+
+If starting on a new design then this provides max flexibility
+
+  Scenario: A flip flop
+  Given a file named "flop.rb" with:
+  """
+  class Flop < HdlModule
+    def build
+      @name = "generic_flop"
+      add_port "clk"
+      add_port "rst"
+      add_port "in"
+      add_port "out", direction: output
+    end
+  end
+  """
+  And a file named "flop.v.erb" with:
+  """
+  module <%= @name %>(<%= port_declarations %>);
+  <%= output_port_reg_definitions %>
+
+  // Any arbitarty verilog, system verilog code
+  always @(posedge clk)
+    if(rst)
+      out <= 1'b0;
+    else
+      out <= in;
+  endmodule
+  """
+  When I run `vgen flop.rb`
+  Then the file "generic_flop.v" should contain:
+  """
+  module generic_flop(
+    input clk,
+    input rst,
+    input in;
+    output out;
+
+    reg out;
+  
+    // Any arbitarty verilog, system verilog code
+    always @(posedge clk)
+    if(rst)
+      out <= 1'b0;
+    else
+      out <= in;
+
+  endmodule
+  """
+
+

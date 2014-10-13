@@ -5,8 +5,8 @@ Feature: Rename a vector port to separate pins
   """
   class Leaf < HdlModule
     def build
-      add( Port.new("in1", width: 10),
-           Port.new("out1", direction: "output", width: 5))
+      add_port "in1", width: 10
+      add_port "out1", direction: "output", width: 5
     end
   end
   """
@@ -14,10 +14,10 @@ Feature: Rename a vector port to separate pins
   """
   class Dut < HdlModule
     def build
-       l = add(Leaf.new("leaf1"))
-       l.ports["in1"].width(5,0).connect_pin("sub_in1")
-       l.ports["in1"].width(9,6).connect_pin("sub_in2")
-       l.ports["out1"].connect_pin("out")
+      add_instance Leaf "leaf1"
+      leaf1.in1.range(5,0).connect_pin("sub_in1")
+      leaf1.in1.range(9,6).connect_pin("sub_in2")
+      leaf1.out1.connect_pint("out")
     end
   end
   """

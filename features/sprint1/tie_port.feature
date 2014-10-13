@@ -4,9 +4,9 @@ Scenario: Tie input port of a child to a constant value.
   Given a file named "leaf.rb" with: 
   """
   class Leaf < HdlModule
-    def build_phase
-      add_port Port.new("in1", direction: "input", width: 10),
-               Port.new("out1", direction: "output"))
+    def build
+      add_port "in1", direction: "input", width: 10
+      add_port "out1", direction: "output"
     end
   end
   """
@@ -14,13 +14,10 @@ Scenario: Tie input port of a child to a constant value.
   """
   class Dut < HdlModule
 
-    def build_phase
+    def build
        add_instance Leaf, "leaf1"
-    end
-
-    def connect_phase
-       tie leaf1.in1 48  #Tied port to a constant value
-       connect leaf1.out1, "out" 
+       leaf1.in1.tie_to(48)  #Tied port to a constant value
+       leaf1.out1.connect_pin "out" 
     end
 
   end
