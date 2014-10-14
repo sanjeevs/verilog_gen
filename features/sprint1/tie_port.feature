@@ -16,7 +16,7 @@ Scenario: Tie input port of a child to a constant value.
 
     def build
        add_instance Leaf, "leaf1"
-       leaf1.in1.tie_to(48)  #Tied port to a constant value
+       leaf1.in1.tie_to 48  #Tied port to a constant value
        leaf1.out1.connect_pin "out" 
     end
 
