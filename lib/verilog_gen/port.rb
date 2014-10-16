@@ -4,7 +4,7 @@ module VerilogGen
 
     def initialize(name, params = {})
       @name = name
-      @direction = "input"
+      @direction = :input
       @width = 1
       params.each do |key, value|
         raise ArgumentError, 
@@ -13,7 +13,7 @@ module VerilogGen
       end
 
       #Enumeration checking.
-      raise ArgumentError, "direction is not valid" unless @direction == "input" or @direction == "output"
+      raise ArgumentError, "direction is not valid" unless @direction == :input or @direction == :output
     end
 
     #Value checking

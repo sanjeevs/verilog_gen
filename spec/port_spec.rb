@@ -10,7 +10,7 @@ module VerilogGen
     end
 
     it "should be input by default" do
-      expect(port.direction).to eql "input"
+      expect(port.direction).to eql :input
     end
 
     it "should be single bit by default" do
@@ -42,6 +42,16 @@ module VerilogGen
         hash1[port] = "Hello"
         expect(hash1[diff_port]).not_to be == (hash1[port])
       end 
+    end
+
+    describe "vector port" do
+      let(:port) { Port.new("port", width: 10, direction: :output) }
+      it "should have the correct width" do
+        expect(port.width).to equal(10)
+      end
+      it "should have the correct direction" do
+        expect(port.direction).to equal(:output)
+      end
     end
 
   end
