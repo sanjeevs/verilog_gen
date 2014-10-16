@@ -23,7 +23,7 @@ options[:output_filename] = "#{options[:top_module_name]}.v" unless options.has_
 
 hdl_files = []
 if ARGV.empty?
-  puts "error: you must supply a list of hdl files in ruby format"
+  puts "error: you must supply a list of hdl modules in ruby format"
   exit 1
 else
   hdl_files = @ARGV
