@@ -20,7 +20,7 @@ Feature: algorithms for input pins to become primary inputs.
 
   end
   """
-  When I run `vgen leaf.rb dut.rb `
+  When I run `vgen leaf.rb dut.rb --top Dut`
   Then the file "dut.v" should contain:
     """
 

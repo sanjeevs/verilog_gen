@@ -1,0 +1,10 @@
+module <%= module_name %> (
+  <% ports.values[0..-2].each do |port| %>
+  <%= "#{port.direction} #{port.type} #{port.name}," %>
+  <% end %>
+  <% last_port = ports.values.last %>
+  <%= "#{last_port.direction} #{last_port.type} #{last_port.name}" if last_port %>
+
+);
+
+endmodule

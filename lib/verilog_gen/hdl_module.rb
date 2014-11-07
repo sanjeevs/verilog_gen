@@ -1,12 +1,13 @@
 module VerilogGen
   class HdlModule
-    attr_reader :name, :ports, :pins, :child_instances
+    attr_reader :name, :module_name, :ports, :pins, :child_instances
 
     def initialize(name)
       @name = name
       @ports = {}
       @pins = {}
       @child_instances = {}
+      @module_name = self.class.name.split('::')[1].snakecase
       build
     end
 
@@ -37,6 +38,17 @@ module VerilogGen
         self.class.send :define_method, method_name do
           child_instances[name]
         end
+      end
+    end
+
+    def render(template_file)
+      unless File.exist?(template_file) 
+        root = Pathname.new(__FILE__).parent.parent.join('templates')
+        template_file = "#{root}#{File::SEPARATOR}#{template_file}"
+      end
+      File.open(template_file) do |fh|
+        template = ERB.new(fh.read, nil, '>')
+        template.result(binding)
       end
     end
   end

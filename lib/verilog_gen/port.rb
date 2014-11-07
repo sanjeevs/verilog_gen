@@ -30,5 +30,17 @@ module VerilogGen
       return name.hash ^ direction.hash ^ width.hash
     end
 
+    def type
+      if direction == :output and width == 1
+        return "logic"
+      elsif direction == :output
+        return "logic [#{width-1}:0]"
+      elsif direction == :input and width > 1
+        return "[#{width-1}:0]"
+      else
+        return ""
+      end
+    end
+
   end
 end

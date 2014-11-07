@@ -23,7 +23,7 @@ module VerilogGen
           expect(hdl_module.ports["port1"]).to eql(port1)
         end
         it "should get second back" do
-          expect(hdl_module.ports).to eql(port2)
+          expect(hdl_module.port2).to eql(port2)
         end
 
         it "should access port hierarically" do
@@ -36,7 +36,7 @@ module VerilogGen
 
     describe "add a vector port" do
       before { hdl_module.add_port "port1", width: 10 }
-      it { expect(hdl_module.port.width).to equal(10) }
+      it { expect(hdl_module.port1.width).to equal(10) }
     end
 
     describe "add a hdl module" do
@@ -54,5 +54,36 @@ module VerilogGen
       end
     end
 
+    describe "render a v2k template " do
+      it "should create a no port module" do
+        puts hdl_module.render("../templates/v2k_template.erb")
+      end
+      describe "render a input port" do
+        before { hdl_module.add_port "port1" }
+        it "should create input port " do
+          puts hdl_module.render("../templates/v2k_template.erb")
+        end
+      end
+      describe "render a vector input port" do
+        before { hdl_module.add_port "port2", width: 200 }
+        it "should create vector input port " do
+          puts hdl_module.render("../templates/v2k_template.erb")
+        end
+      
+      end
+      describe "render a output port" do
+        before { hdl_module.add_port "port1", direction: :output }
+        it "should create output port " do
+          puts hdl_module.render("../templates/v2k_template.erb")
+        end
+      end
+      describe "render a vector output port" do
+        before { hdl_module.add_port "port2", width: 200, direction: :output }
+        it "should create vector output port " do
+          puts hdl_module.render("../templates/v2k_template.erb")
+        end
+      
+      end
+    end
   end
 end

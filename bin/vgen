@@ -19,6 +19,7 @@ end
 
 option_parser.parse!
 
+options[:module_template] = "module_template.erb"
 options[:output_filename] = "#{options[:top_module_name]}.v" unless options.has_key?(options[:output_filename])
 
 hdl_files = []
