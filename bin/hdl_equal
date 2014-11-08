@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+
+# Compare the equality of 2 hdl module classes.
+# The 2 classes are in separate files.
+
+require 'pp'
+
+if ARGV.size != 2
+  puts "error: you must specify 2 ruby hdl modules to compare"
+  exit 1
+end
+
+$LOAD_PATH.unshift File.expand_path("../lib")
+
+require "verilog_gen"
+module VerilogGen
+  #Create 2 separate namespaces to load the 2 classes.
+  module File1
+  end
+
+  module File2
+  end
+end
+
+ns1 = VerilogGen::File1 
+content1 = File.open(ARGV[0]).read 
+
+ns2 = VerilogGen::File2 
+content2 = File.open(ARGV[1]).read 
+
+eval "
+module #{ns1}
+  #{content1}
+end
+"
+
+eval "
+module #{ns2}
+  #{content2}
+end
+"
+
+class1_lst = ns1.constants.select {|c| ns1.const_get(c).is_a? Class } 
+class2_lst = ns2.constants.select {|c| ns2.const_get(c).is_a? Class }
+
+num_mismatches = 0
+
+if class1_lst == class2_lst
+  class1_lst.each do |c|
+    if ns1.const_get(c).new('name') == ns2.const_get(c).new('new')
+      puts "Matched #{c}"
+    else
+      puts "Mismached #{c}"
+      num_mismatches += 1
+    end
+  end
+else
+  puts "Mismatched type/number of classes. Dumping class list"
+  pp "#{ns1}" + class1_lst
+  pp "#{ns2}" + class2_lst
+  num_mismatches += 1
+end
+
+exit num_mismatches
+

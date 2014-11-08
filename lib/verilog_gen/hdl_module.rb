@@ -2,6 +2,12 @@ module VerilogGen
   class HdlModule
     attr_reader :name, :module_name, :ports, :pins, :child_instances
 
+    # Public: Create a hdl module with a name.
+    #
+    # name - The name of the module in RubyLand.
+    #
+    # The name of the module must be unique in a design. 
+    # The verilog module name is a snakecase version of the ruby name.
     def initialize(name)
       @name = name
       @ports = {}
@@ -11,10 +17,18 @@ module VerilogGen
       build
     end
 
+    # Public: Template method that is overwritten by the actual class.
+    #
     def build
       #Override this to add the ports and child instances.
     end
 
+    # Public: Add a port to the module.
+    #
+    # name - The name of the port.
+    # params - Attributes of the port like direction, width ...etc
+    #
+    # Raises exception if the port name is not unique 
     def add_port(name, params = {})
       if ports.keys.include?(name)
         raise ArgumentError, 
