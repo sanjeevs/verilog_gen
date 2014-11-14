@@ -6,26 +6,26 @@
 require 'pp'
 
 if ARGV.size != 2
-  puts "error: you must specify 2 ruby hdl modules to compare"
+  puts "error: you must specify 2 ruby hdl modules to compare."
   exit 1
 end
 
+$LOAD_PATH.unshift File.expand_path("../../lib")
 $LOAD_PATH.unshift File.expand_path("../lib")
 
-require "verilog_gen"
-module VerilogGen
-  #Create 2 separate namespaces to load the 2 classes.
-  module File1
-  end
-
-  module File2
-  end
+require_relative "../lib/verilog_gen"
+module File1
+  include VerilogGen
 end
 
-ns1 = VerilogGen::File1 
+module File2
+  include VerilogGen
+end
+
+ns1 = File1 
 content1 = File.open(ARGV[0]).read 
 
-ns2 = VerilogGen::File2 
+ns2 = File2
 content2 = File.open(ARGV[1]).read 
 
 eval "
@@ -39,27 +39,9 @@ module #{ns2}
   #{content2}
 end
 "
-
-class1_lst = ns1.constants.select {|c| ns1.const_get(c).is_a? Class } 
-class2_lst = ns2.constants.select {|c| ns2.const_get(c).is_a? Class }
-
-num_mismatches = 0
-
-if class1_lst == class2_lst
-  class1_lst.each do |c|
-    if ns1.const_get(c).new('name') == ns2.const_get(c).new('new')
-      puts "Matched #{c}"
-    else
-      puts "Mismached #{c}"
-      num_mismatches += 1
-    end
-  end
-else
-  puts "Mismatched type/number of classes. Dumping class list"
-  pp "#{ns1}" + class1_lst
-  pp "#{ns2}" + class2_lst
-  num_mismatches += 1
+x1 = nil
+ns1.constants.select do |c| 
+  x1 = ns1.const_get(c).new("hello") if c == :HdlModule
 end
 
-exit num_mismatches
-
+pp x1

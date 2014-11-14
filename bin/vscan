@@ -1,0 +1,6 @@
+#!/usr/bin/env perl
+
+use Verilog::Parser;
+
+print "error: you must supply a leaf verilog module.\n";
+exit(1);
