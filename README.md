@@ -16,12 +16,12 @@ Create a class HdlModule that corresponds to a verilog module. The class
 HdlModule knows the ports and the instances of the design. The script vgen
 can create the ports of the design by using the following  default rule.
 A. if there are multiple outputs then it is a primary output whose width
-  is the sum of all the busses.
+   is the sum of all the busses.
 B. If there is one output then it is an internal wire.
 C. If there is 0 output then it is an primary input. The width of the port
-  is the largest width of the input pin.
-  If the user actually wanted the inputs to form a sub bus then user
-  would connect the ports to the pin manually.
+   is the largest width of the input pin.
+   If the user actually wanted the inputs to form a sub bus then user
+   would connect the ports to the pin manually.
 
 ## Installation
 
