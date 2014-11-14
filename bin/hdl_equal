@@ -14,34 +14,32 @@ $LOAD_PATH.unshift File.expand_path("../../lib")
 $LOAD_PATH.unshift File.expand_path("../lib")
 
 require_relative "../lib/verilog_gen"
-module File1
-  include VerilogGen
+
+def create_hdl_instance(ns, filename)
+  content = File.open(filename).read 
+  eval """
+  module #{ns}
+    include VerilogGen
+    #{content}
+  end
+  """
+  ns.constants.select do |c| 
+    return ns.const_get(c).new("hello") if c == :HdlModule
+  end
+  raise "ArgumentError", "Could not find the class HdlModule"
+  return nil
 end
 
-module File2
-  include VerilogGen
+module Lhs; end
+module Rhs; end
+
+lhs = create_hdl_instance(Lhs, ARGV[0])
+rhs = create_hdl_instance(Rhs, ARGV[1])
+
+if lhs == rhs 
+  puts "Hurrah they are equal"
+  exit 0
+else
+  puts "They are not equal"
+  exit 1
 end
-
-ns1 = File1 
-content1 = File.open(ARGV[0]).read 
-
-ns2 = File2
-content2 = File.open(ARGV[1]).read 
-
-eval "
-module #{ns1}
-  #{content1}
-end
-"
-
-eval "
-module #{ns2}
-  #{content2}
-end
-"
-x1 = nil
-ns1.constants.select do |c| 
-  x1 = ns1.const_get(c).new("hello") if c == :HdlModule
-end
-
-pp x1

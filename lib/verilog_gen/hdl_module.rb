@@ -1,15 +1,19 @@
 module VerilogGen
+  # Base class for all verilog modules.
+  #
+  # This class holds all the common code that is shared with all the actual
+  # verilog modules.
+  #
   class HdlModule
-    attr_reader :name, :module_name, :ports, :pins, :child_instances
+    attr_reader :instance_name, :module_name, :ports, :pins, :child_instances
 
     # Public: Create a hdl module with a name.
-    #
-    # name - The name of the module in RubyLand.
     #
     # The name of the module must be unique in a design. 
     # The verilog module name is a snakecase version of the ruby name.
     def initialize(name)
-      @name = name
+      #Sane defaults for the derived classes
+      @instance_name = name
       @ports = {}
       @pins = {}
       @child_instances = {}
@@ -64,6 +68,14 @@ module VerilogGen
         template = ERB.new(fh.read, nil, '>')
         template.result(binding)
       end
+    end
+
+    def ==(other) 
+      return instance_name == other.instance_name \
+             && module_name == other.module_name \
+             && ports == other.ports \
+             && pins == other.pins \
+             && child_instances == other.child_instances 
     end
   end
 end
