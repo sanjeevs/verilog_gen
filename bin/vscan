@@ -1,6 +1,187 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
+## ----------------------------------------------------------------------
+## This script converts a verilog file into a ruby includable file which
+## contains the structure which defines the module definition of the given
+## verilog file.
+##
+##  Input:  Path to the verilog file
+##  Output: <stdout> text of ruby includable file
+## ----------------------------------------------------------------------
 
-use Verilog::Parser;
+require 5.005;
+use FindBin qw($RealBin);
+use lib "$RealBin/blib/arch";
+use lib "$RealBin/blib/lib";
+use lib "$RealBin";
 
-print "error: you must supply a leaf verilog module.\n";
-exit(1);
+use Verilog::Netlist;
+use strict;
+
+my $VERSION = "0.0.1";
+
+my $verilog_file = shift @ARGV;
+die "error: you must supply a leaf verilog module.\n" unless( $verilog_file );
+die "error: file $verilog_file does not exist.\n" unless( -f $verilog_file );
+my $module;
+if( $verilog_file =~ /^.*\/(.*?)\.v.*$/ ) {
+    ## path includes hierarchy
+    $module = $1;
+} else {
+    ## file is in CWD
+    $module = $verilog_file;
+    $module =~ s/\.v$//;
+}
+my $ruby_file = "${module}.rb";
+
+## And then process the Verilog file
+&Convert_Verilog_To_Ruby( $module, $verilog_file, $ruby_file );
+exit(0);
+
+## --------------------------------------------------
+## Parse a verilog file and convert it into a ruby executable
+## that contains the structure which described the Verilog module's
+## declaration state
+sub Convert_Verilog_To_Ruby {
+    my $module_name = shift @_;
+    my $in_file = shift @_;
+    my $out_file = shift @_;
+
+    ## Prepare for reading in verilog netlists
+    my $netlist = new Verilog::Netlist();
+    $netlist->read_file( filename=>$in_file );
+    
+    ## Get a pointer to the module's structure
+    my $module = $netlist->find_module($module_name);
+    die "error: can't find a top level module in $in_file.\n" unless( $module );
+
+    open( RUBY, "> $out_file" ) or die "error: can't write file $out_file: $!\n";
+
+    ## Any startup text needed to print
+    &Print_Header($in_file);
+
+    ## Add the module name
+    &Print_Module($module->name);
+    
+    ## And information for each port
+    foreach my $port ($module->ports_sorted) {
+	(my $width, my $lsb) = &Parse_Vector($port->data_type, $module);
+	&Print_Port($port->name, $port->direction, $width, $lsb);
+    }
+
+    ## Finish with any text required to end file creation
+    &Print_Trailer();
+
+    return;
+}
+
+## --------------------------------------------------
+## A function to determine if a string is a Verilog vector
+## declaration (e.g., [3:2]) and return the LSB of the
+## vector and the width of the vector.
+sub Parse_Vector {
+    my $string = shift @_;
+    my $module = shift @_;
+    my $lhs;
+    my $rhs;
+    my $width;
+    my $lsb;
+
+    $string =~ s/\/\/.*$//; ## Remove Verilog comments if any
+    unless( $string =~ /:/ ) {
+	## This is not a vector, set 'lhs' and 'rhs' such that
+	## Vector width will be calculated as 1 and LSB as 0:
+	$lhs = 0;
+	$rhs = 0;
+    } else {
+	## String is not empty, it is a vector and could have
+	## parameters, mathematical functions, etc.
+	$string =~ s/^.*\[//; ## strip everything up to and including [
+	$string =~ s/\].*$//; ## strip everything after and including ]
+	## Break into the LHS and RHS (of the colon)
+	($lhs, $rhs) = split( /:/, $string, 2 );
+	## Convert each side into a numerical value
+	$lhs = &Resolve_Expression( $lhs, $module );
+	$rhs = &Resolve_Expression( $rhs, $module );
+    }
+
+    ## Calculate LSB and vector width
+    if( $lhs < $rhs ) {
+	$lsb = $lhs;
+	$width = $rhs - $lhs + 1;
+    } else {
+	$lsb = $rhs;
+	$width = $lhs - $rhs + 1;
+    }
+
+    return( $width, $lsb );
+}
+
+## --------------------------------------------------
+## Function to replace parameters in a string and then
+## evaluate the mathematical result of the string post
+## parameter replacement.
+sub Resolve_Expression {
+    my $string = shift @_;
+    my $module = shift @_;
+
+    ## Split the string on interesting mathematical operators
+    ##   (which are: **, *, +, -, /, %, (, ) )
+    ##   Note: task calls are not supported (e.g., log2)
+    my @ITEMS = split( /(\*+|\+|\-|\/|\%|\(|\))/, $string );
+    ## Then substitute parameters with values (i.e., if one of
+    ## the items returned by the 'split' above is a defined
+    ## parameter, replace it in the array with the parameters value:
+    for( my $i=0; $i<=$#ITEMS; ++$i ) {
+	## Is there a net matching the text 'name' of the item?
+	my $net = $module->find_net($ITEMS[$i]);
+	## If so, replace the item with the value of the net (parameter)
+	$ITEMS[$i] = $net->value if( $net );
+    }
+    ## Then evaluate the resultant string as a mathematical function
+    my $result = eval( join( "", @ITEMS ) );
+
+    return($result);
+}
+
+## --------------------------------------------------
+## Ruby file header text
+sub Print_Header {
+    my $src_file = shift @_;
+    ## currently does nothing
+
+    return;
+}
+
+## --------------------------------------------------
+## Ruby file module name processing
+sub Print_Module {
+    my $module_name = shift @_;
+    ## Make sure module name is all lower case with first letter capitalized
+    $module_name =~ tr/A-Z/a-z/;
+    $module_name = ucfirst( $module_name );
+    print RUBY "class $module_name < HdlModule\n";
+    print RUBY "  def build\n";
+
+    return;
+}
+
+## --------------------------------------------------
+## Ruby file port data type processing
+sub Print_Port {
+    my $port_name = shift @_;
+    my $port_dir = shift @_;
+    my $port_width = shift @_;
+    my $port_lsb = shift @_;
+    print RUBY "    add_port \"${port_name}\", width: ${port_width}, direction: \"${port_dir}put\"\n";
+
+    return;
+}
+
+## --------------------------------------------------
+## Ruby file trailer text
+sub Print_Trailer {
+    print RUBY "  end\n";
+    print RUBY "end\n";
+
+    return;
+}

@@ -18,6 +18,6 @@ Feature: convert a verilog 1364 format to ruby.
   end
   """
   When I run `vscan leaf.v`
-  Then the file 'leaf.rb' should exist 
+  Then a file named "leaf.rb" should exist 
   And when I run `hdl_equal expect.rb leaf.rb'
   Then the exit status should be 0
