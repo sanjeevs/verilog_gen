@@ -5,7 +5,7 @@ module VerilogGen
   #
   class HdlModule
     attr_reader :module_name, :instance_name, :ports, :pins, :child_instances
-
+    attr_reader :proxy, :file_name, :parameters
     # Default arguments for derived class. 
     def initialize(instance_name)
       #Sane defaults for the derived classes
@@ -14,6 +14,9 @@ module VerilogGen
       @child_instances = {}
       @module_name = self.class.name.split('::')[1].snakecase
       @instance_name = instance_name
+      @proxy = false
+      @file_name = ""
+      @parameters = {}
     end
 
     def build
@@ -35,6 +38,7 @@ module VerilogGen
         self.class.send :define_method, method_name do
           ports[name]
         end
+        return ports[name]
       end
     end
 
@@ -53,6 +57,7 @@ module VerilogGen
         self.class.send :define_method, method_name do
           child_instances[name]
         end
+        return child_instances[name]
       end
     end
 
@@ -81,7 +86,10 @@ module VerilogGen
       module_name == other.module_name \
         && ports == other.ports \
         && pins == other.pins \
-        && child_instances == other.child_instances 
+        && child_instances == other.child_instances \
+        && proxy == other.proxy \
+        && file_name == other.file_name \
+        && parameters == parameters
     end
 
     # Well behaved hash key.
@@ -98,7 +106,7 @@ module VerilogGen
     # @return [Numeric] hash value 
     # @note if a.eql?(b) then a.hash = b.hash
     def hash
-      module_name ^ instance_name
+      module_name.hash ^ instance_name.hash
     end
 
   end
