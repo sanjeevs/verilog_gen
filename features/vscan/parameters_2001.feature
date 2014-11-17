@@ -27,14 +27,6 @@ Feature: convert a verilog 1364-2001 format to ruby.
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      parameter["IN1_MSB"] = 5
-      parameter["IN1_LSB"] = 3
-      parameter["IN2_MSB"] = 7
-      parameter["IN2_LSB"] = 0
-      parameter["OUT1_MSB"] = 31
-      parameter["OUT1_LSB"] = 0
-      parameter["OUT2_MSB"] = 8
-      parameter["OUT2_LSB"] = 3
       add_port "in1", direction: "input", lhs: 5, rhs: 3
       add_port "in2", direction: "input", lhs: 7, rhs: 0
       add_port "out1", direction: "output", lhs: 31, rhs: 0

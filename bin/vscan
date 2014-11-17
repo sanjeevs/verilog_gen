@@ -17,7 +17,7 @@ use lib "$RealBin";
 use Verilog::Netlist;
 use strict;
 
-my $VERSION = "0.0.1";
+my $VERSION = "0.1.0";
 
 my $verilog_file = shift @ARGV;
 die "error: you must supply a leaf verilog module.\n" unless( $verilog_file );
@@ -50,28 +50,29 @@ sub Convert_Verilog_To_Ruby {
     ## Prepare for reading in verilog netlists
     my $netlist = new Verilog::Netlist();
     $netlist->read_file( filename=>$in_file );
-    
-    ## Get a pointer to the module's structure
-    my $module = $netlist->find_module($module_name);
-    die "error: can't find module $module_name in $in_file.\n" unless( $module );
 
+    ## Open the output file for writing
     open( RUBY, "> $out_file" ) or die "error: can't write file $out_file: $!\n";
+    ## And print any startup text needed
+    &Print_Header($VERSION);
 
-    ## Any startup text needed to print
-    &Print_Header($in_file);
+    ## Get a pointer to the module's structure
+    foreach my $module ($netlist->modules_sorted) {
 
-    ## Add the module name
-    &Print_Module($module->name);
+	## Add the module name
+	&Print_Module($in_file, $module->name, $module->name);
     
-    ## And information for each port
-    foreach my $port ($module->ports_sorted) {
-	(my $width, my $lsb) = &Parse_Vector($port->data_type, $module);
-	&Print_Port($port->name, $port->direction, $width, $lsb);
+	## And information for each port
+	foreach my $port ($module->ports_sorted) {
+	    (my $vector, my $lhs, my $rhs) = &Parse_Vector($port->data_type, $module);
+	    &Print_Port($port->name, $port->direction, $vector, $lhs, $rhs);
+	}
+	
+	## Finish with any text required to end file creation
+	&Print_Trailer();
+
     }
-
-    ## Finish with any text required to end file creation
-    &Print_Trailer();
-
+	
     return;
 }
 
@@ -82,20 +83,20 @@ sub Convert_Verilog_To_Ruby {
 sub Parse_Vector {
     my $string = shift @_;
     my $module = shift @_;
+    my $vector;
     my $lhs;
     my $rhs;
-    my $width;
-    my $lsb;
 
     $string =~ s/\/\/.*$//; ## Remove Verilog comments if any
     unless( $string =~ /:/ ) {
-	## This is not a vector, set 'lhs' and 'rhs' such that
-	## Vector width will be calculated as 1 and LSB as 0:
+	## This is not a vector, set outptus to 0/false
+	$vector = 0;
 	$lhs = 0;
 	$rhs = 0;
     } else {
 	## String is not empty, it is a vector and could have
 	## parameters, mathematical functions, etc.
+	$vector = 1;
 	$string =~ s/^.*\[//; ## strip everything up to and including [
 	$string =~ s/\].*$//; ## strip everything after and including ]
 	## Break into the LHS and RHS (of the colon)
@@ -105,16 +106,7 @@ sub Parse_Vector {
 	$rhs = &Resolve_Expression( $rhs, $module );
     }
 
-    ## Calculate LSB and vector width
-    if( $lhs < $rhs ) {
-	$lsb = $lhs;
-	$width = $rhs - $lhs + 1;
-    } else {
-	$lsb = $rhs;
-	$width = $lhs - $rhs + 1;
-    }
-
-    return( $width, $lsb );
+    return( $vector, $lhs, $rhs );
 }
 
 ## --------------------------------------------------
@@ -147,21 +139,26 @@ sub Resolve_Expression {
 ## --------------------------------------------------
 ## Ruby file header text
 sub Print_Header {
-    my $src_file = shift @_;
-    ## currently does nothing
-
+    print RUBY "# vscan v${VERSION}\n";
+    print RUBY "\n";
     return;
 }
 
 ## --------------------------------------------------
 ## Ruby file module name processing
 sub Print_Module {
+    my $src_file = shift @_;
+    my $class_name = shift @_;
     my $module_name = shift @_;
-    ## Make sure module name is all lower case with first letter capitalized
-    $module_name =~ tr/A-Z/a-z/;
-    $module_name = ucfirst( $module_name );
-    print RUBY "class $module_name < HdlModule\n";
-    print RUBY "  def build\n";
+    print RUBY "# --------------------------------------------------\n";
+    ## Make sure class name is all lower case with first letter capitalized
+    $class_name =~ tr/A-Z/a-z/;
+    $class_name = ucfirst( $class_name );
+    print RUBY "class $class_name < HdlModule\n";
+    print RUBY "  def initialize\n";
+    print RUBY "    proxy = true\n";
+    print RUBY "    file_name = \"${src_file}\"\n";
+    print RUBY "    module_name = \"${module_name}\"\n";
 
     return;
 }
@@ -171,9 +168,15 @@ sub Print_Module {
 sub Print_Port {
     my $port_name = shift @_;
     my $port_dir = shift @_;
-    my $port_width = shift @_;
-    my $port_lsb = shift @_;
-    print RUBY "    add_port \"${port_name}\", width: ${port_width}, direction: \"${port_dir}put\"\n";
+    my $vector = shift @_;
+    my $vector_lhs = shift @_;
+    my $vector_rhs = shift @_;
+
+    if( $vector ) {
+	print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}put\", lhs: ${vector_lhs}, rhs: ${vector_rhs}\n";
+    } else {
+	print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}put\"\n";
+    }
 
     return;
 }
@@ -183,6 +186,7 @@ sub Print_Port {
 sub Print_Trailer {
     print RUBY "  end\n";
     print RUBY "end\n";
+    print RUBY "\n";
 
     return;
 }
