@@ -9,7 +9,7 @@ Feature: convert a verilog 1364-2001 format to ruby.
        localparam IN2_MSB = 7,
                   IN2_LSB = 0,
        localparam OUT1_MSB = 31,
-                  OUT1_MSB = 0,
+                  OUT1_LSB = 0,
                   OUT2_MSB = 8,
                   OUT2_LSB = 3 )
   (

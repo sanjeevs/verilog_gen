@@ -1,6 +1,6 @@
 Feature: convert a verilog 1364 format to ruby.
 
-  Scenario: Single input port
+  Scenario: Parameterized ports
   Given a file named "leaf.v" with: 
   """
   module leaf (
@@ -15,7 +15,7 @@ Feature: convert a verilog 1364 format to ruby.
   parameter IN2_MSB = 7,
             IN2_LSB = 0;
   parameter OUT1_MSB = 31,
-            OUT1_MSB = 0,
+            OUT1_LSB = 0,
             OUT2_MSB = 8,
             OUT2_LSB = 3;
 

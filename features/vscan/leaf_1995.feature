@@ -3,9 +3,12 @@ Feature: convert a verilog 1364 format to ruby.
   Scenario: Single input port
   Given a file named "leaf.v" with: 
   """
-  module leaf(in, out);
-    input in;
-    output out;
+  module leaf (
+    in,
+    out
+  );
+  input in;
+  output out;
   endmodule
   """
   And a file named "expect.rb" with:

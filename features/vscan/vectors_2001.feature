@@ -1,6 +1,6 @@
 Feature: convert a verilog 1364-2001 format to ruby.
 
-  Scenario: Single input port
+  Scenario: Vectored ports
   Given a file named "leaf.v" with: 
   """
   module leaf (

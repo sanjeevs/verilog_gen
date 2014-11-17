@@ -31,7 +31,8 @@ if( $verilog_file =~ /^.*\/(.*?)\.v.*$/ ) {
     $module = $verilog_file;
     $module =~ s/\.v$//;
 }
-my $ruby_file = "${module}.rb";
+my $ruby_file = $verilog_file;
+$ruby_file =~ s/.v$/.rb/;
 
 ## And then process the Verilog file
 &Convert_Verilog_To_Ruby( $module, $verilog_file, $ruby_file );
@@ -52,7 +53,7 @@ sub Convert_Verilog_To_Ruby {
     
     ## Get a pointer to the module's structure
     my $module = $netlist->find_module($module_name);
-    die "error: can't find a top level module in $in_file.\n" unless( $module );
+    die "error: can't find module $module_name in $in_file.\n" unless( $module );
 
     open( RUBY, "> $out_file" ) or die "error: can't write file $out_file: $!\n";
 
