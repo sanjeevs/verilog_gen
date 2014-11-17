@@ -36,6 +36,9 @@ module Rhs; end
 lhs = create_hdl_instance(Lhs, ARGV[0])
 rhs = create_hdl_instance(Rhs, ARGV[1])
 
+pp lhs
+pp rhs
+
 if lhs == rhs 
   puts "Hurrah they are equal"
   exit 0
