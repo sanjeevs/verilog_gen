@@ -11,7 +11,7 @@ Feature: convert a verilog 1364-2001 format to ruby.
        parameter OUT1_MSB = 31,
                  OUT1_LSB = 0,
                  OUT2_MSB = 8,
-                OUT2_LSB = 3 )
+                 OUT2_LSB = 3 )
   (
     input  [IN1_MSB-1:IN1_LSB]               in1,
     input  [IN2_MSB*2+1:IN2_LSB+1]           in2,
@@ -23,11 +23,22 @@ Feature: convert a verilog 1364-2001 format to ruby.
   And a file named "expect.rb" with:
   """
   class Leaf < HdlModule
-    def build
-      add_port "in1", width: 2, direction: "input"
-      add_port "in2", width: 15, direction: "input"
-      add_port "out1", width: 8, direction: "output"
-      add_port "out2", width: 4, direction: "output"
+    def initialize
+      proxy = true
+      file_name = "leaf.v"
+      module_name = "leaf"
+      parameter["IN1_MSB"] = 5
+      parameter["IN1_LSB"] = 3
+      parameter["IN2_MSB"] = 7
+      parameter["IN2_LSB"] = 0
+      parameter["OUT1_MSB"] = 31
+      parameter["OUT1_LSB"] = 0
+      parameter["OUT2_MSB"] = 8
+      parameter["OUT2_LSB"] = 3
+      add_port "in1", direction: "input", lhs: 4, rhs: 3
+      add_port "in2", direction: "input", lhs: 15, rhs: 1
+      add_port "out1", direction: "output", lhs: 7, rhs: 0
+      add_port "out2", direction: "output", lhs: 10, rhs: 7
     end
   end
   """

@@ -18,11 +18,14 @@ Feature: convert a verilog 1364 format to ruby.
   And a file named "expect.rb" with:
   """
   class Leaf < HdlModule
-    def build
-      add_port "in1", width: 3, direction: "input"
-      add_port "in2", width: 8, direction: "input"
-      add_port "out1", width: 32, direction: "output"
-      add_port "out2", width: 6, direction: "output"
+    def initialize
+      proxy = true
+      file_name = "leaf.v"
+      module_name = "leaf"
+      add_port "in1", direction: "input", lhs: 3, rhs: 5
+      add_port "in2", direction: "input", lhs: 0, rhs: 7
+      add_port "out1", direction: "output", lhs: 0, rhs: 31
+      add_port "out2", direction: "output", lhs: 3, rhs: 8
     end
   end
   """
