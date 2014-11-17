@@ -5,7 +5,15 @@
 ## verilog file.
 ##
 ##  Input:  Path to the verilog file
-##  Output: <stdout> text of ruby includable file
+##          Parameter override declarations in format PARAM1=value
+##          Class override declared using -class flag
+##  Output: File in same directory as verilog file named <module>.rb
+##          or <class_override>.rb if -class flag specified.
+##
+##  Examples:
+##     vscan subdir1/leaf.v
+##     vscan PARAM1=7 PARAM2=9 leaf.v
+##     vscan -class trunk leaf.v
 ## ----------------------------------------------------------------------
 
 require 5.005;
