@@ -18,24 +18,45 @@ use Verilog::Netlist;
 use strict;
 
 my $VERSION = "0.1.0";
+my %PARAMETERS;
+my $class_override = "";
+my $verilog_file = "";
+my $ruby_file = "";
 
-my $verilog_file = shift @ARGV;
+while( @ARGV ) {
+    my $option = shift @ARGV;
+    if( $option =~ /=/ ) {
+	## A parameter is potentially being overwritten
+	(my $parameter, my $value) = split( /=/, $option, 2 );
+	$PARAMETERS{$parameter} = $value;
+    }
+    elsif( $option eq "-class" ) {
+	die "error: you can't specify more than one class overide.\n" if( $class_override );
+	$class_override = shift @ARGV;
+    }
+    else {
+	die "error: too many command line arguments.\n" if( $verilog_file );
+	$verilog_file = $option;
+	$ruby_file = $verilog_file;
+	$ruby_file =~ s/.v$/.rb/;
+    }
+}
 die "error: you must supply a leaf verilog module.\n" unless( $verilog_file );
 die "error: file $verilog_file does not exist.\n" unless( -f $verilog_file );
 my $module;
 if( $verilog_file =~ /^.*\/(.*?)\.v.*$/ ) {
     ## path includes hierarchy
     $module = $1;
+    $ruby_file =~ s/\/${module}\.rb$/\/${class_override}\.rb/ if( $class_override );
 } else {
     ## file is in CWD
     $module = $verilog_file;
     $module =~ s/\.v$//;
+    $ruby_file = "${class_override}.rb" if( $class_override );
 }
-my $ruby_file = $verilog_file;
-$ruby_file =~ s/.v$/.rb/;
 
 ## And then process the Verilog file
-&Convert_Verilog_To_Ruby( $module, $verilog_file, $ruby_file );
+&Convert_Verilog_To_Ruby( $module, $class_override, $verilog_file, $ruby_file );
 exit(0);
 
 ## --------------------------------------------------
@@ -44,6 +65,7 @@ exit(0);
 ## declaration state
 sub Convert_Verilog_To_Ruby {
     my $module_name = shift @_;
+    my $class = shift @_;
     my $in_file = shift @_;
     my $out_file = shift @_;
 
@@ -59,8 +81,12 @@ sub Convert_Verilog_To_Ruby {
     ## Get a pointer to the module's structure
     foreach my $module ($netlist->modules_sorted) {
 
-	## Add the module name
-	&Print_Module($in_file, $module->name, $module->name);
+	## Add the module name and class
+	$class = $module->name unless( $class );
+	&Print_Module($in_file, $class, $module->name);
+
+	## Add override parameters
+	&Print_Parameters();
     
 	## And information for each port
 	foreach my $port ($module->ports_sorted) {
@@ -125,13 +151,23 @@ sub Resolve_Expression {
     ## the items returned by the 'split' above is a defined
     ## parameter, replace it in the array with the parameters value:
     for( my $i=0; $i<=$#ITEMS; ++$i ) {
-	## Is there a net matching the text 'name' of the item?
-	my $net = $module->find_net($ITEMS[$i]);
-	## If so, replace the item with the value of the net (parameter)
-	$ITEMS[$i] = $net->value if( $net );
+	## Is there an override of the same item from the command line?
+	## if so, replace if the override value instead, else check
+	## for a parameter in the Verilog
+	if( $PARAMETERS{$ITEMS[$i]} ) {
+	    ## Use override value
+	    $ITEMS[$i] = $PARAMETERS{$ITEMS[$i]};
+	}
+	else {
+	    ## Is there a net matching the text 'name' of the item?
+	    my $net = $module->find_net($ITEMS[$i]);
+	    ## If so, replace the item with the value of the net (parameter)
+	    $ITEMS[$i] = $net->value if( $net );
+	}
     }
     ## Then evaluate the resultant string as a mathematical function
     my $result = eval( join( "", @ITEMS ) );
+    die "error: I/O declaration using undefined parameter.\n" unless( $result ne "" );
 
     return($result);
 }
@@ -159,6 +195,16 @@ sub Print_Module {
     print RUBY "    proxy = true\n";
     print RUBY "    file_name = \"${src_file}\"\n";
     print RUBY "    module_name = \"${module_name}\"\n";
+
+    return;
+}
+
+## --------------------------------------------------
+## Print out override parameters specified on the command line
+sub Print_Parameters {
+    foreach my $override (sort keys %PARAMETERS) {
+	print RUBY "    parameter[\"${override}\"] = " . $PARAMETERS{$override} . "\n";
+    }
 
     return;
 }
