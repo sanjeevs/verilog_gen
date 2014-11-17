@@ -1,26 +1,26 @@
 Feature: convert a verilog 1364 format to ruby.
 
-  Scenario: Single input port
+  Scenario: Single input port, negative test
   Given a file named "leaf.v" with: 
   """
-  module leaf (
-    in,
-    out
-  );
-  input in;
-  output out;
+  module leaf(in, out);
+    input in;
+    output out;
   endmodule
   """
   And a file named "expect.rb" with:
   """
   class Leaf < HdlModule
-    def build
-      add_port "in", width: 1, direction: "input"
-      add_port "out", width: 1, direction: "output"
+    def initialize
+      proxy = true
+      file_name = "leaf.v"
+      module_name = "leaf"
+      add_port "in", direction: "output"
+      add_port "out", direction: "output"
     end
   end
   """
   When I run `vscan leaf.v`
   Then a file named "leaf.rb" should exist 
   When I run `hdl_equal expect.rb leaf.rb`
-  Then the exit status should be 0
+  Then the exit status should not be 0
