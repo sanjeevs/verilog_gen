@@ -56,7 +56,7 @@ module VerilogGen
     # Get the module name
     # @note If not set then sets it to snake case version of class name.
     def self.module_name
-      @module_name ||= self.class.name.split('::')[1].snakecase
+      @module_name ||= self.name.split('::')[1].snakecase
     end
 
     # Set the module name

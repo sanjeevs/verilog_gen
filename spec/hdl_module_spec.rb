@@ -21,6 +21,14 @@ module VerilogGen
       leaf1.instance_name == "leaf1" 
     end
 
+    it "should have correct module name 1" do
+      Leaf1.module_name == "leaf1" 
+    end
+
+    it "should have correct module name 2" do
+      Leaf2.module_name == "leaf2" 
+    end
+
     it "should have the dynamic get on instance name" do
       Leaf2.leaf1 == leaf1
     end

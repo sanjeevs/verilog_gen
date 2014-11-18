@@ -15,40 +15,65 @@ $LOAD_PATH.unshift File.expand_path("../lib")
 
 require_relative "../lib/verilog_gen"
 
-def create_hdl_instance(ns, filename)
+# Evaluate the class in 2 separate namespaces
+# @return [Array] List of all derived class of hdl modules
+def create_hdl_classes(ns, filename)
   content = File.open(filename).read 
   eval """
   module #{ns}
-    include VerilogGen
+    require 'verilog_gen' 
     # Hook to detect a subclass
-    class HdlModule
-      @@instances = []
+    class VerilogGen::HdlModule
+      @instances = []
       def self.inherited(new_subclass)
-        @@instances << new_subclass.new('hello')
+        @instances << new_subclass
       end
       def self.get
-        @@instances
+        @instances
       end
     end
     #{content}
   end
   """
-  return ns::HdlModule.get
+  return VerilogGen::HdlModule.get
 end
 
 module Lhs; end
 module Rhs; end
 
-lhs = create_hdl_instance(Lhs, ARGV[0])
-rhs = create_hdl_instance(Rhs, ARGV[1])
+lhs = create_hdl_classes(Lhs, ARGV[0])
+rhs = create_hdl_classes(Rhs, ARGV[1])
 
-pp lhs
-pp rhs
-
-if lhs == rhs 
-  puts "Hurrah they are equal"
-  exit 0
-else
-  puts "They are not equal"
+if lhs.size == 0
+  puts "No Hdl Module detected in source file:#{ARGV[0]}"
   exit 1
+end
+
+if rhs.size == 0
+  puts "No Hdl Module detected in source file:#{ARGV[1]}"
+  exit 1
+end
+
+if lhs.size != rhs.size 
+  puts "Number of entries #{lhs.size} on #{ARGV[0]} do not match #{ARGV[1]}"
+  exit 1
+end
+
+lhs.each_index do |i|
+  if lhs[i].ports  == rhs[i].ports \
+    && lhs[i].child_instances == rhs[i].child_instances \
+    && lhs[i].module_name == rhs[i].module_name \
+    && lhs[i].proxy == rhs[i].proxy \
+    && lhs[i].file_name == rhs[i].file_name \
+    && lhs[i].parameters == rhs[i].parameters
+    exit 0 
+  else
+    puts "Mismatched ports" unless lhs[i].ports == rhs[i].ports    
+    puts "Mismatched child" unless lhs[i].child_instances == rhs[i].child_instances
+    puts "Mismatched mdule_name" unless lhs[i].module_name == rhs[i].module_name
+    puts "Mismatched proxy " unless lhs[i].proxy == rhs[i].proxy
+    puts "Mismatched file_name" unless lhs[i].file_name == rhs[i].file_name
+    puts "Mismatched parameters" unless lhs[i].parameters == rhs[i].parameters
+    exit 1
+  end
 end
