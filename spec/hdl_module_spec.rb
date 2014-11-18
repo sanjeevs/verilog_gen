@@ -1,36 +1,43 @@
 require 'spec_helper'
 
 module VerilogGen
-  class Leaf < HdlModule
+  class Leaf1 < HdlModule
     add_port("port1")
     @module_name = "Leaf"
   end
   class Leaf2 < HdlModule; 
-    add_instance(Leaf, "leaf1")
+    add_instance(Leaf1, "leaf1")
   end
 
   describe HdlModule do
     
-    let(:leaf1) { Leaf.new("leaf1") }
-    let(:leaf1_same) { Leaf.new("leaf1") }
+    let(:leaf1) { Leaf1.new("leaf1") }
+    let(:leaf1_same) { Leaf1.new("leaf1") }
     let(:port1) { Port.new("port1") }
     let(:leaf2) { Leaf2.new("leaf2") }
-    let(:leaf2_same) { Leaf.new("leaf2") }
+    let(:leaf2_same) { Leaf1.new("leaf2") }
 
     it "should have correct instance name" do
       leaf1.instance_name == "leaf1" 
     end
 
+    it "should have the dynamic get on instance name" do
+      Leaf2.leaf1 == leaf1
+    end
     it "should have correct module name" do
-      Leaf.module_name == "Leaf" 
+      Leaf1.module_name == "Leaf" 
     end
 
     it "should have port1" do
-      Leaf.ports["port1"] = port1
+      Leaf1.ports["port1"] == port1
+    end
+    
+    it "should be able to use the dynamic get" do
+      Leaf1.port1 == port1
     end
 
     it "should have proxy false" do
-      expect(Leaf.proxy).to eq(false)
+      expect(Leaf1.proxy).to eq(false)
     end
 
     describe "#equal" do
@@ -43,23 +50,23 @@ module VerilogGen
     end
 
     it "should flag duplicate ports" do
-      expect { Leaf.add_port("port1") }.to raise_exception
+      expect { Leaf1.add_port("port1") }.to raise_exception
     end
 
     it "should allow adding new port" do
-      expect { Leaf.add_port("port2") }.to change {Leaf.ports.size}.from(1).to(2) 
+      expect { Leaf1.add_port("port2") }.to change {Leaf1.ports.size}.from(1).to(2) 
     end
    
     it "should return the newly added port" do
-      expect(Leaf.add_port("port3")).to eq(Port.new("port3"))
+      expect(Leaf1.add_port("port3")).to eq(Port.new("port3"))
     end
 
     it "should flag duplicate child instance" do
-      expect { Leaf2.add_instance(Leaf, "leaf1") }.to raise_exception
+      expect { Leaf2.add_instance(Leaf1, "leaf1") }.to raise_exception
     end
 
     it "should allow different child instance" do
-      expect { Leaf2.add_instance(Leaf, "leaf1_2") }.to \
+      expect { Leaf2.add_instance(Leaf1, "leaf1_2") }.to \
                       change {Leaf2.child_instances.size}.from(1).to(2)
     end
    

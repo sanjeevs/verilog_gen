@@ -6,13 +6,15 @@ module VerilogGen
   class HdlModule
 
 
+    def self.ports()
+      @ports ||= {}
+    end
     # Add a port to the design.
     # @param [String] name of the port.
     # @param [String] params of port.
     # @return [HdlPort] new port created.
     # @note Raises exception if the port name is not unique 
     def self.add_port(name, params = {})
-      @ports ||= {}
       if ports.keys.include?(name)
         raise ArgumentError, 
           "Duplicate port name '#{name}' detected"
@@ -20,40 +22,36 @@ module VerilogGen
         ports[name] = Port.new(name, params)
         method_name = name.to_sym
         # create the accessor using port name
-        self.class.send :define_method, method_name do
+        define_singleton_method(method_name) do
           ports[name]
         end
         return ports[name]
       end
     end
 
+    def self.child_instances()
+      @child_instances ||= {}
+    end
     # Add a instance to the design.
     # @param [HdlModule] child instance of the design.
     # @param [String] instance_name
     # @return [HdlModule] child instance added.
     # @note Raises exception if the child instance is not unique.
     def self.add_instance(klass, name)
-      @child_instances ||= {}
       if child_instances.keys.include?(name)
         raise ArgumentError, 
           "Duplicate module instance name '#{name}' detected"
       else
         child_instances[name] = klass.new(name) 
         method_name = name.to_sym
-        self.class.send :define_method, method_name do
+        define_singleton_method(method_name) do
           child_instances[name]
         end
         return child_instances[name]
       end
     end
 
-    def self.ports()
-      @ports ||= {}
-    end
 
-    def self.child_instances()
-      @child_instances ||= {}
-    end
 
     # Get the module name
     # @note If not set then sets it to snake case version of class name.
