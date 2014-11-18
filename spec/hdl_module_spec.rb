@@ -2,16 +2,11 @@ require 'spec_helper'
 
 module VerilogGen
   class Leaf < HdlModule
-    def initialize(instance_name)
-      super
-      add_port("port1")
-     end
+    add_port("port1")
+    @module_name = "Leaf"
   end
   class Leaf2 < HdlModule; 
-    def initialize(instance_name)
-      super
-      add_instance(Leaf, "leaf1")
-    end
+    add_instance(Leaf, "leaf1")
   end
 
   describe HdlModule do
@@ -27,20 +22,20 @@ module VerilogGen
     end
 
     it "should have correct module name" do
-      leaf1.module_name == "Leaf" 
+      Leaf.module_name == "Leaf" 
     end
 
     it "should have port1" do
-      leaf1.ports["port1"] = port1
+      Leaf.ports["port1"] = port1
     end
 
     it "should have proxy false" do
-      expect(leaf1.proxy).to eq(false)
+      expect(Leaf.proxy).to eq(false)
     end
 
     describe "#equal" do
-      it "should not match instance name" do
-        expect(leaf1).to eq(leaf2_same)
+      it "should match instance name" do
+        expect(leaf1).to eq(leaf1_same)
       end
     end
     it "should not match another dervied class" do
@@ -48,30 +43,26 @@ module VerilogGen
     end
 
     it "should flag duplicate ports" do
-      expect { leaf1.add_port("port1") }.to raise_exception
+      expect { Leaf.add_port("port1") }.to raise_exception
     end
 
     it "should allow adding new port" do
-      expect { leaf1.add_port("port2") }.to change {leaf1.ports.size}.from(1).to(2) 
+      expect { Leaf.add_port("port2") }.to change {Leaf.ports.size}.from(1).to(2) 
     end
    
     it "should return the newly added port" do
-      expect(leaf1.add_port("port3")).to eq(Port.new("port3"))
+      expect(Leaf.add_port("port3")).to eq(Port.new("port3"))
     end
 
     it "should flag duplicate child instance" do
-      expect { leaf2.add_instance(Leaf, "leaf1") }.to raise_exception
+      expect { Leaf2.add_instance(Leaf, "leaf1") }.to raise_exception
     end
 
     it "should allow different child instance" do
-      expect { leaf2.add_instance(Leaf, "leaf1_2") }.to \
-                      change {leaf2.child_instances.size}.from(1).to(2)
+      expect { Leaf2.add_instance(Leaf, "leaf1_2") }.to \
+                      change {Leaf2.child_instances.size}.from(1).to(2)
     end
    
-    it "should return new child instance" do
-      expect(leaf2.add_instance(Leaf, "leaf1_2")).to \
-                                                eq(Leaf.new("leaf1_2")) 
-    end
     describe "#hash" do
       it "should find the entry" do
         hdl_hash = {}

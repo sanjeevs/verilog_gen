@@ -4,37 +4,22 @@ module VerilogGen
   #   verilog modules.
   #
   class HdlModule
-    attr_reader :module_name, :instance_name, :ports, :pins, :child_instances
-    attr_reader :proxy, :file_name, :parameters
-    # Default arguments for derived class. 
-    def initialize(instance_name)
-      #Sane defaults for the derived classes
-      @ports = {}
-      @pins = {}
-      @child_instances = {}
-      @module_name = self.class.name.split('::')[1].snakecase
-      @instance_name = instance_name
-      @proxy = false
-      @file_name = ""
-      @parameters = {}
-    end
 
-    def build
-    end
 
     # Add a port to the design.
     # @param [String] name of the port.
     # @param [String] params of port.
     # @return [HdlPort] new port created.
     # @note Raises exception if the port name is not unique 
-    def add_port(name, params = {})
+    def self.add_port(name, params = {})
+      @ports ||= {}
       if ports.keys.include?(name)
         raise ArgumentError, 
-                  "Duplicate port name '#{name}' detected"
+          "Duplicate port name '#{name}' detected"
       else
         ports[name] = Port.new(name, params)
         method_name = name.to_sym
-        # create the get accessor
+        # create the accessor using port name
         self.class.send :define_method, method_name do
           ports[name]
         end
@@ -47,10 +32,11 @@ module VerilogGen
     # @param [String] instance_name
     # @return [HdlModule] child instance added.
     # @note Raises exception if the child instance is not unique.
-    def add_instance(klass, name)
+    def self.add_instance(klass, name)
+      @child_instances ||= {}
       if child_instances.keys.include?(name)
         raise ArgumentError, 
-             "Duplicate module instance name '#{name}' detected"
+          "Duplicate module instance name '#{name}' detected"
       else
         child_instances[name] = klass.new(name) 
         method_name = name.to_sym
@@ -59,6 +45,56 @@ module VerilogGen
         end
         return child_instances[name]
       end
+    end
+
+    def self.ports()
+      @ports ||= {}
+    end
+
+    def self.child_instances()
+      @child_instances ||= {}
+    end
+
+    # Get the module name
+    # @note If not set then sets it to snake case version of class name.
+    def self.module_name
+      @module_name ||= self.class.name.split('::')[1].snakecase
+    end
+
+    # Set the module name
+    def self.module_name=(name)
+      @module_name = name
+    end
+
+    def self.proxy
+      @proxy ||= false
+    end
+
+    def self.proxy=(value)
+      @proxy = value
+    end
+
+    def self.file_name
+      @file_name ||= "" 
+    end
+
+    def self.file_name=(other)
+      @file_name = other
+    end
+
+    def self.parameters
+      @parameters ||= {} 
+    end
+
+
+    def self.proxy=(value)
+      @proxy = value
+    end
+    attr_reader :instance_name 
+    attr_accessor :pins
+    def initialize(instance_name)
+      @instance_name = instance_name
+      @pins =  {}
     end
 
     # Render the ruby code to verilog.
@@ -78,18 +114,11 @@ module VerilogGen
 
     # Equality of hdl module
     # @param [HdlModule] 
-    # @return true if the hdl module match.
-    # @note instance name is not compared.
+    # @return true if the instance is the same
     def ==(other) 
       return true if other.equal?(self)
       return false unless other.instance_of?(self.class)
-      module_name == other.module_name \
-        && ports == other.ports \
-        && pins == other.pins \
-        && child_instances == other.child_instances \
-        && proxy == other.proxy \
-        && file_name == other.file_name \
-        && parameters == parameters
+      instance_name == other.instance_name && pins == other.pins 
     end
 
     # Well behaved hash key.
@@ -98,17 +127,14 @@ module VerilogGen
     # @note if a.eql?(b) then a.hash = b.hash
     def eql?(other)
       return false unless other.instance_of?(self.class)
-      module_name == other.module_name \
-      && instance_name == other.instance_name
+      instance_name == other.instance_name 
     end
 
     # Calculate the hash.
     # @return [Numeric] hash value 
     # @note if a.eql?(b) then a.hash = b.hash
     def hash
-      module_name.hash ^ instance_name.hash
+      instance_name.hash
     end
-
   end
 end
-  
