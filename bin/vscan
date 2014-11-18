@@ -34,32 +34,32 @@ my $ruby_file = "";
 while( @ARGV ) {
     my $option = shift @ARGV;
     if( $option =~ /=/ ) {
-	## A parameter is potentially being overwritten
-	(my $parameter, my $value) = split( /=/, $option, 2 );
-	$PARAMETERS{$parameter} = $value;
+        ## A parameter is potentially being overwritten
+        (my $parameter, my $value) = split( /=/, $option, 2 );
+        $PARAMETERS{$parameter} = $value;
     }
     elsif( $option eq "-class" ) {
-	die "error: you can't specify more than one class overide.\n" if( $class_override );
-	$class_override = shift @ARGV;
+        die "error: you can't specify more than one class overide.\n" if( $class_override );
+        $class_override = shift @ARGV;
     }
     else {
-	die "error: too many command line arguments.\n" if( $verilog_file );
-	$verilog_file = $option;
-	$ruby_file = $verilog_file;
-	$ruby_file =~ s/.v$/.rb/;
+        die "error: too many command line arguments.\n" if( $verilog_file );
+        $verilog_file = $option;
+        $ruby_file = $verilog_file;
+        $ruby_file =~ s/\.(.*?)v$/.rb/;
     }
 }
 die "error: you must supply a leaf verilog module.\n" unless( $verilog_file );
 die "error: file $verilog_file does not exist.\n" unless( -f $verilog_file );
 my $module;
-if( $verilog_file =~ /^.*\/(.*?)\.v.*$/ ) {
+if( $verilog_file =~ /^.*\/(.*?)\.(.*?)v.*$/ ) {
     ## path includes hierarchy
     $module = $1;
     $ruby_file =~ s/\/${module}\.rb$/\/${class_override}\.rb/ if( $class_override );
 } else {
     ## file is in CWD
     $module = $verilog_file;
-    $module =~ s/\.v$//;
+    $module =~ s/\.(.*?)v$//;
     $ruby_file = "${class_override}.rb" if( $class_override );
 }
 
@@ -89,24 +89,24 @@ sub Convert_Verilog_To_Ruby {
     ## Get a pointer to the module's structure
     foreach my $module ($netlist->modules_sorted) {
 
-	## Add the module name and class
-	$class = $module->name unless( $class );
-	&Print_Module($in_file, $class, $module->name);
+        ## Add the module name and class
+        $class = $module->name unless( $class );
+        &Print_Module($in_file, $class, $module->name);
 
-	## Add override parameters
-	&Print_Parameters();
+        ## Add override parameters
+        &Print_Parameters();
     
-	## And information for each port
-	foreach my $port ($module->ports_sorted) {
-	    (my $vector, my $lhs, my $rhs) = &Parse_Vector($port->data_type, $module);
-	    &Print_Port($port->name, $port->direction, $vector, $lhs, $rhs);
-	}
-	
-	## Finish with any text required to end file creation
-	&Print_Trailer();
+        ## And information for each port
+        foreach my $port ($module->ports_sorted) {
+            (my $vector, my $lhs, my $rhs) = &Parse_Vector($port->data_type, $module);
+            &Print_Port($port->name, $port->direction, $vector, $lhs, $rhs);
+        }
+        
+        ## Finish with any text required to end file creation
+        &Print_Trailer();
 
     }
-	
+        
     return;
 }
 
@@ -120,24 +120,65 @@ sub Parse_Vector {
     my $vector;
     my $lhs;
     my $rhs;
+    my $type;
 
     $string =~ s/\/\/.*$//; ## Remove Verilog comments if any
-    unless( $string =~ /:/ ) {
-	## This is not a vector, set outptus to 0/false
-	$vector = 0;
-	$lhs = 0;
-	$rhs = 0;
+
+    ## First determine the type
+    if   ( $string =~ /^reg/       ) { $type = "reg";       }
+    elsif( $string =~ /^logic/     ) { $type = "logic";     }
+    elsif( $string =~ /^bit/       ) { $type = "bit";       }
+    elsif( $string =~ /^byte/      ) { $type = "byte";      }
+    elsif( $string =~ /^shortint/  ) { $type = "shortint";  }
+    elsif( $string =~ /^int/       ) { $type = "int";       }
+    elsif( $string =~ /^longint/   ) { $type = "longint";   }
+    elsif( $string =~ /^time/      ) { $type = "time";      }
+    elsif( $string =~ /^realtime/  ) { $type = "realtime";  }
+    elsif( $string =~ /^shortreal/ ) { $type = "shortreal"; }
+    elsif( $string =~ /^real/      ) { $type = "real";      }
+    else                             { $type = "wire";      }
+
+    ## And then determine width of signal based on type, etc.
+    if( $type eq "byte" ) {
+        ## byte
+        $vector = 1;
+        $lhs = 7;
+        $rhs = 0;
+    }
+    elsif( $type eq "shortint" ) {
+        ## integer
+        $vector = 1;
+        $lhs = 15;
+        $rhs = 0;
+    }
+    elsif( ($type eq "int") || ($type eq "shortreal") ) {
+        ## integer, shortreal
+        $vector = 1;
+        $lhs = 31;
+        $rhs = 0;
+    }
+    elsif( ($type =~ /^real/) || ($type eq "longint") || ($type eq "time") ) {
+        ## real, realtime, longint, time
+        $vector = 1;
+        $lhs = 63;
+        $rhs = 0;
+    }
+    elsif( $string =~ /:/ ) {
+        ## reg, wire, logic, bit:
+	## vector containing parameters, mathematical functions, etc.
+        $vector = 1;
+        $string =~ s/^.*\[//; ## strip everything up to and including [
+        $string =~ s/\].*$//; ## strip everything after and including ]
+        ## Break into the LHS and RHS (of the colon)
+        ($lhs, $rhs) = split( /:/, $string, 2 );
+        ## Convert each side into a numerical value
+        $lhs = &Resolve_Expression( $lhs, $module );
+        $rhs = &Resolve_Expression( $rhs, $module );
     } else {
-	## String is not empty, it is a vector and could have
-	## parameters, mathematical functions, etc.
-	$vector = 1;
-	$string =~ s/^.*\[//; ## strip everything up to and including [
-	$string =~ s/\].*$//; ## strip everything after and including ]
-	## Break into the LHS and RHS (of the colon)
-	($lhs, $rhs) = split( /:/, $string, 2 );
-	## Convert each side into a numerical value
-	$lhs = &Resolve_Expression( $lhs, $module );
-	$rhs = &Resolve_Expression( $rhs, $module );
+        ## reg, wire, logic, bit: single-bit
+        $vector = 0;
+        $lhs = 0;
+        $rhs = 0;
     }
 
     return( $vector, $lhs, $rhs );
@@ -151,29 +192,38 @@ sub Resolve_Expression {
     my $string = shift @_;
     my $module = shift @_;
 
-    ## Split the string on interesting mathematical operators
-    ##   (which are: **, *, +, -, /, %, (, ) )
-    ##   Note: task calls are not supported (e.g., log2)
+    ## Split the string on interesting Verilog supported mathematical operators
+    ##   (which are: **, *, +, -, /, %, (, ) ).  Note, $clog() is supported deeper
+    ##   in the code below.
     my @ITEMS = split( /(\*+|\+|\-|\/|\%|\(|\))/, $string );
     ## Then substitute parameters with values (i.e., if one of
     ## the items returned by the 'split' above is a defined
     ## parameter, replace it in the array with the parameters value:
     for( my $i=0; $i<=$#ITEMS; ++$i ) {
-	## Is there an override of the same item from the command line?
-	## if so, replace if the override value instead, else check
-	## for a parameter in the Verilog
-	if( $PARAMETERS{$ITEMS[$i]} ) {
-	    ## Use override value
-	    $ITEMS[$i] = $PARAMETERS{$ITEMS[$i]};
+        ## Is there an override of item from the command line?
+        ## if so, replace with the override value instead
+        if( $PARAMETERS{$ITEMS[$i]} ) {
+            ## Use override value
+            $ITEMS[$i] = $PARAMETERS{$ITEMS[$i]};
+        }
+	elsif( $ITEMS[$i] eq "\$clog2" ) {
+	    ## Else, check if the item is a special Verilog function call:
+	    ## Replace verilog log-base-2 function call with local version
+	    $ITEMS[$i] = "&Log2";
 	}
-	else {
-	    ## Is there a net matching the text 'name' of the item?
-	    my $net = $module->find_net($ITEMS[$i]);
-	    ## If so, replace the item with the value of the net (parameter)
-	    $ITEMS[$i] = $net->value if( $net );
-	}
+        else {
+            ## Else, check if there there is a net matching the text 'name' of the item?
+            my $net = $module->find_net($ITEMS[$i]);
+            ## If so, replace the item with the value of the net (parameter)
+            $ITEMS[$i] = $net->value if( $net );
+        }
+	## Else, the item is either a number, mathematical operator, or something
+	## that is not supported.  Leave it unchanged.
     }
-    ## Then evaluate the resultant string as a mathematical function
+    ## Then evaluate the resultant string as a mathematical function.  This will return
+    ## a NULL value if the evaluation fails (due to unsupported stuff in expression):
+    ## Because this is a PERL EVAL, the &Log2 function call that was placed in the expression
+    ## will calculate using the Log2 subroutine located in this program.
     my $result = eval( join( "", @ITEMS ) );
     die "error: I/O declaration using undefined parameter.\n" unless( $result ne "" );
 
@@ -211,7 +261,7 @@ sub Print_Module {
 ## Print out override parameters specified on the command line
 sub Print_Parameters {
     foreach my $override (sort keys %PARAMETERS) {
-	print RUBY "    parameter[\"${override}\"] = " . $PARAMETERS{$override} . "\n";
+        print RUBY "    parameter[\"${override}\"] = " . $PARAMETERS{$override} . "\n";
     }
 
     return;
@@ -226,10 +276,16 @@ sub Print_Port {
     my $vector_lhs = shift @_;
     my $vector_rhs = shift @_;
 
+    ## Convert the port direction into a proper string
+    $port_dir = "input" if( $port_dir eq "in" );
+    $port_dir = "output" if( $port_dir eq "out" );
+    ## if 'inout', already in correct format
+
+    ## And print out the lhs/rhs of vectors if the port is a vector
     if( $vector ) {
-	print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}put\", lhs: ${vector_lhs}, rhs: ${vector_rhs}\n";
+        print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\", lhs: ${vector_lhs}, rhs: ${vector_rhs}\n";
     } else {
-	print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}put\"\n";
+        print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\"\n";
     }
 
     return;
@@ -244,3 +300,23 @@ sub Print_Trailer {
 
     return;
 }
+
+## --------------------------------------------------
+## Log2 function used for signal vector resolution.  In order to
+## match verilog, round up the answer
+sub Log2 {
+    my $operand = shift @_;
+    my $result = &RoundUp( log($operand)/log(2) );
+
+    return( $result );
+}
+
+## --------------------------------------------------
+## Helper function to round up a value
+sub RoundUp {
+    my $n = shift @_;
+    my $n_roundedup = ($n==int($n)) ? $n : int($n+1);
+
+    return( $n_roundedup );
+}
+
