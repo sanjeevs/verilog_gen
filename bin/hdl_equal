@@ -20,14 +20,20 @@ def create_hdl_instance(ns, filename)
   eval """
   module #{ns}
     include VerilogGen
+    # Hook to detect a subclass
+    class HdlModule
+      @@instances = []
+      def self.inherited(new_subclass)
+        @@instances << new_subclass.new('hello')
+      end
+      def self.get
+        @@instances
+      end
+    end
     #{content}
   end
   """
-  ns.constants.select do |c| 
-    return ns.const_get(c).new("hello") if c == :HdlModule
-  end
-  raise "ArgumentError", "Could not find the class HdlModule"
-  return nil
+  return ns::HdlModule.get
 end
 
 module Lhs; end
@@ -35,6 +41,9 @@ module Rhs; end
 
 lhs = create_hdl_instance(Lhs, ARGV[0])
 rhs = create_hdl_instance(Rhs, ARGV[1])
+
+pp lhs
+pp rhs
 
 if lhs == rhs 
   puts "Hurrah they are equal"

@@ -10,11 +10,11 @@ module VerilogGen
     end
 
     it "should be input by default" do
-      expect(port.direction).to eql :input
+      expect(port.direction).to eql "input"
     end
 
     it "should be single bit by default" do
-      expect(port.width).to eql 1 
+      expect(port.scalar?).to eql true 
     end
 
     describe "equal" do
@@ -45,12 +45,12 @@ module VerilogGen
     end
 
     describe "vector port" do
-      let(:port) { Port.new("port", width: 10, direction: :output) }
+      let(:port) { Port.new("port", lhs: 9, rhs: 0,  direction: "output") }
       it "should have the correct width" do
         expect(port.width).to equal(10)
       end
       it "should have the correct direction" do
-        expect(port.direction).to equal(:output)
+        expect(port.direction).to eq("output")
       end
     end
 
