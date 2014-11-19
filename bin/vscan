@@ -25,7 +25,7 @@ use lib "$RealBin";
 use Verilog::Netlist;
 use strict;
 
-my $VERSION = "0.3.0";
+my $VERSION = "0.3.1";
 my %PARAMETERS;
 my $class_override = "";
 my $verilog_file = "";
@@ -86,7 +86,7 @@ sub Convert_Verilog_To_Ruby {
     ## And print any startup text needed
     &Print_Header($VERSION);
 
-    ## Get a pointer to the module's structure
+    ## Process all module declarations in the Verilog file
     foreach my $module ($netlist->modules_sorted) {
 
         ## Add the module name and class
@@ -98,13 +98,29 @@ sub Convert_Verilog_To_Ruby {
     
         ## And information for each port
         foreach my $port ($module->ports_sorted) {
-            (my $type, my $packed, my $unpacked) = &Parse_Port($port->data_type, $port->array, $module);
-            &Print_Port($port->name, $port->direction, $type, $packed, $unpacked);
+	    ## if an 'interface', the port->direction is "interface"
+	    (my $type, my $packed, my $unpacked) = &Parse_Port($port->data_type, $port->array, $module);
+	    &Print_Port($port->name, $port->direction, $type, $packed, $unpacked);
         }
         
         ## Finish with any text required to end file creation
         &Print_Trailer();
+    }
 
+    ## Process all interface declarations in the Verilog file
+    foreach my $interface ($netlist->interfaces_sorted) {
+
+	## Start printing the class information for the interface
+	&Print_Interface($in_file, $interface->name, $interface->name);
+
+        ## And 'port' information for each interface
+        foreach my $port ($interface->ports_sorted) {
+	    (my $type, my $packed, my $unpacked) = &Parse_Port($port->data_type, $port->array, $interface);
+	    &Print_Port($port->name, $port->direction, $type, $packed, $unpacked);
+        }
+        
+        ## Finish with any text required to end file creation
+        &Print_Trailer();
     }
         
     return;
@@ -246,6 +262,26 @@ sub Print_Module {
 }
 
 ## --------------------------------------------------
+## Ruby file module name processing
+sub Print_Interface {
+    my $src_file = shift @_;
+    my $class_name = shift @_;
+    my $interface_name = shift @_;
+    print RUBY "\n";
+    print RUBY "# --------------------------------------------------\n";
+    ## Make sure classs name is all lower case with first letter capitalized
+    $class_name =~ tr/A-Z/a-z/;
+    $class_name = ucfirst( $class_name );
+    print RUBY "class $class_name < HdlInterface\n";
+    print RUBY "  def initialize\n";
+    print RUBY "    proxy = true\n";
+    print RUBY "    file_name = \"${src_file}\"\n";
+    print RUBY "    interface_name = \"${interface_name}\"\n";
+
+    return;
+}
+
+## --------------------------------------------------
 ## Print out override parameters specified on the command line
 sub Print_Parameters {
     foreach my $override (sort keys %PARAMETERS) {
@@ -269,15 +305,20 @@ sub Print_Port {
     $port_dir = "output" if( $port_dir eq "out" );
     ## if 'inout', already in correct format
 
-    ## Print out the line of interest
-    print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\", type: \"${port_type}\"";
-    
-    ## Print out the packed side of the array and unpacked side of the array if they exist
-    print RUBY ", packed: \"${packed_string}\"" if( $packed_string );
-    print RUBY ", unpacked: \"${unpacked_string}\"" if( $unpacked_string );
-
-    ## Finish with carriage return
-    print RUBY "\n";
+    if( $port_dir eq "interface" ) {
+	print RUBY "    add_interface \"${port_name}\", type: \"${port_type}\"\n";
+    }
+    else {
+	## Print out the line of interest
+	print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\", type: \"${port_type}\"";
+	
+	## Print out the packed side of the array and unpacked side of the array if they exist
+	print RUBY ", packed: \"${packed_string}\"" if( $packed_string );
+	print RUBY ", unpacked: \"${unpacked_string}\"" if( $unpacked_string );
+	
+	## Finish with carriage return
+	print RUBY "\n";
+    }
 
     return;
 }
