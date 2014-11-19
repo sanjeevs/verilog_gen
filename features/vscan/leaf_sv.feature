@@ -16,9 +16,8 @@ Feature: convert a system verilog format to ruby.
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      add_port "in", direction: "input", packed "[3:0]"
-      add_port "out", direction: "output", packed "[2:0]"
-      add_port "out_l", direction: "output"
+      add_port "in", direction: "input", packed "[3:0]", type: "logic"
+      add_port "out", direction: "output", packed "[2:0]", type: "reg"
     end
   end
   """

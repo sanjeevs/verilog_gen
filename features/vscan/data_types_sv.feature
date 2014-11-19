@@ -7,9 +7,9 @@ Feature: convert a system verilog format to ruby.
   """
   module leaf (
     output  logic         o_logic_bit,
-    output  logic [3:0] o_logic_vector,
+    output  logic [3:0]   o_logic_vector,
     output  reg           o_reg_bit,
-    output  reg  [31:0]  o_reg_vector,
+    output  reg  [31:0]   o_reg_vector,
     output  bit           o_bit_bit,
     output  bit [7:0]     o_bit_vector,
     output  byte          o_byte,
@@ -31,21 +31,21 @@ Feature: convert a system verilog format to ruby.
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      add_port "o_logic_bit", direction: "output"
-      add_oprt "o_logic_vector", direction: "output", packed: "[3:0]"
-      add_port "o_reg_bit", direction: "output"
-      add_oprt "o_reg_vector", direction: "output", packed: "[31:0]"
-      add_port "o_bit_bit", direction: "output"
-      add_oprt "o_bit_vector", direction: "output", packed: "[7:0]"
-      add_port "o_byte", direction: "output", packed: "[7:0]"
-      add_port "o_shortint", direction: "output", packed: "[15:0]"
-      add_port "o_int", direction: "output", packed: "[15:0]"
-      add_port "o_integer", direction: "output", packed: "[31:0]"
-      add_port "o_longint", direction: "output", packed: "[63:0]"
-      add_port "o_shortreal", direction: "output", packed: "[31:0]"
-      add_port "o_real", direction: "output", packed: "[63:0]"
-      add_port "o_time", direction: "output", packed: "[63:0]"
-      add_port "o_realtim", direction: "output", packed: "[63:0]"
+      add_port "o_logic_bit", direction: "output", type: "bit"
+      add_oprt "o_logic_vector", direction: "output", packed: "[3:0]", type: "logic"
+      add_port "o_reg_bit", direction: "output", type: "reg"
+      add_oprt "o_reg_vector", direction: "output", packed: "[31:0]", type: "reg"
+      add_port "o_bit_bit", direction: "output", type: "bit"
+      add_oprt "o_bit_vector", direction: "output", packed: "[7:0]", type: "bit"
+      add_port "o_byte", direction: "output", type: "byte"
+      add_port "o_shortint", direction: "output", type: "shortint"
+      add_port "o_int", direction: "output", type: "int"
+      add_port "o_integer", direction: "output", type: "integer"
+      add_port "o_longint", direction: "output", type: "longint"
+      add_port "o_shortreal", direction: "output", type: "shortreal"
+      add_port "o_real", direction: "output", type: "real"
+      add_port "o_time", direction: "output", type: "time"
+      add_port "o_realtime", direction: "output", type: "realtime"
     end
   end
   """

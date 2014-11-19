@@ -29,11 +29,11 @@ Feature: convert a verilog 1364-2001 format to ruby.
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      add_port "in1", direction: "input", packed: "[4:3]"
-      add_port "in2", direction: "input", packed: "[15:1]"
-      add_port "out1", direction: "output", packed: "[7:0]"
-      add_port "out2", direction: "output", packed: "[10:7]"
-      add_port "out3", direction: "output", packed: "[7:4]"
+      add_port "in1", direction: "input", packed: "[4:3]", type: "wire"
+      add_port "in2", direction: "input", packed: "[15:1]", type: "wire"
+      add_port "out1", direction: "output", packed: "[7:0]", type: "wire"
+      add_port "out2", direction: "output", packed: "[10:7]", type: "wire"
+      add_port "out3", direction: "output", packed: "[7:4]", type: "wire"
     end
   end
   """

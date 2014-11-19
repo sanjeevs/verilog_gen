@@ -25,7 +25,7 @@ use lib "$RealBin";
 use Verilog::Netlist;
 use strict;
 
-my $VERSION = "0.2.0";
+my $VERSION = "0.3.0";
 my %PARAMETERS;
 my $class_override = "";
 my $verilog_file = "";
@@ -98,8 +98,8 @@ sub Convert_Verilog_To_Ruby {
     
         ## And information for each port
         foreach my $port ($module->ports_sorted) {
-            (my $packed, my $unpacked) = &Parse_Vector($port->data_type, $port->array, $module);
-            &Print_Port($port->name, $port->direction, $packed, $unpacked);
+            (my $type, my $packed, my $unpacked) = &Parse_Port($port->data_type, $port->array, $module);
+            &Print_Port($port->name, $port->direction, $type, $packed, $unpacked);
         }
         
         ## Finish with any text required to end file creation
@@ -111,10 +111,10 @@ sub Convert_Verilog_To_Ruby {
 }
 
 ## --------------------------------------------------
-## A function to determine if a string is a Verilog vector
-## declaration (e.g., [3:2]) and return the LSB of the
-## vector and the width of the vector.
-sub Parse_Vector {
+## A function to parse a port to determine the type of the
+## port, the packed portion of a vector declaration and the
+## unpacked portion of an array declaration.
+sub Parse_Port {
     my $packed_string = shift @_;
     my $unpacked_string = shift @_;
     my $module = shift @_;
@@ -124,41 +124,20 @@ sub Parse_Vector {
 
     ## Remove Verilog comments if any
     $packed_string =~ s/\/\/.*$//;
-    $unpacked_string =~ s/\/\/.*$//;
 
     ## First determine the type
-    if   ( $packed_string =~ /^reg/       ) { $type = "reg";       }
-    elsif( $packed_string =~ /^logic/     ) { $type = "logic";     }
-    elsif( $packed_string =~ /^bit/       ) { $type = "bit";       }
-    elsif( $packed_string =~ /^byte/      ) { $type = "byte";      }
-    elsif( $packed_string =~ /^shortint/  ) { $type = "shortint";  }
-    elsif( $packed_string =~ /^int/       ) { $type = "int";       }
-    elsif( $packed_string =~ /^longint/   ) { $type = "longint";   }
-    elsif( $packed_string =~ /^time/      ) { $type = "time";      }
-    elsif( $packed_string =~ /^realtime/  ) { $type = "realtime";  }
-    elsif( $packed_string =~ /^shortreal/ ) { $type = "shortreal"; }
-    elsif( $packed_string =~ /^real/      ) { $type = "real";      }
-    else                             { $type = "wire";      }
+    if( $packed_string =~ /^(.*?)\[/ ) {
+	$type = $1;
+	$type =~ s/\s+//g;
+    }
+    else {
+	## Remove white spaces
+	$packed_string =~ s/\s+//g;
+	$type = $packed_string;
+    }
+    $type = "wire" if( $type eq "" ); ## default to wire if not specified
 
-    ## And then determine width of signal based on type, etc.  This is the
-    ## packed (vector) portion of the signal declaration.
-    if( $type eq "byte" ) {
-        ## byte
-        $packed = "[7:0]";
-    }
-    elsif( $type eq "shortint" ) {
-        ## integer
-        $packed = "[15:0]";
-    }
-    elsif( ($type eq "int") || ($type eq "shortreal") ) {
-        ## integer, shortreal
-        $packed = "[31:0]";
-    }
-    elsif( ($type =~ /^real/) || ($type eq "longint") || ($type eq "time") ) {
-        ## real, realtime, longint, time
-        $packed = "[63:0]";
-    }
-    elsif( $packed_string =~ /:/ ) {
+    if( $packed_string =~ /:/ ) {
         ## reg, wire, logic, bit:
 	## vector containing parameters, mathematical functions, etc.
 	while( $packed_string =~ /\[/ ) {
@@ -176,6 +155,9 @@ sub Parse_Vector {
     }
 
     ## And then handle the unpacked (array) portion of the signal
+    ## Remove Verilog comments if any
+    $unpacked_string =~ s/\/\/.*$//;
+
     while( $unpacked_string =~ /\[/ ) {
 	$unpacked_string =~ s/^(.*?)\[//; ## strip everything up to and including [
 	(my $substr, $unpacked_string) = split( /\]/, $unpacked_string, 2 ); ## Get all to the left of first ]
@@ -187,7 +169,7 @@ sub Parse_Vector {
 	$unpacked .= "[$lhs:$rhs]";
     }
 
-    return( $packed, $unpacked );
+    return( $type, $packed, $unpacked );
 }
 
 ## --------------------------------------------------
@@ -278,6 +260,7 @@ sub Print_Parameters {
 sub Print_Port {
     my $port_name = shift @_;
     my $port_dir = shift @_;
+    my $port_type = shift @_;
     my $packed_string = shift @_;
     my $unpacked_string = shift @_;
 
@@ -287,7 +270,7 @@ sub Print_Port {
     ## if 'inout', already in correct format
 
     ## Print out the line of interest
-    print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\"";
+    print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\", type: \"${port_type}\"";
     
     ## Print out the packed side of the array and unpacked side of the array if they exist
     print RUBY ", packed: \"${packed_string}\"" if( $packed_string );

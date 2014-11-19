@@ -38,8 +38,8 @@ Feature: Check that module name and file name match
       proxy = true
       file_name = "leaf.v"
       module_name = "mod_a"
-      add_port "in_a", direction: "input"
-      add_port "out_a", direction: "output"
+      add_port "in_a", direction: "input", type: "wire"
+      add_port "out_a", direction: "output", type: "wire"
     end
   end
   class Mod_b < HdlModule
@@ -47,8 +47,8 @@ Feature: Check that module name and file name match
       proxy = true
       file_name = "leaf.v"
       module_name = "mod_b"
-      add_port "in_b", direction: "input"
-      add_port "out_b", direction: "output"
+      add_port "in_b", direction: "input", type: "wire"
+      add_port "out_b", direction: "output", type: "wire"
     end
   end
   class Mod_c < HdlModule
@@ -56,8 +56,8 @@ Feature: Check that module name and file name match
       proxy = true
       file_name = "leaf.v"
       module_name = "mod_c"
-      add_port "in_c", direction: "input"
-      add_port "out_c", direction: "output"
+      add_port "in_c", direction: "input", type: "wire"
+      add_port "out_c", direction: "output", type: "wire"
     end
   end
   """

@@ -15,8 +15,8 @@ Feature: Check that class name can be overridden
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      add_port "in", direction: "input"
-      add_port "out", direction: "output"
+      add_port "in", direction: "input", type: "wire"
+      add_port "out", direction: "output", type: "wire"
     end
   end
   """

@@ -15,8 +15,8 @@ Feature: Check that module name and file name match
       proxy = true
       file_name = "leaf.v"
       module_name = "trunk"
-      add_port "in", direction: "input"
-      add_port "out", direction: "output"
+      add_port "in", direction: "input", type: "wire"
+      add_port "out", direction: "output", type: "wire"
     end
   end
   """

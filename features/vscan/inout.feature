@@ -15,7 +15,7 @@ Feature: convert a verilog 1364-2001 format to ruby.
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      add_port "tri_state_sig", direction: "inout"
+      add_port "tri_state_sig", direction: "inout", type: "wire"
     end
   end
   """

@@ -22,13 +22,13 @@ Feature: convert a verilog 1364-2001 format to ruby.
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      add_port "o_wire_bit", direction: "output"
-      add_port "o_wire_vector", direction: "output", packed: "[10:-4]"
-      add_port "o_reg_bit", direction: "output"
-      add_port "o_reg_vector", direction: "output", packed: "[-3:-4]"
-      add_port "o_integer", direction: "output", packed: "[31:0]"
-      add_port "o_real", direction: "output", packed: "[63:0]"
-      add_port "o_realtime", direction: "output", packed: "[63:0]"
+      add_port "o_wire_bit", direction: "output", type: "wire"
+      add_port "o_wire_vector", direction: "output", packed: "[10:-4]", type: "wire"
+      add_port "o_reg_bit", direction: "output", type: "reg"
+      add_port "o_reg_vector", direction: "output", packed: "[-3:-4]", type: "reg"
+      add_port "o_integer", direction: "output", type: "integer"
+      add_port "o_real", direction: "output", type: "real"
+      add_port "o_realtime", direction: "output", type: "realtime"
     end
   end
   """
