@@ -25,7 +25,7 @@ use lib "$RealBin";
 use Verilog::Netlist;
 use strict;
 
-my $VERSION = "0.1.0";
+my $VERSION = "0.2.0";
 my %PARAMETERS;
 my $class_override = "";
 my $verilog_file = "";
@@ -98,8 +98,8 @@ sub Convert_Verilog_To_Ruby {
     
         ## And information for each port
         foreach my $port ($module->ports_sorted) {
-            (my $vector, my $lhs, my $rhs) = &Parse_Vector($port->data_type, $module);
-            &Print_Port($port->name, $port->direction, $vector, $lhs, $rhs);
+            (my $packed, my $unpacked) = &Parse_Vector($port->data_type, $port->array, $module);
+            &Print_Port($port->name, $port->direction, $packed, $unpacked);
         }
         
         ## Finish with any text required to end file creation
@@ -115,73 +115,79 @@ sub Convert_Verilog_To_Ruby {
 ## declaration (e.g., [3:2]) and return the LSB of the
 ## vector and the width of the vector.
 sub Parse_Vector {
-    my $string = shift @_;
+    my $packed_string = shift @_;
+    my $unpacked_string = shift @_;
     my $module = shift @_;
-    my $vector;
-    my $lhs;
-    my $rhs;
     my $type;
+    my $packed = "";
+    my $unpacked = "";
 
-    $string =~ s/\/\/.*$//; ## Remove Verilog comments if any
+    ## Remove Verilog comments if any
+    $packed_string =~ s/\/\/.*$//;
+    $unpacked_string =~ s/\/\/.*$//;
 
     ## First determine the type
-    if   ( $string =~ /^reg/       ) { $type = "reg";       }
-    elsif( $string =~ /^logic/     ) { $type = "logic";     }
-    elsif( $string =~ /^bit/       ) { $type = "bit";       }
-    elsif( $string =~ /^byte/      ) { $type = "byte";      }
-    elsif( $string =~ /^shortint/  ) { $type = "shortint";  }
-    elsif( $string =~ /^int/       ) { $type = "int";       }
-    elsif( $string =~ /^longint/   ) { $type = "longint";   }
-    elsif( $string =~ /^time/      ) { $type = "time";      }
-    elsif( $string =~ /^realtime/  ) { $type = "realtime";  }
-    elsif( $string =~ /^shortreal/ ) { $type = "shortreal"; }
-    elsif( $string =~ /^real/      ) { $type = "real";      }
+    if   ( $packed_string =~ /^reg/       ) { $type = "reg";       }
+    elsif( $packed_string =~ /^logic/     ) { $type = "logic";     }
+    elsif( $packed_string =~ /^bit/       ) { $type = "bit";       }
+    elsif( $packed_string =~ /^byte/      ) { $type = "byte";      }
+    elsif( $packed_string =~ /^shortint/  ) { $type = "shortint";  }
+    elsif( $packed_string =~ /^int/       ) { $type = "int";       }
+    elsif( $packed_string =~ /^longint/   ) { $type = "longint";   }
+    elsif( $packed_string =~ /^time/      ) { $type = "time";      }
+    elsif( $packed_string =~ /^realtime/  ) { $type = "realtime";  }
+    elsif( $packed_string =~ /^shortreal/ ) { $type = "shortreal"; }
+    elsif( $packed_string =~ /^real/      ) { $type = "real";      }
     else                             { $type = "wire";      }
 
-    ## And then determine width of signal based on type, etc.
+    ## And then determine width of signal based on type, etc.  This is the
+    ## packed (vector) portion of the signal declaration.
     if( $type eq "byte" ) {
         ## byte
-        $vector = 1;
-        $lhs = 7;
-        $rhs = 0;
+        $packed = "[7:0]";
     }
     elsif( $type eq "shortint" ) {
         ## integer
-        $vector = 1;
-        $lhs = 15;
-        $rhs = 0;
+        $packed = "[15:0]";
     }
     elsif( ($type eq "int") || ($type eq "shortreal") ) {
         ## integer, shortreal
-        $vector = 1;
-        $lhs = 31;
-        $rhs = 0;
+        $packed = "[31:0]";
     }
     elsif( ($type =~ /^real/) || ($type eq "longint") || ($type eq "time") ) {
         ## real, realtime, longint, time
-        $vector = 1;
-        $lhs = 63;
-        $rhs = 0;
+        $packed = "[63:0]";
     }
-    elsif( $string =~ /:/ ) {
+    elsif( $packed_string =~ /:/ ) {
         ## reg, wire, logic, bit:
 	## vector containing parameters, mathematical functions, etc.
-        $vector = 1;
-        $string =~ s/^.*\[//; ## strip everything up to and including [
-        $string =~ s/\].*$//; ## strip everything after and including ]
-        ## Break into the LHS and RHS (of the colon)
-        ($lhs, $rhs) = split( /:/, $string, 2 );
-        ## Convert each side into a numerical value
-        $lhs = &Resolve_Expression( $lhs, $module );
-        $rhs = &Resolve_Expression( $rhs, $module );
+	while( $packed_string =~ /\[/ ) {
+	    $packed_string =~ s/^(.*?)\[//; ## strip everything up to and including [
+	    (my $substr, $packed_string) = split( /\]/, $packed_string, 2 ); ## Get all to the left of first ]
+	    ## Break into the LHS and RHS (of the colon)
+	    (my $lhs, my $rhs) = split( /:/, $substr, 2 );
+	    ## Convert each side into a numerical value
+	    $lhs = &Resolve_Expression( $lhs, $module );
+	    $rhs = &Resolve_Expression( $rhs, $module );
+	    $packed .= "[$lhs:$rhs]";
+	}
     } else {
         ## reg, wire, logic, bit: single-bit
-        $vector = 0;
-        $lhs = 0;
-        $rhs = 0;
     }
 
-    return( $vector, $lhs, $rhs );
+    ## And then handle the unpacked (array) portion of the signal
+    while( $unpacked_string =~ /\[/ ) {
+	$unpacked_string =~ s/^(.*?)\[//; ## strip everything up to and including [
+	(my $substr, $unpacked_string) = split( /\]/, $unpacked_string, 2 ); ## Get all to the left of first ]
+	## Break into the LHS and RHS (of the colon)
+	(my $lhs, my $rhs) = split( /:/, $substr, 2 );
+	## Convert each side into a numerical value
+	$lhs = &Resolve_Expression( $lhs, $module );
+	$rhs = &Resolve_Expression( $rhs, $module );
+	$unpacked .= "[$lhs:$rhs]";
+    }
+
+    return( $packed, $unpacked );
 }
 
 ## --------------------------------------------------
@@ -272,21 +278,23 @@ sub Print_Parameters {
 sub Print_Port {
     my $port_name = shift @_;
     my $port_dir = shift @_;
-    my $vector = shift @_;
-    my $vector_lhs = shift @_;
-    my $vector_rhs = shift @_;
+    my $packed_string = shift @_;
+    my $unpacked_string = shift @_;
 
     ## Convert the port direction into a proper string
     $port_dir = "input" if( $port_dir eq "in" );
     $port_dir = "output" if( $port_dir eq "out" );
     ## if 'inout', already in correct format
 
-    ## And print out the lhs/rhs of vectors if the port is a vector
-    if( $vector ) {
-        print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\", lhs: ${vector_lhs}, rhs: ${vector_rhs}\n";
-    } else {
-        print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\"\n";
-    }
+    ## Print out the line of interest
+    print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\"";
+    
+    ## Print out the packed side of the array and unpacked side of the array if they exist
+    print RUBY ", packed: \"${packed_string}\"" if( $packed_string );
+    print RUBY ", unpacked: \"${unpacked_string}\"" if( $unpacked_string );
+
+    ## Finish with carriage return
+    print RUBY "\n";
 
     return;
 }

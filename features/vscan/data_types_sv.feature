@@ -32,20 +32,20 @@ Feature: convert a system verilog format to ruby.
       file_name = "leaf.v"
       module_name = "leaf"
       add_port "o_logic_bit", direction: "output"
-      add_oprt "o_logic_vector", direction: "output", lhs: 3, rhs: 0
+      add_oprt "o_logic_vector", direction: "output", packed: "[3:0]"
       add_port "o_reg_bit", direction: "output"
-      add_oprt "o_reg_vector", direction: "output", lhs: 31, rhs: 0
+      add_oprt "o_reg_vector", direction: "output", packed: "[31:0]"
       add_port "o_bit_bit", direction: "output"
-      add_oprt "o_bit_vector", direction: "output", lhs: 7, rhs: 0
-      add_port "o_byte", direction: "output", lhs: 7, rhs: 0
-      add_port "o_shortint", direction: "output", lhs: 15, rhs: 0
-      add_port "o_int", direction: "output", lhs: 31, rhs: 0
-      add_port "o_integer", direction: "output", lhs: 31, rhs: 0
-      add_port "o_longint", direction: "output", lhs: 63, rhs: 0
-      add_port "o_shortreal", direction: "output", lhs: 31, rhs: 0
-      add_port "o_real", direction: "output", lhs: 63, rhs: 0
-      add_port "o_time", direction: "output", lhs: 63, rhs: 0
-      add_port "o_realtim", direction: "output", lhs: 63, rhs: 0
+      add_oprt "o_bit_vector", direction: "output", packed: "[7:0]"
+      add_port "o_byte", direction: "output", packed: "[7:0]"
+      add_port "o_shortint", direction: "output", packed: "[15:0]"
+      add_port "o_int", direction: "output", packed: "[15:0]"
+      add_port "o_integer", direction: "output", packed: "[31:0]"
+      add_port "o_longint", direction: "output", packed: "[63:0]"
+      add_port "o_shortreal", direction: "output", packed: "[31:0]"
+      add_port "o_real", direction: "output", packed: "[63:0]"
+      add_port "o_time", direction: "output", packed: "[63:0]"
+      add_port "o_realtim", direction: "output", packed: "[63:0]"
     end
   end
   """

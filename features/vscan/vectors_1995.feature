@@ -22,10 +22,10 @@ Feature: convert a verilog 1364 format to ruby.
       proxy = true
       file_name = "leaf.v"
       module_name = "leaf"
-      add_port "in1", direction: "input", lhs: 5, rhs: 3
-      add_port "in2", direction: "input", lhs: 7, rhs: 0
-      add_port "out1", direction: "output", lhs: 31, rhs: 0
-      add_port "out2", direction: "output", lhs: 8, rhs: 3
+      add_port "in1", direction: "input", packed: "[5:3]"
+      add_port "in2", direction: "input", packed: "[7:0]"
+      add_port "out1", direction: "output", packed: "[31:0]"
+      add_port "out2", direction: "output", packed: "[8:3]"
     end
   end
   """

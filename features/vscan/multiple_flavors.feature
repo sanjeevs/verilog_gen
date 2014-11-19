@@ -32,10 +32,10 @@ Feature: convert a verilog 1364-2001 format to ruby.
       parameter["OUT2_MSB"] = 10
       parameter["OUT2_LSB"] = 5
       parameter["WIDTH"] = 256
-      add_port "in1", direction: "input", lhs: 5, rhs: 3
-      add_port "in2", direction: "input", lhs: 7, rhs: 0
-      add_port "out1", direction: "output", lhs: 31, rhs: 0
-      add_port "out2", direction: "output", lhs: 10, rhs: 5
+      add_port "in1", direction: "input", packed: "[5:3]"
+      add_port "in2", direction: "input", packed: "[7:0]"
+      add_port "out1", direction: "output", packed: "[31:0]"
+      add_port "out2", direction: "output", packed: "[10:5]"
     end
   end
   """
@@ -49,10 +49,10 @@ Feature: convert a verilog 1364-2001 format to ruby.
       parameter["OUT1_MSB"] = 4
       parameter["OUT1_LSB"] = 2
       parameter["WIDTH"] = 32
-      add_port "in1", direction: "input", lhs: 5, rhs: 3
-      add_port "in2", direction: "input", lhs: 7, rhs: 0
-      add_port "out1", direction: "output", lhs: 4, rhs: 2
-      add_port "out2", direction: "output", lhs: 8, rhs: 3
+      add_port "in1", direction: "input", packed: "[5:3]"
+      add_port "in2", direction: "input", packed: "[7:0]"
+      add_port "out1", direction: "output", packed: "[4:2]"
+      add_port "out2", direction: "output", packed: "[8:3]"
     end
   end
   """
