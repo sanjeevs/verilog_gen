@@ -25,7 +25,7 @@ use lib "$RealBin";
 use Verilog::Netlist;
 use strict;
 
-my $VERSION = "0.3.1";
+my $VERSION = "0.3.2";
 my %PARAMETERS;
 my $class_override = "";
 my $verilog_file = "";
@@ -94,7 +94,7 @@ sub Convert_Verilog_To_Ruby {
         &Print_Module($in_file, $class, $module->name);
 
         ## Add override parameters
-        &Print_Parameters();
+        &Print_Parameters($module);
     
         ## And information for each port
         foreach my $port ($module->ports_sorted) {
@@ -111,8 +111,12 @@ sub Convert_Verilog_To_Ruby {
     foreach my $interface ($netlist->interfaces_sorted) {
 
 	## Start printing the class information for the interface
-	&Print_Interface($in_file, $interface->name, $interface->name);
+        $class = $interface->name unless( $class );
+	&Print_Interface($in_file, $class, $interface->name);
 
+        ## Add override parameters
+        &Print_Parameters($interface);
+    
         ## And 'port' information for each interface
         foreach my $port ($interface->ports_sorted) {
 	    (my $type, my $packed, my $unpacked) = &Parse_Port($port->data_type, $port->array, $interface);
@@ -284,8 +288,13 @@ sub Print_Interface {
 ## --------------------------------------------------
 ## Print out override parameters specified on the command line
 sub Print_Parameters {
+    my $object = shift @_;
+
     foreach my $override (sort keys %PARAMETERS) {
-        print RUBY "    parameter[\"${override}\"] = " . $PARAMETERS{$override} . "\n";
+	my $net = $object->find_net($override);
+	if( $net ) {
+	    print RUBY "    parameter[\"${override}\"] = " . $PARAMETERS{$override} . "\n" if( $net->decl_type eq "parameter" );
+	}
     }
 
     return;

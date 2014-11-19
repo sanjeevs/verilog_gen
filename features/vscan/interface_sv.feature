@@ -19,7 +19,7 @@ Feature: convert a system verilog format to ruby.
   class Leaf < HdlModule
     def initialize
       proxy = true
-      file_name = "leaf.v"
+      file_name = "leaf.sv"
       module_name = "leaf"
       add_port "clk", direction: "input", type: "wire"
       add_interface "port_interface", type: "intf"
@@ -28,7 +28,7 @@ Feature: convert a system verilog format to ruby.
   class Intf < HdlInterface
     def initialize
       proxy = true
-      file_name = "leaf.v"
+      file_name = "leaf.sv"
       interface_name = "intf"
     end
   end

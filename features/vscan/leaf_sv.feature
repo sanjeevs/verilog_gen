@@ -14,7 +14,7 @@ Feature: convert a system verilog format to ruby.
   class Leaf < HdlModule
     def initialize
       proxy = true
-      file_name = "leaf.v"
+      file_name = "leaf.sv"
       module_name = "leaf"
       add_port "in", direction: "input", packed "[3:0]", type: "logic"
       add_port "out", direction: "output", packed "[2:0]", type: "reg"

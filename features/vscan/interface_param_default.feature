@@ -1,23 +1,18 @@
 Feature: convert a system verilog format to ruby.
 
-  Scenario: System Verilog interfaces (nested)
+  Scenario: System Verilog interfaces (with parameters)
   Given a file named "leaf.sv" with: 
   """
-  interface sub_intf (
-    input wire pin
+  interface intf #(PARAM1=3) (
+    input  logic [PARAM1:0]   in1, in2,
+    output       [PARAM1-1:0] out
   );
-  endinterface: sub_intf;
-
-  interface intf (
-    input  logic [3:0] in1, in2,
-    output       [2:0] out,
-    sub_intf           s1, s2
-  );
+  wire pin;
   endinterface: intf
 
   module leaf (
     input wire clk,
-          intf port_interface
+          intf port_interface,
   );
   endmodule
   """
@@ -40,16 +35,6 @@ Feature: convert a system verilog format to ruby.
       add_port "in1", direction: "input", type: "logic", packed: "[3:0]"
       add_port "in2", direction: "output", type: "logic", packed: "[3:0]"
       add_port "out", direction: "output", type: "logic", packed: "[2:0]"
-      add_interface "s1", type: "sub_intf"
-      add_interface "s2", type: "sub_intf"
-    end
-  end
-  class Sub_intf < HdlInterface
-    def initialize
-      proxy = true
-      file_name = "leaf.sv"
-      interface_name = "sub_intf"
-      add_port "pin", direction: "input", type: "wire"
     end
   end
   """
