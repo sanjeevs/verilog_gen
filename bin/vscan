@@ -256,11 +256,10 @@ sub Print_Module {
     ## Make sure class name is all lower case with first letter capitalized
     $class_name =~ tr/A-Z/a-z/;
     $class_name = ucfirst( $class_name );
-    print RUBY "class $class_name < HdlModule\n";
-    print RUBY "  def initialize\n";
-    print RUBY "    proxy = true\n";
-    print RUBY "    file_name = \"${src_file}\"\n";
-    print RUBY "    module_name = \"${module_name}\"\n";
+    print RUBY "class $class_name < VerilogGen::HdlModule\n";
+    print RUBY "  \@proxy = true\n";
+    print RUBY "  \@file_name = \"${src_file}\"\n";
+    print RUBY "  \@module_name = \"${module_name}\"\n";
 
     return;
 }
@@ -335,7 +334,6 @@ sub Print_Port {
 ## --------------------------------------------------
 ## Ruby file trailer text
 sub Print_Trailer {
-    print RUBY "  end\n";
     print RUBY "end\n";
     print RUBY "\n";
 

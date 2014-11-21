@@ -6,7 +6,7 @@ module VerilogGen
     @module_name = "Leaf"
   end
   class Leaf2 < HdlModule; 
-    add_instance(Leaf1, "leaf1")
+    add_child_instance(Leaf1, "leaf1")
   end
 
   describe HdlModule do
@@ -70,11 +70,11 @@ module VerilogGen
     end
 
     it "should flag duplicate child instance" do
-      expect { Leaf2.add_instance(Leaf1, "leaf1") }.to raise_exception
+      expect { Leaf2.add_child_instance(Leaf1, "leaf1") }.to raise_exception
     end
 
     it "should allow different child instance" do
-      expect { Leaf2.add_instance(Leaf1, "leaf1_2") }.to \
+      expect { Leaf2.add_child_instance(Leaf1, "leaf1_2") }.to \
                       change {Leaf2.child_instances.size}.from(1).to(2)
     end
    

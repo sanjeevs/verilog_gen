@@ -37,7 +37,7 @@ module VerilogGen
     # @param [String] instance_name
     # @return [HdlModule] child instance added.
     # @note Raises exception if the child instance is not unique.
-    def self.add_instance(klass, name)
+    def self.add_child_instance(klass, name)
       if child_instances.keys.include?(name)
         raise ArgumentError, 
           "Duplicate module instance name '#{name}' detected"

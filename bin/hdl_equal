@@ -72,7 +72,8 @@ lhs.each_index do |i|
     puts "Mismatched child" unless lhs[i].child_instances == rhs[i].child_instances
     puts "Mismatched mdule_name" unless lhs[i].module_name == rhs[i].module_name
     puts "Mismatched proxy " unless lhs[i].proxy == rhs[i].proxy
-    puts "Mismatched file_name" unless lhs[i].file_name == rhs[i].file_name
+    puts "Mismatched file_name. Expect=#{lhs[i].file_name}, \
+      Got=#{rhs[i].file_name}" unless lhs[i].file_name == rhs[i].file_name
     puts "Mismatched parameters" unless lhs[i].parameters == rhs[i].parameters
     exit 1
   end

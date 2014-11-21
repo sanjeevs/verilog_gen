@@ -54,5 +54,11 @@ module VerilogGen
       end
     end
 
+    decribe "invalid attribute" do
+      it "should flag an attribute failure" do
+        expect(Port.new("invalid_attribute", invalid_attribute: "value")).to throw exception
+      end
+    end
+
   end
 end
