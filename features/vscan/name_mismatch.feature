@@ -10,14 +10,12 @@ Feature: Check that module name and file name match
   """
   And a file named "expect.rb" with:
   """
-  class Trunk < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "trunk"
-      add_port "in", direction: "input", type: "wire"
-      add_port "out", direction: "output", type: "wire"
-    end
+  class Trunk < VerilogGen::HdlModule
+   set_proxy  true
+   set_file_name  "leaf.v"
+   set_module_name  "trunk"
+   add_port "in", direction: "input", type: "wire"
+   add_port "out", direction: "output", type: "wire"
   end
   """
   When I run `vscan leaf.v`

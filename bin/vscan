@@ -294,7 +294,7 @@ sub Print_Parameters {
     foreach my $override (sort keys %PARAMETERS) {
 	my $net = $object->find_net($override);
 	if( $net ) {
-	    print RUBY "    set_parameter ${override}: " . $PARAMETERS{$override} . "\n" if( $net->decl_type eq "parameter" );
+	    print RUBY "  set_parameter ${override}: " . $PARAMETERS{$override} . "\n" if( $net->decl_type eq "parameter" );
 	}
     }
 

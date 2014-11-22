@@ -8,7 +8,8 @@ module VerilogGen
                        :lhs => 0, 
                        :rhs => 0,
                        :type => "wire",
-                       :packed => ""
+                       :packed => "",
+                       :unpacked => ""
                       }
 
     # Construct a port.

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-module VerilogGen
+module VerilogGenTest
 
-  describe Port do
-    let(:port) { Port.new("in1") }
+  describe VerilogGen::Port do
+    let(:port) { VerilogGen::Port.new("in1") }
 
     it "should have correct name" do
       expect(port.name).to eql "in1"
@@ -18,7 +18,7 @@ module VerilogGen
     end
 
     describe "equal" do
-      let(:same_port) { Port.new("in1") }
+      let(:same_port) { VerilogGen::Port.new("in1") }
       it "should be equal for single bit input" do
         expect(same_port).to be == port
       end
@@ -33,7 +33,7 @@ module VerilogGen
     end
 
     describe "not equal" do
-      let(:diff_port) { Port.new("in2") }
+      let(:diff_port) { VerilogGen::Port.new("in2") }
       it "should no be equal for different name" do
         expect(diff_port).not_to equal port
       end
@@ -45,7 +45,7 @@ module VerilogGen
     end
 
     describe "vector port" do
-      let(:port) { Port.new("port", lhs: 9, rhs: 0,  direction: "output") }
+      let(:port) { VerilogGen::Port.new("port", lhs: 9, rhs: 0,  direction: "output") }
       it "should have the correct width" do
         expect(port.width).to equal(10)
       end
@@ -56,7 +56,7 @@ module VerilogGen
 
     describe "invalid attribute" do
       it "should flag an attribute failure" do
-        expect { Port.new("invalid_attribute", 
+        expect { VerilogGen::Port.new("invalid_attribute", 
                         invalid_attribute: "value") }.to raise_exception
       end
     end

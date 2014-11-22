@@ -1,5 +1,5 @@
 Feature: convert a verilog 1364 format to ruby.
-
+  @jsd
   Scenario: Long file path
   Given a file named "subdir1/subdir2/leaf.v" with: 
   """

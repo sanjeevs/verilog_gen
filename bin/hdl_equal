@@ -75,7 +75,8 @@ lhs.each_index do |i|
     puts "Mismatched proxy " unless lhs[i].proxy == rhs[i].proxy
     puts "Mismatched file_name. Expect=#{lhs[i].file_name}, \
       Got=#{rhs[i].file_name}" unless lhs[i].file_name == rhs[i].file_name
-    puts "Mismatched parameters" unless lhs[i].parameters == rhs[i].parameters
+    puts "Mismatched parameters:#{lhs[i].parameters}:#{rhs[i].parameters}" \
+          unless lhs[i].parameters == rhs[i].parameters
     exit 1
   end
 end

@@ -95,7 +95,9 @@ module VerilogGen
     end
 
     def self.set_parameter param
-      @parameters = param 
+      param.each do |k, v|
+        parameters[k] = v
+      end
     end
 
     # Instance specific state

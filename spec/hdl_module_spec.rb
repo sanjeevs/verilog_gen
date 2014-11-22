@@ -1,23 +1,25 @@
 require 'spec_helper'
 
-module VerilogGen
-  class Leaf1 < HdlModule
+module VerilogGenTest
+  class Leaf1 < VerilogGen::HdlModule
     add_port("port1")
     set_module_name  "Leaf"
     set_file_name  "hello_leaf1"
     set_parameter hello: 10, namaste: 23
   end
-  class Leaf2 < HdlModule; 
+  class Leaf2 < VerilogGen::HdlModule; 
     add_child_instance(Leaf1, "leaf1")
     set_proxy true
     set_file_name "hello_leaf2"
+    set_parameter width: 1
+    set_parameter height: 2
   end
 
-  describe HdlModule do
+  describe VerilogGen::HdlModule do
     
     let(:leaf1) { Leaf1.new("leaf1") }
     let(:leaf1_same) { Leaf1.new("leaf1") }
-    let(:port1) { Port.new("port1") }
+    let(:port1) { VerilogGen::Port.new("port1") }
     let(:leaf2) { Leaf2.new("leaf2") }
     let(:leaf2_same) { Leaf1.new("leaf2") }
 
@@ -60,8 +62,12 @@ module VerilogGen
       expect(Leaf1.file_name).to eq("hello_leaf1")
     end
 
-    it "should have correct parameters" do
+    it "should have correct parameters for leaf1" do
       expect(Leaf1.parameters).to eq(hello: 10, namaste: 23)
+    end
+    
+    it "should have correct parameters for leaf2" do
+      expect(Leaf2.parameters).to eq(width: 1, height: 2)
     end
     describe "#equal" do
       it "should match instance name" do
@@ -77,11 +83,12 @@ module VerilogGen
     end
 
     it "should allow adding new port" do
-      expect { Leaf1.add_port("port2") }.to change {Leaf1.ports.size}.from(1).to(2) 
+      expect { Leaf1.add_port("port2") }.to \
+                            change {Leaf1.ports.size}.from(1).to(2) 
     end
    
     it "should return the newly added port" do
-      expect(Leaf1.add_port("port3")).to eq(Port.new("port3"))
+      expect(Leaf1.add_port("port3")).to eq(VerilogGen::Port.new("port3"))
     end
 
     it "should flag duplicate child instance" do

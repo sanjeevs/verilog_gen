@@ -1,5 +1,5 @@
 Feature: Check that module name and file name match
-
+  @jsd
   Scenario: Mismatched names
   Given a file named "leaf.v" with: 
   """
