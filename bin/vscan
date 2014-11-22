@@ -21,6 +21,7 @@ use FindBin qw($RealBin);
 use lib "$RealBin/blib/arch";
 use lib "$RealBin/blib/lib";
 use lib "$RealBin";
+use File::Basename;
 
 use Verilog::Netlist;
 use strict;
@@ -256,10 +257,11 @@ sub Print_Module {
     ## Make sure class name is all lower case with first letter capitalized
     $class_name =~ tr/A-Z/a-z/;
     $class_name = ucfirst( $class_name );
+    my $file_name = basename($src_file);
     print RUBY "class $class_name < VerilogGen::HdlModule\n";
-    print RUBY "  \@proxy = true\n";
-    print RUBY "  \@file_name = \"${src_file}\"\n";
-    print RUBY "  \@module_name = \"${module_name}\"\n";
+    print RUBY "  set_proxy true\n";
+    print RUBY "  set_file_name \"${file_name}\"\n";
+    print RUBY "  set_module_name \"${module_name}\"\n";
 
     return;
 }
@@ -292,7 +294,7 @@ sub Print_Parameters {
     foreach my $override (sort keys %PARAMETERS) {
 	my $net = $object->find_net($override);
 	if( $net ) {
-	    print RUBY "    parameter[\"${override}\"] = " . $PARAMETERS{$override} . "\n" if( $net->decl_type eq "parameter" );
+	    print RUBY "    set_parameter ${override}: " . $PARAMETERS{$override} . "\n" if( $net->decl_type eq "parameter" );
 	}
     }
 
@@ -314,11 +316,11 @@ sub Print_Port {
     ## if 'inout', already in correct format
 
     if( $port_dir eq "interface" ) {
-	print RUBY "    add_interface \"${port_name}\", type: \"${port_type}\"\n";
+	print RUBY "  add_interface \"${port_name}\", type: \"${port_type}\"\n";
     }
     else {
 	## Print out the line of interest
-	print RUBY "    add_port \"${port_name}\", direction: \"${port_dir}\", type: \"${port_type}\"";
+	print RUBY "  add_port \"${port_name}\", direction: \"${port_dir}\", type: \"${port_type}\"";
 	
 	## Print out the packed side of the array and unpacked side of the array if they exist
 	print RUBY ", packed: \"${packed_string}\"" if( $packed_string );

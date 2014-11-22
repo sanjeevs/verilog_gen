@@ -1,5 +1,4 @@
 Feature: Check that class name can be overridden
-
   Scenario: Class override
   Given a file named "leaf.v" with: 
   """

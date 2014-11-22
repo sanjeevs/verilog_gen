@@ -60,34 +60,45 @@ module VerilogGen
     end
 
     # Set the module name
-    def self.module_name=(name)
-      @module_name = name
+    # @note Convienence routine for setting the class instance variable.
+    #    Using assignment operator confuses ruby interpreter hence set prefix.
+    def self.set_module_name(module_name)
+      @module_name = module_name
     end
 
+    # Get the proxy.
     def self.proxy
       @proxy ||= false
     end
 
-    def self.proxy=(value)
-      @proxy = value
+    # Set the proxy.
+    def self.set_proxy(value)
+      @proxy = value 
     end
 
+
+    # Get the file name.
     def self.file_name
       @file_name ||= "" 
     end
-
-    def self.file_name=(other)
-      @file_name = other
+    
+    def self.set_file_name(file_name)
+      @file_name = file_name
     end
-
+    
+    def file_name(file_name)
+      @file_name = file_name
+    end
+    
     def self.parameters
       @parameters ||= {} 
     end
 
-
-    def self.proxy=(value)
-      @proxy = value
+    def self.set_parameter param
+      @parameters = param 
     end
+
+    # Instance specific state
     attr_reader :instance_name 
     attr_accessor :pins
     def initialize(instance_name)

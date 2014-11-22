@@ -1,5 +1,5 @@
 Feature: convert a system verilog format to ruby.
-
+  @wip
   Scenario: System Verilog interfaces (with parameters)
   Given a file named "leaf.sv" with: 
   """

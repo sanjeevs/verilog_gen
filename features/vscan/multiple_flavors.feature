@@ -24,36 +24,34 @@ Feature: convert a verilog 1364-2001 format to ruby.
   """
   And a file named "expect_wide.rb" with:
   """
-  class Leaf_wide < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "leaf"
-      parameter["OUT2_MSB"] = 10
-      parameter["OUT2_LSB"] = 5
-      parameter["WIDTH"] = 256
-      add_port "in1", direction: "input", packed: "[5:3]", type: "wire"
-      add_port "in2", direction: "input", packed: "[7:0]", type: "wire"
-      add_port "out1", direction: "output", packed: "[31:0]" type: "wire"
-      add_port "out2", direction: "output", packed: "[10:5]" type: "wire"
-    end
+  class Leaf_wide < VerilogGen::HdlModule
+    set_proxy  true
+    set_file_name  "leaf.v"
+    set_module_name "leaf"
+
+    set_parameter OUT2_MSB: 10
+    set_parameter OUT2_LSB:  5
+    set_parameter WIDTH:  256
+
+    add_port "in1", direction: "input", packed: "[5:3]", type: "wire"
+    add_port "in2", direction: "input", packed: "[7:0]", type: "wire"
+    add_port "out1", direction: "output", packed: "[31:0]", type: "wire"
+    add_port "out2", direction: "output", packed: "[10:5]", type: "wire"
   end
   """
   And a file named "expect_narrow.rb" with:
   """
-  class Leaf_narrow < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "leaf"
-      parameter["OUT1_MSB"] = 4
-      parameter["OUT1_LSB"] = 2
-      parameter["WIDTH"] = 32
-      add_port "in1", direction: "input", packed: "[5:3]", type: "wire"
-      add_port "in2", direction: "input", packed: "[7:0]", type: "wire"
-      add_port "out1", direction: "output", packed: "[4:2]", type: "wire"
-      add_port "out2", direction: "output", packed: "[8:3]", type: "wire"
-    end
+  class Leaf_narrow < VerilogGen::HdlModule
+    set_proxy  true
+    set_file_name  "leaf.v"
+    set_module_name  "leaf"
+    set_parameter OUT1_MSB: 4
+    set_parameter OUT1_LSB: 2
+    set_parameter WIDTH: 32
+    add_port "in1", direction: "input", packed: "[5:3]", type: "wire"
+    add_port "in2", direction: "input", packed: "[7:0]", type: "wire"
+    add_port "out1", direction: "output", packed: "[4:2]", type: "wire"
+    add_port "out2", direction: "output", packed: "[8:3]", type: "wire"
   end
   """
   When I run `vscan OUT2_MSB=10 OUT2_LSB=5 WIDTH=256 -class leaf_wide leaf.v`

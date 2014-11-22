@@ -11,14 +11,12 @@ Feature: convert a verilog 1364-2001 format to ruby.
   """
   And a file named "expect.rb" with:
   """
-  class Leaf < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "leaf"
-      add_port "in", direction: "input", type: "wire"
-      add_port "out", direction: "output", type: "wire"
-    end
+  class Leaf < VerilogGen::HdlModule
+    @proxy = true
+    @file_name = "leaf.v"
+    @module_name = "leaf"
+    add_port "in", direction: "input", type: "wire"
+    add_port "out", direction: "output", type: "wire"
   end
   """
   When I run `vscan leaf.v`

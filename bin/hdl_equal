@@ -34,7 +34,7 @@ def create_hdl_classes(ns, filename)
     end
     #{content}
   end
-  """
+  """, binding, __FILE__, __LINE__
   return VerilogGen::HdlModule.get
 end
 
@@ -55,7 +55,8 @@ if rhs.size == 0
 end
 
 if lhs.size != rhs.size 
-  puts "Number of entries #{lhs.size} on #{ARGV[0]} do not match #{ARGV[1]}"
+  puts "Number of entries #{lhs.size} on #{ARGV[0]} do not match
+                          #{rhs.size} entries in #{ARGV[1]}"
   exit 1
 end
 

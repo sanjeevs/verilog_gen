@@ -1,5 +1,5 @@
 Feature: convert a system verilog format to ruby.
-
+  
   Scenario: More complex port types, note that SV allows all data types
             to be on port lists, including arrays and structures!  This
             test does not test arrays or structures
@@ -26,27 +26,25 @@ Feature: convert a system verilog format to ruby.
   """
   And a file named "expect.rb" with:
   """
-  class Leaf < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "leaf"
-      add_port "o_logic_bit", direction: "output", type: "bit"
-      add_oprt "o_logic_vector", direction: "output", packed: "[3:0]", type: "logic"
-      add_port "o_reg_bit", direction: "output", type: "reg"
-      add_oprt "o_reg_vector", direction: "output", packed: "[31:0]", type: "reg"
-      add_port "o_bit_bit", direction: "output", type: "bit"
-      add_oprt "o_bit_vector", direction: "output", packed: "[7:0]", type: "bit"
-      add_port "o_byte", direction: "output", type: "byte"
-      add_port "o_shortint", direction: "output", type: "shortint"
-      add_port "o_int", direction: "output", type: "int"
-      add_port "o_integer", direction: "output", type: "integer"
-      add_port "o_longint", direction: "output", type: "longint"
-      add_port "o_shortreal", direction: "output", type: "shortreal"
-      add_port "o_real", direction: "output", type: "real"
-      add_port "o_time", direction: "output", type: "time"
-      add_port "o_realtime", direction: "output", type: "realtime"
-    end
+  class Leaf < VerilogGen::HdlModule
+    @proxy = true
+    @file_name = "leaf.v"
+    @module_name = "leaf"
+    add_port "o_logic_bit", direction: "output", type: "bit"
+    add_port "o_logic_vector", direction: "output", packed: "[3:0]", type: "logic"
+    add_port "o_reg_bit", direction: "output", type: "reg"
+    add_port "o_reg_vector", direction: "output", packed: "[31:0]", type: "reg"
+    add_port "o_bit_bit", direction: "output", type: "bit"
+    add_port "o_bit_vector", direction: "output", packed: "[7:0]", type: "bit"
+    add_port "o_byte", direction: "output", type: "byte"
+    add_port "o_shortint", direction: "output", type: "shortint"
+    add_port "o_int", direction: "output", type: "int"
+    add_port "o_integer", direction: "output", type: "integer"
+    add_port "o_longint", direction: "output", type: "longint"
+    add_port "o_shortreal", direction: "output", type: "shortreal"
+    add_port "o_real", direction: "output", type: "real"
+    add_port "o_time", direction: "output", type: "time"
+    add_port "o_realtime", direction: "output", type: "realtime"
   end
   """
   When I run `vscan leaf.v`

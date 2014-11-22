@@ -33,32 +33,26 @@ Feature: Check that module name and file name match
   """
   And a file named "expect.rb" with:
   """
-  class Mod_a < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "mod_a"
-      add_port "in_a", direction: "input", type: "wire"
-      add_port "out_a", direction: "output", type: "wire"
-    end
+  class Mod_a < VerilogGen::HdlModule
+    set_proxy  true
+    set_file_name  "leaf.v"
+    set_module_name  "mod_a"
+    add_port "in_a", direction: "input", type: "wire"
+    add_port "out_a", direction: "output", type: "wire"
   end
-  class Mod_b < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "mod_b"
-      add_port "in_b", direction: "input", type: "wire"
-      add_port "out_b", direction: "output", type: "wire"
-    end
+  class Mod_b < VerilogGen::HdlModule
+    set_proxy  true
+    set_file_name  "leaf.v"
+    set_module_name  "mod_b"
+    add_port "in_b", direction: "input", type: "wire"
+    add_port "out_b", direction: "output", type: "wire"
   end
-  class Mod_c < HdlModule
-    def initialize
-      proxy = true
-      file_name = "leaf.v"
-      module_name = "mod_c"
-      add_port "in_c", direction: "input", type: "wire"
-      add_port "out_c", direction: "output", type: "wire"
-    end
+  class Mod_c < VerilogGen::HdlModule
+    set_proxy true
+    set_file_name "leaf.v"
+    set_module_name "mod_c"
+    add_port "in_c", direction: "input", type: "wire"
+    add_port "out_c", direction: "output", type: "wire"
   end
   """
   When I run `vscan leaf.v`

@@ -1,7 +1,15 @@
 module VerilogGen
   # Model of a verilog port.
   class Port
-    attr_reader :name, :direction, :lhs, :rhs
+    
+    @@DEFAULT_PARAMS = {
+                       :name => "", 
+                       :direction => "input", 
+                       :lhs => 0, 
+                       :rhs => 0,
+                       :type => "wire",
+                       :packed => ""
+                      }
 
     # Construct a port.
     # @param [String] name of the port
@@ -10,18 +18,24 @@ module VerilogGen
     # @param [Integer] right hahd side digit
     # @note If lhs and rhs are 0 then it is a scalar port else vector type.
     def initialize(name, params = {})
+      @@DEFAULT_PARAMS.each do |key, value|
+        instance_variable_set("@#{key}", value)
+        self.class.send(:attr_reader, key.to_s)
+      end
+
       @name = name
-      @direction = "input"
-      @lhs = @rhs = 0
+
       params.each do |key, value|
-        raise ArgumentError, 
-              "invalid value of port field" unless defined? key
+        raise ArgumentError, "invalid value of port field '#{key}' with '#{value}'" \
+                    unless @@DEFAULT_PARAMS.has_key? key
         instance_variable_set("@#{key}", value)
       end
 
       #Enumeration checking.
-      raise ArgumentError, "direction is not valid" \
-                        unless @direction == "input" or @direction == "output"
+      raise ArgumentError, "direction '#{direction}' is not valid value" \
+                        unless @direction == "input" or @direction == "output"\
+                          or @direction == "inout"
+
     end
 
     # Equaltiy of port

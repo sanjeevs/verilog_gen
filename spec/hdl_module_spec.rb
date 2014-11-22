@@ -3,10 +3,14 @@ require 'spec_helper'
 module VerilogGen
   class Leaf1 < HdlModule
     add_port("port1")
-    @module_name = "Leaf"
+    set_module_name  "Leaf"
+    set_file_name  "hello_leaf1"
+    set_parameter hello: 10, namaste: 23
   end
   class Leaf2 < HdlModule; 
     add_child_instance(Leaf1, "leaf1")
+    set_proxy true
+    set_file_name "hello_leaf2"
   end
 
   describe HdlModule do
@@ -48,6 +52,17 @@ module VerilogGen
       expect(Leaf1.proxy).to eq(false)
     end
 
+    it "should have proxy true" do
+      expect(Leaf2.proxy).to eq(true)
+    end
+    
+    it "should have file_name" do
+      expect(Leaf1.file_name).to eq("hello_leaf1")
+    end
+
+    it "should have correct parameters" do
+      expect(Leaf1.parameters).to eq(hello: 10, namaste: 23)
+    end
     describe "#equal" do
       it "should match instance name" do
         expect(leaf1).to eq(leaf1_same)
