@@ -1,24 +1,24 @@
 class Fifo_4x64 < VerilogGen::HdlModule
-  add_child_instance Fifo_ctrl_4d, "fifo_ctrl_inst"
-  add_child_instance Generic_mem_4x64, "memory_inst"
+  add_child_instance "fifo_ctrl_inst", Fifo_ctrl_4d
+  add_child_instance "memory_inst", Generic_mem_4x64
   memory_inst.mem_wr_data.connect "push_data"
   memory_inst.mem_rd_data.connect "pop_data"
 end
 
 class Fifo_8x64 < VerilogGen::HdlModule
-  add_child_instance Fifo_ctrl_8d, "fifo_ctrl_inst"
-  add_child_instance Generic_mem_8x64, "memory_inst"
+  add_child_instance "fifo_ctrl_inst", Fifo_ctrl_8d
+  add_child_instance "memory_inst", Generic_mem_8x64
   memory_inst.mem_wr_data.connect "push_data"
   memory_inst.mem_rd_data.connect "pop_data"
 end
 
-class Demo_router_2x64b < VerilogGen::HdlModule
+class Generic_router_2x64b < VerilogGen::HdlModule
   2.times do |i|
-    add_child_instance Fifo_4x64, "src_fifo_#{i}"
+    add_child_instance "src_fifo_#{i}", Fifo_4x64
   end
-  add_child_instance Rr_arb, "arb"
-  add_child_instance Router_ctrl_64bit, "router_ctrl"
-  add_child_instance Fifo_8x64, "dst_fifo"
+  add_child_instance "arb", Rr_arb
+  add_child_instance "router_ctrl", Router_ctrl_64bit
+  add_child_instance "dst_fifo", Fifo_8x64
 
   router_ctrl.empty.connect "empty", width: 2
   router_ctrl.pop.connect "pop", width: 2

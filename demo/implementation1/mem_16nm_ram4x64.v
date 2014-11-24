@@ -7,26 +7,26 @@
 //
 // --------------------------------------------------
 
-module mem_16nm_proc_16x73
+module mem_16nm_ram4x64
 (
   input  wire        clk,
   input  wire        mem_wr_en,
-  input  wire [3:0]  mem_wr_addr,
-  input  wire [72:0] mem_wr_data,
+  input  wire [1:0]  mem_wr_addr,
+  input  wire [63:0] mem_wr_data,
   input  wire        mem_rd_en,
-  input  wire [3:0]  mem_rd_addr,
-  input  wire [72:0] mem_rd_data,
+  input  wire [1:0]  mem_rd_addr,
+  input  wire [63:0] mem_rd_data,
 
   input  wire        bist_clk,
   input  wire        bist_en,
-  input  wire [3:0]  bist_addr,
-  input  wire [72:0] bist_wr_data,
-  output wire [72:0] bist_rd_data
+  input  wire [1:0]  bist_addr,
+  input  wire [63:0] bist_wr_data,
+  output wire [63:0] bist_rd_data
 );
 
 // The memory declaration
-reg [72:0] memory [15:0];
-reg [72:0] mem_rd_data_i;
+reg [63:0] memory [3:0];
+reg [63:0] mem_rd_data_i;
 
 always @ (posedge clk) begin
   if( mem_wr_en ) begin
