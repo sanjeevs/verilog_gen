@@ -11,7 +11,7 @@
 module generic_mem
   #( parameter  DEPTH=8,
      parameter  WIDTH=32,
-     localparam AWIDTH=$clog2(WIDTH) )
+     localparam AWIDTH=$clog2(DEPTH) )
 (
   input wire              clk,
   input wire              mem_wr_en,
