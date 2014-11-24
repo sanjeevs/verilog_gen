@@ -228,7 +228,12 @@ sub Resolve_Expression {
             ## Else, check if there there is a net matching the text 'name' of the item?
             my $net = $module->find_net($ITEMS[$i]);
             ## If so, replace the item with the value of the net (parameter)
-            $ITEMS[$i] = $net->value if( $net );
+	    if( $net ) {
+		## The value (for paremeters) might themselves be complex expressions
+		## that need to be evaluated, call this function recursively before
+		## proceeding:
+		$ITEMS[$i] = &Resolve_Expression( $net->value, $module );
+	    }
         }
 	## Else, the item is either a number, mathematical operator, or something
 	## that is not supported.  Leave it unchanged.

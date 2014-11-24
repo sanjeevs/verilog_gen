@@ -12,13 +12,15 @@ Feature: convert a verilog 1364-2001 format to ruby.
                  OUT1_LSB = 0,
                  OUT2_MSB = 8,
                  OUT2_LSB = 3,
-       parameter DEPTH = 128 )
+       parameter DEPTH = 128,
+       parameter AW = $clog2(DEPTH)+3 )
   (
     input  [IN1_MSB-1:IN1_LSB]                     in1,
     input  [IN2_MSB*2+1:IN2_LSB+1]                 in2,
     output [(OUT1_MSB+1)/4-1:OUT1_LSB]             out1,
     output [(OUT2_MSB%2)+10:(2**OUT2_LSB)-1]       out2,
-    output [$clog2(DEPTH):$clog2($clog2(32-2)+10)] out3
+    output [$clog2(DEPTH):$clog2($clog2(32-2)+10)] out3,
+    output [AW-1:0]                                out4
   );
   endmodule
   """
@@ -36,6 +38,7 @@ Feature: convert a verilog 1364-2001 format to ruby.
     add_port "out1", direction: "output", packed: "[7:0]", type: "wire"
     add_port "out2", direction: "output", packed: "[10:7]", type: "wire"
     add_port "out3", direction: "output", packed: "[7:4]", type: "wire"
+    add_port "out4", direction: "output", packed: "[9:0]", type: "wire"
   end
   """
   When I run `vscan leaf.v`
