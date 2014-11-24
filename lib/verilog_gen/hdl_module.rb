@@ -108,6 +108,20 @@ module VerilogGen
       @pins =  {}
     end
 
+    # Convienence routine for adding pin to ports.
+    # @note Creates a pin indexed by the port name
+    def method_missing(name, *args)
+      string_name = name.to_s
+      return super unless self.class.ports.has_key? string_name
+      if pins.has_key?(string_name)
+        pin = pins[string_name]
+      else
+        pin = Pin.new(self.class.ports[string_name])
+        @pins[string_name] = pin
+      end
+      pin
+    end
+
     # Render the ruby code to verilog.
     # @param [Template] ERB file for verilog template.
     # @return [String] completed template.
