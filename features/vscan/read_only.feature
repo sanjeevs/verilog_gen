@@ -1,5 +1,5 @@
 Feature: Check that output file can be written
-
+  @wip
   Scenario: Read only directory error
   Given a file named "subdir1/leaf.v" with: 
   """

@@ -52,20 +52,20 @@ while( @ARGV ) {
 }
 die "error: you must supply a leaf verilog module.\n" unless( $verilog_file );
 die "error: file $verilog_file does not exist.\n" unless( -f $verilog_file );
-my $module;
+my $file_no_path_no_extension;
 if( $verilog_file =~ /^.*\/(.*?)\.(.*?)v.*$/ ) {
     ## path includes hierarchy
-    $module = $1;
-    $ruby_file =~ s/\/${module}\.rb$/\/${class_override}\.rb/ if( $class_override );
+    $file_no_path_no_extension = $1;
+    $ruby_file =~ s/\/${file_no_path_no_extension}\.rb$/\/${class_override}\.rb/ if( $class_override );
 } else {
     ## file is in CWD
-    $module = $verilog_file;
-    $module =~ s/\.(.*?)v$//;
+    $file_no_path_no_extension = $verilog_file;
+    $file_no_path_no_extension =~ s/\.(.*?)v$//;
     $ruby_file = "${class_override}.rb" if( $class_override );
 }
 
 ## And then process the Verilog file
-&Convert_Verilog_To_Ruby( $module, $class_override, $verilog_file, $ruby_file );
+&Convert_Verilog_To_Ruby( $class_override, $verilog_file, $ruby_file );
 exit(0);
 
 ## --------------------------------------------------
@@ -73,8 +73,7 @@ exit(0);
 ## that contains the structure which described the Verilog module's
 ## declaration state
 sub Convert_Verilog_To_Ruby {
-    my $module_name = shift @_;
-    my $class = shift @_;
+    my $class_override = shift @_;
     my $in_file = shift @_;
     my $out_file = shift @_;
 
@@ -87,11 +86,16 @@ sub Convert_Verilog_To_Ruby {
     ## And print any startup text needed
     &Print_Header($VERSION);
 
+    ## Set the class to the override value, and then fix it later if
+    ## it wans't overridden:
+    my $class = $class_override;
+
     ## Process all module declarations in the Verilog file
     foreach my $module ($netlist->modules_sorted) {
 
         ## Add the module name and class
-        $class = $module->name unless( $class );
+        $class = $module->name unless( $class_override );
+
         &Print_Module($in_file, $class, $module->name);
 
         ## Add override parameters
@@ -112,7 +116,7 @@ sub Convert_Verilog_To_Ruby {
     foreach my $interface ($netlist->interfaces_sorted) {
 
 	## Start printing the class information for the interface
-        $class = $interface->name unless( $class );
+        $class = $interface->name unless( $class_override );
 	&Print_Interface($in_file, $class, $interface->name);
 
         ## Add override parameters

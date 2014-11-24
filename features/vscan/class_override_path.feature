@@ -1,6 +1,4 @@
 Feature: Check that class name can be overridden
-
-  @jsd
   Scenario: Class override
   Given a file named "subdir1/leaf.v" with: 
   """
