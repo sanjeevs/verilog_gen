@@ -1,31 +1,34 @@
 Slide Demo
 -------------------
 * Router module
-  > 2 source clients, 1 destination client
-  > All inputs and outputs are FIFO'd
-  > Round-robin arbitration
+> 2 source clients, 1 destination client
+> All inputs and outputs are FIFO'd
+> Round-robin arbitration
 
-* <Insert picture here>
+* Block diagram
 
 Slide Multiple Views
 ------------------------
 * Generic view
-    > The design built without concern with implementation details
-    > Contains leaf-level Verilog files and ruby connectivity scripts
-    > There are no ifdef's, etc. to pollute code
+> The design built without concern with implementation details
+> Contains leaf-level Verilog files and ruby connectivity scripts
+> There are no ifdef's, etc. to pollute code
+
 * Implementation 1 view (chip 1)
-    > Inherits the generic view
-    > Contains chip-specific modifications
-    > Generic memory modules replaced with vendor specific models
-    > BIST controller added
+> Inherits the generic view
+> Contains chip-specific modifications
+> Generic memory modules replaced with vendor specific models
+> BIST controller added
+
 * Implementation 2 view (chip 2)
-    > Inherits the chip 1 view
-    > Contains repeater flops on all I/O pins
+> Inherits the chip 1 view
+> Contains repeater flops on all I/O pins
 
 Slide Generic View Design (part 1)
 ------------------------
 * Instance Source/Destination FIFOs:
 
+code inserte here (TBD):
 class Fifo_4x64 < VerilogGen::HdlModule
   add_child_instance "fifo_ctrl_inst", Fifo_ctrl_4d
   add_child_instance "memory_inst", Generic_mem_4x64
@@ -33,6 +36,7 @@ class Fifo_4x64 < VerilogGen::HdlModule
   memory_inst.mem_rd_data.connect "pop_data"
 end
 
+code inserte here (TBD):
 class Fifo_8x64 < VerilogGen::HdlModule
   add_child_instance "fifo_ctrl_inst", Fifo_ctrl_8d
   add_child_instance "memory_inst", Generic_mem_8x64
@@ -44,6 +48,7 @@ Slide Generic View Design (part 2)
 ------------------------
 * Top design and instances:
 
+code inserte here (TBD):
 class Generic_router_2x64b < VerilogGen::HdlModule
   clients = 2
   width = 64
@@ -64,6 +69,7 @@ Slide Generic View Design (part 3)
 ------------------------
 * Top design connectivity
 
+code inserte here (TBD):
   router_ctrl.empty.connect "empty", width: #{clients}
   router_ctrl.pop.connect "pop", width: #{clients}
   router_ctrl.data_in_#{i}.connect "data_in_array", width: #{clients}*#{width}
@@ -86,6 +92,7 @@ Slide Chip 1 Implementation (part 1)
 ------------------------
 * Replace generic memories with vendor specific memories
 
+code inserte here (TBD):
 require_relative "generic_router.rb"
 
 class chip1_router < Generic_router_2x64b
@@ -103,6 +110,7 @@ Slide Chip 1 Implementation (part 2)
 ------------------------
 * Chip 1 design connectivity changes
 
+code inserte here (TBD):
   # Wire to input FIFO memories
   2.times do |i|
     src_fifo_"#{i}".memory_inst.bist_en.connect "bist_en_#{i}"
@@ -122,6 +130,7 @@ Slide Chip 2 Implementation (part 1)
 ------------------------
 * Add repeater flops on all external pins (except clock/reset) to design chip 1
 
+code inserte here (TBD):
 require_relative "chip1_router.rb"
 
 
@@ -129,3 +138,4 @@ Slide Chip 2 Implementation (part 2)
 ------------------------
 * Chip 2 design connectivity changes
 
+code inserte here (TBD):
