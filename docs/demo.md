@@ -24,7 +24,7 @@ Slide Multiple Views
 
   > Inherits the generic view
 
-  > Contains chip-specific modifications
+  > Contains implementation-specific modifications
 
   > Generic memory modules replaced with vendor specific models
 
