@@ -44,13 +44,14 @@ MVC design pattern
     + chipX view:
     + emulation view
     + fpga view
-* Controller Build scripts in Ruby.
+* Controller Build scripts written by RTL designer.
+
 > MVC is the de facto design pattern for separating out different concerns. 
   We are going to use it for solving our problem.
-  We view the leaf verilog modules as the *model* of the design.
-  The *design* is the view composed by arranging the models in various ways. 
+  + We view the leaf verilog modules as the *model*. 
+  + The *design* is the view composed from the models.
       Like different views, we have different design or implementations.
-  The controller is the ruby scripts that the RTL designer creates.  
+  + The *controller* is the ruby scripts that creates the design.  
 
 Slide Advantages 
 ---------------------
@@ -78,3 +79,4 @@ Our toolkit is composed of 2 scripts.
      
 Slide Demo
 -------------
+**Check demo.md in the same directory **
