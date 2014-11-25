@@ -49,12 +49,12 @@ always @ (*) begin
 end
 integer pdc_index;
 always @ (posedge clk) begin
-  for( pdc_index=1; pdc_index<DELAY; pdc_index=pdc_index+1 ) begin
+  for( pdc_index=1; pdc_index<=DELAY; pdc_index=pdc_index+1 ) begin
     if( reset ) begin
-      pop_delay_chain[pdc_index] <= 0;
+      pop_delay_chain[pdc_index] <= #0 0;
     end
     else begin
-      pop_delay_chain[pdc_index] <= pop_delay_chain[pdc_index-1];
+      pop_delay_chain[pdc_index] <= #0 pop_delay_chain[pdc_index-1];
     end
   end
 end
