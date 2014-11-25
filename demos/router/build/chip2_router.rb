@@ -8,7 +8,8 @@ class Chip2_router < VerilogGen::HdlModule
   chip1.ports.each do |port|
     next if port.name =~ /^clk$/ || port.name =~ /^reset$/
     port.connect "#{port.name}_i"
-    add_child_instance "repeater_#{port.name}", Flop_delay, WIDTH=#{port.width}
+    Fd_class = create_hdl_class "flop_delay", "WIDTH=#{port.width}, DEPTH=2"
+    add_child_instance "repeater_#{port.name}", Fd_class
     if port.direction =~ /input/
       repeater_#{port.name}.connect "i", #{port.name}
       repeater_#{port.name}.connect "o", "#{port.name}_i"
