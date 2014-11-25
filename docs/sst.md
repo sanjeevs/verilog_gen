@@ -48,16 +48,17 @@ MVC design pattern
 
 > MVC is the de facto design pattern for separating out different concerns. 
   We are going to use it for solving our problem.
-  + We view the leaf verilog modules as the *model*. 
-  + The *design* is the view composed from the models.
-      Like different views, we have different design or implementations.
-  + The *controller* is the ruby scripts that creates the design.  
+  + We view the leaf verilog modules as the **model**. 
+  + The design is the **view** composed from the models.
+      Like different views, we have different designs or implementations.
+  + The **controller** is the build script that creates the designs.  
 
 Slide Advantages 
 ---------------------
 * Do not *pollute* the RTL design(model) with details related to implementation(views).
-* Keep implementation specific details in separate files and compose the final design.
-* Allow code reuse.
+* Use OOP to keep the build scripts clean. 
+    + Emulation version is same as generic version except for *memory cells*.
+    + ChipA version is identical to chipX except for new bist logic.
 
 Slide Basic Flow
 ------------------
