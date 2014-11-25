@@ -32,24 +32,60 @@ module VerilogGen
     def self.child_instances()
       @child_instances ||= {}
     end
-    # Add a instance to the design.
-    # @param [HdlModule] child instance of the design.
-    # @param [String] instance_name
-    # @return [HdlModule] child instance added.
-    # @note Raises exception if the child instance is not unique.
-    def self.add_child_instance(klass, name)
-      if child_instances.keys.include?(name)
-        raise ArgumentError, 
-          "Duplicate module instance name '#{name}' detected"
+
+    # Convert the hierarical path to the instance.
+    # @param [String] Complete hierarichal path.
+    # @return [HdlModule, Nil] if no parent then return nil
+    def self.get_module_instance(hier_path)
+      if child_instances.has_key?(hier_path[0])
+        parent = child_instances[hier_path[0]]
       else
-        child_instances[name] = klass.new(name) 
+        raise ArgumentError, 
+            "Unable to resolve starting hier path '#{hier_path}' at '#{hier_path[0]}'"
+      end
+
+      hier_path[1..-1].each do |node|
+        if parent.class.child_instances.has_key?(node)
+          parent = parent.class.child_instances[node]
+        else
+          raise ArgumentError, 
+            "Unable to resolve complete hier path '#{hier_path}' at '#{node}'"
+        end 
+      end
+      return parent
+    end
+
+    # Add a instance to the design.
+    # @param [String] instance path
+    # @param [HdlModule] child class name 
+    # @return [HdlModule] child instance added.
+    # @example
+    #    Adds an instance "fifo_inst" of class Fifo 
+    #    add_child_instance("fifo_inst", Fifo) 
+    #
+    #    Adds an instance at hier "a.b"  
+    #    add_child_instance("a.b.fifo_inst", Fifo)
+    #
+    # @note Raises exception if the child instance is not unique.
+    def self.add_child_instance(hier_name, klass)
+      parent = nil
+      hier_path = hier_name.split('.')
+      name = hier_path[-1]
+      parent = get_module_instance(hier_path[0..-2]) if hier_path.size > 1
+      parent_class = parent ? parent.class : self
+
+      if parent_class.child_instances.keys.include?(name)
+        raise ArgumentError, 
+          "Duplicate module instance name '#{name}' detected in '#{hier_path}"
+      else
+        parent_class.child_instances[name] = klass.new(name) 
         method_name = name.to_sym
         define_singleton_method(method_name) do
-          child_instances[name]
+          parent_class.child_instances[name]
         end
-        return child_instances[name]
+        child = parent_class.child_instances[name]
       end
-    end
+    end   
 
 
 
@@ -81,15 +117,15 @@ module VerilogGen
     def self.file_name
       @file_name ||= "" 
     end
-    
+
     def self.set_file_name(file_name)
       @file_name = file_name
     end
-    
+
     def file_name(file_name)
       @file_name = file_name
     end
-    
+
     def self.parameters
       @parameters ||= {} 
     end
@@ -108,18 +144,25 @@ module VerilogGen
       @pins =  {}
     end
 
-    # Convienence routine for adding pin to ports.
-    # @note Creates a pin indexed by the port name
+    # Check If the method name matches a port or child instance name.
+    # @return [Pin, Instance] if the name matches a port/child instance.
+    # @note if the method matches a port name that does not have a pin, then
+    # a default pin is added.
     def method_missing(name, *args)
       string_name = name.to_s
-      return super unless self.class.ports.has_key? string_name
-      if pins.has_key?(string_name)
-        pin = pins[string_name]
-      else
-        pin = Pin.new(self.class.ports[string_name])
-        @pins[string_name] = pin
+      if self.class.ports.has_key? string_name 
+        if pins.has_key?(string_name)
+          pin = pins[string_name]
+        else
+          pin = Pin.new(self.class.ports[string_name])
+          @pins[string_name] = pin
+        end
+        return pin
+      elsif self.class.child_instances.has_key?(string_name)
+        return self.class.child_instances[string_name]
+      else 
+        return super  
       end
-      pin
     end
 
     # Render the ruby code to verilog.
@@ -161,5 +204,6 @@ module VerilogGen
     def hash
       instance_name.hash
     end
+
   end
 end
