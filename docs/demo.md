@@ -2,11 +2,11 @@ Slide Demo
 -------------------
 * Router module
 
-> 2 source clients, 1 destination client
+  > 2 source clients, 1 destination client
 
-> All inputs and outputs are FIFO'd
+  > All inputs and outputs are FIFO'd
 
-> Round-robin arbitration
+  > Round-robin arbitration
 
 * Block diagram
 
