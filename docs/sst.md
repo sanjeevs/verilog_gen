@@ -1,42 +1,37 @@
-Slide What is it ?
--------------------
-* A DSL (Domain Specific Language) for RTL designers to compose RTL designs.
-> A domain specific language is a customized language for a particular task.
-For example Makefile, Regular expressions are all examples for DSL.
+Slide A Huge Problem ?
+------------------------
+* Verilog RTL design is hard to reuse.
+    + modules are statically allocated. No OOP.
+> The greatest problem with verilog design is that modules are statically allocated.
+> Not possible to dynamically instantiate/replace them.
+> No Object Oriented Programming.
+    + Very tedious to construct the connectivity.
+> Arcane syntax for connecting the ports together.
+    + New features like interface are half baked. 
+> Waiting for verilog language to evolve is not practical.
 
-* Being presented in DVCon 2015 (March 2015).
-> The details will be part of the proceedings.
+Slide Existing Solutions 
+------------------------
+* Various preprocessing scripts (Perl/Emacs) written as workaround.
+* Bad *code* alert. 
+    + Produce spagetti verilog code with scattered if/else 
+    + Create artifical level of hierarchy.
+
+Slide MVC Design Framework
+-------------------
+* Model View Controller Design Framework  
+> A framework to allow RTL designers to build reusable hardware blocks.
 
 * Clean slate design.
 > For this discussion we are focussing on new designs. Not concerned with existing 
 blocks and methodolgies.
 
-* DSL is 100% Ruby.
-> We actually did not create a new language. Leveraged Ruby.
-  Ruby is a popular open source object oriented scripting language.
-  Not required to know Ruby. Though little bit helps.
-
-Slide A Huge Problem ?
-------------------------
-* Limitation of verilog language for design.
-    + modules are statically allocated. No OOP.
-> The greatest problem with verilog design is that modules are statically allocated.
-  Not possible to dynamically instantiate/replace them.
-  No Object Oriented Programming.
-
-    + Very tedious to construct the connectivity.
-> Arcane syntax for connecting the ports together.
-  New features like interface are half baked. 
-
-* Various preprocessing scripts (Perl/Emacs) written as workaround.
-    + Produce spagetti verilog code with ifdef 
-
-* Hard to maintain and so poor reuse.
-> This is **HUGE** problem. RTL code is our crown jewels. Want to maximize reuse. 
-
 Slide Our Inspiration
 ----------------------
-MVC design pattern
+* MVC design pattern.
+> MVC is the de facto design pattern for separating out different concerns. 
+  Do not *pollute* the RTL design(model) with details related to implementation(views).
+
 * Model : Leaf Verilog modules.
 * View  : Design
     Various types/implementation of design.
@@ -46,34 +41,32 @@ MVC design pattern
     + fpga view
 * Controller Build scripts written by RTL designer.
 
-> MVC is the de facto design pattern for separating out different concerns. 
-  We are going to use it for solving our problem.
+  How do we apply MVC for solving our problem ?
   + We view the leaf verilog modules as the **model**. 
   + The design is the **view** composed from the models.
       Like different views, we have different designs or implementations.
   + The **controller** is the build script that creates the designs.  
 
-Slide Advantages 
+Slide Build Scripts 
 ---------------------
-* Do not *pollute* the RTL design(model) with details related to implementation(views).
-* Use OOP to keep the build scripts clean. 
+* Build scripts are written in Ruby.
+> Ruby is an open source popular scripting language.
+
+* Have a full fledged OOP language for creating the design.
+    + Inheritance, duck typing
+    + Can use regular expressions, hashes, arrays.
+    + pattern matching
+* Can algorthmically
+    + Add/Del/Replace instances of the design.
+    + Query the ports
+    + create connectivity.
+ * Examples
     + Emulation version is same as generic version except for *memory cells*.
-    + ChipA version is identical to chipX except for new bist logic.
+    + ChipA version is identical to ChipX except for new bist logic.
 
-Slide Basic Flow
-------------------
-Our basic flow is
-* RTL designers writes the design as generic Leaf modules.
-* Use the toolkit to create ruby objects for each of the leaf module.
-* Designer composes the design using ruby scripts.
-* Use the toolkit to create the output RTL design.
-
-Slide Toolkit
----------------
-Our toolkit is composed of 2 scripts.
-* vscan:(Verilog->Ruby) Scans the leaf module and creates the ruby proxy class.
-* vgen: (Ruby->Verilog) Loads the ruby design and writes out verilog design.
-* Intuitive api for creating build scripts
+Slide Intuitive Verilog API 
+-----------------------------
+* Provide intuitive api for creating verilog 
     + add_child_instance "a.b.c", Fifo #Add an instance of Fifo at "a.b.c"
     + a.**.c.clk.connect "sclk"        #Find instance 'c' any level below 'a'.
                                        #Connect its port clk to pin sclk.
