@@ -15,23 +15,23 @@ module router_ctrl
      parameter WIDTH=32,
      parameter DELAY=1 )
 (
-  input  wire clk,
-  input  wire reset,
+  input  wire                     clk,
+  input  wire                     reset,
 
   // Connect to input FIFO's
-  input  wire [CLIENTS-1:0] empty,
-  output wire [CLIENTS-1:0] pop,
-  input  wire [WIDTH-1:0]   data_in [CLIENTS-1:0],
+  input  wire [CLIENTS-1:0]       empty,
+  output wire [CLIENTS-1:0]       pop,
+  input  wire [CLIENTS*WIDTH-1:0] data_in,
 
   // Connect to output FIFO
-  input  wire               full,
-  output reg                push,
-  output wire [WIDTH-1:0]   data_out,
+  input  wire                     full,
+  output reg                      push,
+  output wire [WIDTH-1:0]         data_out,
 
   // Connect to the arbiter
-  output wire               cycle,
-  output wire [CLIENTS-1:0] req,
-  input  wire [CLIENTS-1:0] gnt
+  output wire                     cycle,
+  output wire [CLIENTS-1:0]       req,
+  input  wire [CLIENTS-1:0]       gnt
 );
 
 reg [CLIENTS-1:0] pop_delay_chain [DELAY:0];
@@ -49,12 +49,12 @@ always @ (*) begin
 end
 integer pdc_index;
 always @ (posedge clk) begin
-  for( pdc_index=1; pdc_index<DELAY; pdc_index=pdc_index+1 ) begin
+  for( pdc_index=1; pdc_index<=DELAY; pdc_index=pdc_index+1 ) begin
     if( reset ) begin
-      pop_delay_chain[pdc_index] <= 0;
+      pop_delay_chain[pdc_index] <= #0 0;
     end
     else begin
-      pop_delay_chain[pdc_index] <= pop_delay_chain[pdc_index-1];
+      pop_delay_chain[pdc_index] <= #0 pop_delay_chain[pdc_index-1];
     end
   end
 end
@@ -65,7 +65,7 @@ always @ (*) begin
   data_out = {WIDTH{1'b0}};
   for( mux_index=0; mux_index<CLIENTS; mux_index=mux_index+1 ) begin
     if( pop_delay_chain[mux_index] ) begin
-      data_out = data_in[mux_index];
+      data_out = data_in[(mux_index+1)*WIDTH-1:mux_index*WIDTH];
     end
   end
 end

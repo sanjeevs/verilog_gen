@@ -13,22 +13,25 @@ class Fifo_8x64 < VerilogGen::HdlModule
 end
 
 class Generic_router_2x64b < VerilogGen::HdlModule
+  clients = 2
+  width = 64
+
   set_module_name "router"
-  2.times do |i|
+  clients.times do |i|
     add_child_instance "src_fifo_#{i}", Fifo_4x64
   end
   add_child_instance "arb", Rr_arb
   add_child_instance "router_ctrl", Router_ctrl_64bit
   add_child_instance "dst_fifo", Fifo_8x64
 
-  router_ctrl.empty.connect "empty", width: 2
-  router_ctrl.pop.connect "pop", width: 2
-  router_ctrl.data_in.connect "data_in_array", width: 64, size: 2
+  router_ctrl.empty.connect "empty", width: #{clients}
+  router_ctrl.pop.connect "pop", width: #{clients}
+  router_ctrl.data_in_#{i}.connect "data_in_array", width: #{clients}*#{width}
 
-  2.times do |i|
+  clients.times do |i|
     src_fifo_#{i}.empty.connect "empty", lsb: i
     src_fifo_#{i}.pop.connect "pop", lsb: i
-    src_fifo_#{i}.pop_data.connect "data_in_array", width: 64, index: i
+    src_fifo_#{i}.pop_data.connect "data_in_array", lsb #{width}*#{i}
     src_fifo_#{i}.push.connect "client_#{i}_push"
     src_fifo_#{i}.empty.connect "client_#{i}_empty"
     src_fifo_#{i}.push_data.connect "client_#{i}_data"
