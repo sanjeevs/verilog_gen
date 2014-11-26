@@ -1,12 +1,14 @@
-Slide A Huge Problem ?
-------------------------
+Slide Houston we have a problem.
+--------------------------------
 * Verilog RTL design is hard to reuse.
     + modules are statically allocated. No OOP.
 > The greatest problem with verilog design is that modules are statically allocated.
-> Not possible to dynamically instantiate/replace them.
-> No Object Oriented Programming.
+  Not possible to dynamically instantiate/replace them.
+  No Object Oriented Programming.
+
     + Very tedious to construct the connectivity.
 > Arcane syntax for connecting the ports together.
+
     + New features like interface are half baked. 
 > Waiting for verilog language to evolve is not practical.
 
@@ -38,10 +40,8 @@ Slide Our Inspiration
     + generic view: 
     + chipX view:
     + emulation view
-    + fpga view
 * Controller Build scripts written by RTL designer.
-
-  How do we apply MVC for solving our problem ?
+>  How do we apply MVC for solving our problem ?
   + We view the leaf verilog modules as the **model**. 
   + The design is the **view** composed from the models.
       Like different views, we have different designs or implementations.
