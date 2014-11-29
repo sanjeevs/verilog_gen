@@ -4,7 +4,7 @@ module VerilogGen
   #   verilog modules.
   #
   class HdlModule
-
+    include DisplayHelpers
 
     def self.ports()
       @ports ||= {}
@@ -92,7 +92,7 @@ module VerilogGen
     # Get the module name
     # @note If not set then sets it to snake case version of class name.
     def self.module_name
-      @module_name ||= self.name.split('::')[1].snakecase
+      @module_name ||= name.split('::')[-1].snakecase
     end
 
     # Set the module name
@@ -165,11 +165,18 @@ module VerilogGen
       end
     end
 
+    # Convienence routine for getting the pin name
+    # @param [String] port name
+    # @return [String] pin name
+    def pin_name(port_name)
+      @pins[port_name].name
+    end
+
     # Render the ruby code to verilog.
     # @param [Template] ERB file for verilog template.
     # @return [String] completed template.
     # @note Searches for template in curent dir and then 'templates' dir.
-    def render(template_file)
+    def render(template_file = "v2k_template.erb")
       unless File.exist?(template_file) 
         root = Pathname.new(__FILE__).parent.parent.join('templates')
         template_file = "#{root}#{File::SEPARATOR}#{template_file}"
