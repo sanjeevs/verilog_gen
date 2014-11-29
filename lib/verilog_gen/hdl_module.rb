@@ -172,6 +172,10 @@ module VerilogGen
       @pins[port_name].name
     end
 
+    def get_binding
+      binding
+    end
+
     # Render the ruby code to verilog.
     # @param [Template] ERB file for verilog template.
     # @return [String] completed template.
@@ -183,7 +187,7 @@ module VerilogGen
       end
       File.open(template_file) do |fh|
         template = ERB.new(fh.read, nil, '>')
-        template.result(binding)
+        template.result(get_binding)
       end
     end
 
