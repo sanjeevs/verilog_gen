@@ -8,7 +8,7 @@ module VerilogGenTest
     set_parameter hello: 10, namaste: 23
   end
   class Leaf2 < VerilogGen::HdlModule; 
-    add_child_instance(Leaf1, "leaf1")
+    add_child_instance "leaf1", Leaf1
     set_proxy true
     set_file_name "hello_leaf2"
     set_parameter width: 1
@@ -92,11 +92,11 @@ module VerilogGenTest
     end
 
     it "should flag duplicate child instance" do
-      expect { Leaf2.add_child_instance(Leaf1, "leaf1") }.to raise_exception
+      expect { Leaf2.add_child_instance("leaf1", Leaf1) }.to raise_exception
     end
 
     it "should allow different child instance" do
-      expect { Leaf2.add_child_instance(Leaf1, "leaf1_2") }.to \
+      expect { Leaf2.add_child_instance("leaf1_2", Leaf1) }.to \
                       change {Leaf2.child_instances.size}.from(1).to(2)
     end
    
