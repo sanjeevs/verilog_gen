@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.0.0'
 group :development do
-  gem 'rdoc'
+  gem 'yard'
 end
 
 group :test do

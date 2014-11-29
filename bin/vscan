@@ -82,7 +82,9 @@ sub Convert_Verilog_To_Ruby {
     $netlist->read_file( filename=>$in_file );
 
     ## Open the output file for writing
-    open( RUBY, "> $out_file" ) or die "error: can't write file $out_file: $!\n";
+    #open( RUBY, "> $out_file" ) or die "error: can't write file $out_file: $!\n";
+    open( RUBY, ">&STDOUT" ) or die "error: can't dup stdout: $!\n";
+
     ## And print any startup text needed
     &Print_Header($VERSION);
 
