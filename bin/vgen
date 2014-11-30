@@ -23,9 +23,11 @@ end
 
 option_parser.parse!
 unless options.key?(:top_class_name)
-  puts "error: you must supply the top level class name"
+  puts "error: you must supply the top level class name."
   exit 1
 end
+
+options[:output_dirname] = "." unless options.key?(:output_dirname)
 
 if ARGV.empty?
   puts "error: you must supply the ruby build script."
@@ -33,6 +35,15 @@ if ARGV.empty?
 else
   eval(File.open(ARGV[0]).read)
   klass = Object.const_get(options[:top_class_name])
-  puts klass.render
+  # Connect the ports and pins
+  # Write out all the subclasses of hdl modules.
+  VerilogGen::HdlModule.get_subclasses.each do |sub_class|
+    unless sub_class.proxy
+      output_file = "#{options[:output_dirname]}/#{sub_class.module_name}.v"
+      File.open(output_file, 'w') do |fh|
+        fh.write(sub_class.render)
+      end
+    end
+  end
 end
 

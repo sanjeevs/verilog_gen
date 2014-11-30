@@ -4,15 +4,24 @@ module DisplayHelpers
   # @return [String] verilog decl
   # @example
   #    input reg clk,
-  #    output wire vld
+  #    output wire [1:0] vld
 
-  def v2k_port_decl(klass)
+  def v2k_port_decl(port)
+    output = "#{port.direction} #{port.type}"
+    output += " [#{port.lhs}:#{port.rhs}]" unless port.scalar?
+    output += " #{port.name}"
+  end
+
+  def v2k_port_list_decl(klass)
     output = ""
-    klass.ports.values[0..-2].each do |port| 
-      output += "  #{port.direction} #{port.type} #{port.name},\n"
+    klass.ports.values[0..-2].each do |port|
+      output += "  #{v2k_port_decl(port)},\n"
     end
     last_port = klass.ports.values.last
-    output += "  #{last_port.direction} #{last_port.type} #{last_port.name}\n" if last_port
+    if last_port
+      puts v2k_port_decl(last_port) 
+      output += "  #{v2k_port_decl(last_port)}\n"
+    end
   end
 
   # Create verilog parameter string.

@@ -218,5 +218,16 @@ module VerilogGen
       instance_name.hash
     end
 
+    # Hook to detect subclasses.
+    # Used for rendering all the hdl modules to verilog.
+    @hdl_subclasses = []
+    def self.inherited(new_subclass)
+      @hdl_subclasses << new_subclass
+    end
+
+    def self.get_subclasses
+      @hdl_subclasses
+    end
+
   end
 end
