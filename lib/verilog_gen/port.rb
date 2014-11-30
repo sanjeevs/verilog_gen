@@ -39,6 +39,12 @@ module VerilogGen
                         unless @direction == "input" or @direction == "output"\
                           or @direction == "inout"
 
+      # FIXME: Hack lhs and rhs
+      unless @packed == ""
+        m = /\[\s*(\d+)\s*:\s*(\d+)\s*\]/.match @packed
+        @lhs = m.captures[0]
+        @rhs = m.captures[1]
+      end 
     end
 
     # Equaltiy of port

@@ -19,10 +19,11 @@ class Router
 
   # Wire to input FIFO memories
   2.times do |i|
-    src_fifo_"#{i}".memory_inst.bist_en.connect "bist_en_#{i}"
-    src_fifo_"#{i}".memory_inst.bist_addr.connect "bist_addr_#{i}"
-    src_fifo_"#{i}".memory_inst.bist_wr_data.connect "bist_wr_data_#{i}"
-    src_fifo_"#{i}".memory_inst.bist_rd_data.connect "bist_rd_data_#{i}"
+    child_instance = child_instances["src_fifo_#{i}"]
+    child_instance.memory_inst.bist_en.connect "bist_en_#{i}"
+    child_instance.memory_inst.bist_addr.connect "bist_addr_#{i}"
+    child_instance.memory_inst.bist_wr_data.connect "bist_wr_data_#{i}"
+    child_instance.memory_inst.bist_rd_data.connect "bist_rd_data_#{i}"
   end
   # Wire to output FIFO memory
   dst_fifo.memory_inst.ports.each do |i|

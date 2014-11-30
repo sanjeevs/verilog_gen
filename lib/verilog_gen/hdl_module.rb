@@ -171,6 +171,7 @@ module VerilogGen
         if pins.has_key?(string_name)
           pin = pins[string_name]
         else
+          pp self.class.ports[string_name]
           pin = Pin.new(self.class.ports[string_name])
           @pins[string_name] = pin
         end

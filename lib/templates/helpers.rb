@@ -19,7 +19,6 @@ module DisplayHelpers
     end
     last_port = klass.ports.values.last
     if last_port
-      puts v2k_port_decl(last_port) 
       output += "  #{v2k_port_decl(last_port)}\n"
     end
   end
@@ -52,15 +51,25 @@ module DisplayHelpers
   def v2k_child_instances(klass)
     output = ""
     klass.child_instances.each do |instance_name, hdl_instance| 
-      output = "  #{hdl_instance.class.module_name}"
+      output += "  #{hdl_instance.class.module_name}"
       p =  v2k_parameters(hdl_instance.class)
       output += " #{p}" unless p == ""
       output += " #{instance_name}(\n"
       hdl_instance.class.ports.keys[0..-2].each do |port_name|
-        output += "    .#{port_name}(#{hdl_instance.pins[port_name].name}),\n"
+        if hdl_instance.pins.key? port_name
+          output += "    .#{port_name}(#{hdl_instance.pins[port_name].name}),\n"
+        else
+          output += "    .#{port_name}(),\n"
+        end
       end
-      port_name = hdl_instance.class.ports.keys.last 
-      output += "    .#{port_name}(#{hdl_instance.pins[port_name].name})\n"
+      port_name = hdl_instance.class.ports.keys.last
+      if port_name
+        if hdl_instance.pins.key? port_name
+          output += "    .#{port_name}(#{hdl_instance.pins[port_name].name})\n"
+        else
+          output += "    .#{port_name}()\n"
+        end
+      end
       output += "  );\n"
     end
     output

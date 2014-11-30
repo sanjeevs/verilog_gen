@@ -14,13 +14,13 @@ class Chip2_router < VerilogGen::HdlModule
     Fd_class = VerilogGen.leaf("Flop_delay", 
                                file_name: "rtl/flop_delay.v",
                                parameter: "WIDTH=#{port.width}, DEPTH=2")
-    add_child_instance "repeater_#{port.name}", Fd_class
+    repeater = add_child_instance "repeater_#{port.name}", Fd_class
     if port.direction =~ /input/
-      repeater_"#{port.name}".connect "i", #{port.name}
-      repeater_"#{port.name}".connect "o", "#{port.name}_i"
+      repeater.ports[port.name].connect "i", port.name
+      repeater.ports[port.name].connect "o", "#{port.name}_i"
     else
-      repeater_"#{port.name}".connect "i", "#{port.name}_i"
-      repeater_"#{port.name}".connect "o", #{port.name}
+      repeater.ports[port.name].connect "i", "#{port.name}_i"
+      repeater.ports[port.name].connect "o", port.name
     end
   end
 end

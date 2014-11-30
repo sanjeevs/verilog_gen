@@ -10,7 +10,7 @@ module VerilogGen
       @port = port
       @name = port.name
       @type = port.type
-      @width = (port.lhs - port.rhs).abs + 1
+      @width = 1
     end
 
     # Update a pin attributes.

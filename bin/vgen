@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'pp'
 require 'optparse'
+require 'fileutils'
 
 # FIXME: Required till we install the gem
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
@@ -16,8 +17,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-t top", "--top", "top level class name") do |top|
     options[:top_class_name] =  top
   end
-  opts.on("-o", "--outdir", "output directory name") do |outdir|
-    options[:output_dirname] = output
+  opts.on("-o outdir", "--outdir", "output directory name") do |outdir|
+    options[:output_dirname] = outdir
+    FileUtils.mkdir_p outdir
   end
 end
 

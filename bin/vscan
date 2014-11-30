@@ -175,7 +175,7 @@ sub Parse_Port {
 	    ## Convert each side into a numerical value
 	    $lhs = &Resolve_Expression( $lhs, $module );
 	    $rhs = &Resolve_Expression( $rhs, $module );
-	    $packed .= "[$lhs:$rhs], lhs: $lhs, rhs: $rhs";
+	    $packed .= "[$lhs:$rhs]";
 	}
     } else {
         ## reg, wire, logic, bit: single-bit
