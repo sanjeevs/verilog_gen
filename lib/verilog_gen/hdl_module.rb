@@ -1,10 +1,11 @@
+require 'pathname'
 module VerilogGen
   # Base class for all verilog modules.
   #   This class holds all the common code that is shared with all the actual
   #   verilog modules.
   #
   class HdlModule
-    include DisplayHelpers
+    extend DisplayHelpers
 
     def self.ports()
       @ports ||= {}
@@ -34,8 +35,8 @@ module VerilogGen
     end
 
     # Convert the hierarical path to the instance.
-    # @param [String] Complete hierarichal path.
-    # @return [HdlModule, Nil] if no parent then return nil
+    # @param [String] hier_path Complete hierarichal path.
+    # @return [Object, Nil] if no parent then return nil
     def self.get_module_instance(hier_path)
       if child_instances.has_key?(hier_path[0])
         parent = child_instances[hier_path[0]]
@@ -56,9 +57,9 @@ module VerilogGen
     end
 
     # Add a instance to the design.
-    # @param [String] instance path
-    # @param [HdlModule] child class name 
-    # @return [HdlModule] child instance added.
+    # @param [String] hier_name instance path
+    # @param [Object] klass child class name 
+    # @return [Object] child instance added.
     # @example
     #    Adds an instance "fifo_inst" of class Fifo 
     #    add_child_instance("fifo_inst", Fifo) 
@@ -79,6 +80,7 @@ module VerilogGen
           "Duplicate module instance name '#{name}' detected in '#{hier_path}"
       else
         parent_class.child_instances[name] = klass.new(name) 
+        # Create a singleton method for accessing it using dot notation.
         method_name = name.to_sym
         define_singleton_method(method_name) do
           parent_class.child_instances[name]
@@ -136,6 +138,21 @@ module VerilogGen
       end
     end
 
+    # Render the ruby code to verilog.
+    # @param [File] template_file ERB file for verilog template.
+    # @return [String] completed template.
+    # @note Searches for template in curent dir and then 'templates' dir.
+    def self.render(template_file = "v2k_template.erb")
+      unless File.exist?(template_file) 
+        root = Pathname.new(__FILE__).parent.parent.join('templates')
+        template_file = "#{root}#{File::SEPARATOR}#{template_file}"
+      end
+      File.open(template_file) do |fh|
+        template = ERB.new(fh.read, nil, '>')
+        template.result(get_binding)
+      end
+    end
+
     # Instance specific state
     attr_reader :instance_name 
     attr_accessor :pins
@@ -166,33 +183,18 @@ module VerilogGen
     end
 
     # Convienence routine for getting the pin name
-    # @param [String] port name
+    # @param [String] port_name
     # @return [String] pin name
     def pin_name(port_name)
       @pins[port_name].name
     end
 
-    def get_binding
+    def self.get_binding
       binding
     end
 
-    # Render the ruby code to verilog.
-    # @param [Template] ERB file for verilog template.
-    # @return [String] completed template.
-    # @note Searches for template in curent dir and then 'templates' dir.
-    def render(template_file = "v2k_template.erb")
-      unless File.exist?(template_file) 
-        root = Pathname.new(__FILE__).parent.parent.join('templates')
-        template_file = "#{root}#{File::SEPARATOR}#{template_file}"
-      end
-      File.open(template_file) do |fh|
-        template = ERB.new(fh.read, nil, '>')
-        template.result(get_binding)
-      end
-    end
-
     # Equality of hdl module
-    # @param [HdlModule] 
+    # @param [Object] other object 
     # @return true if the instance is the same
     def ==(other) 
       return true if other.equal?(self)
@@ -201,7 +203,7 @@ module VerilogGen
     end
 
     # Well behaved hash key.
-    # @param [HdlModule] 
+    # @param [Object] other hdl module. 
     # @return true if the hash keys are equal.
     # @note if a.eql?(b) then a.hash = b.hash
     def eql?(other)

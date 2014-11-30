@@ -1,13 +1,22 @@
 require_relative "generic_router.rb"
 
-class Chip1_router < Generic_router_2x64b
+# Monkey patch the original class since we are only doing extra.
+class Router 
+  set_module_name "chip1_router"
+
+  src_mem = VerilogGen.leaf("Mem_16nm_ram4x64", 
+                          file_name: "vendors/vendor1/mem_16nm_ram4x64.v")
   2.times do |i|
-    replace_child_instance "src_fifo_#{i}.memory_inst", Mem_16nm_ram4x64
+    replace_child_instance "src_fifo_#{i}.memory_inst", src_mem 
   end
-  replace_child_instance "dst_fifo.memory_inst", Mem_16nm_ram8x64
+
+  dst_mem = VerilogGen.leaf("Mem_16nm_ram8x64", 
+                          file_name: "vendors/vendor1/mem_16nm_ram8x64.v")
+  replace_child_instance "dst_fifo.memory_inst", dst_mem 
 
   # Add a BIST controller and properly wire up ports to memories
   add_child_instance "bist_ctrl_inst", Mem_16nm_bist_ctrl
+
   # Wire to input FIFO memories
   2.times do |i|
     src_fifo_"#{i}".memory_inst.bist_en.connect "bist_en_#{i}"
@@ -21,4 +30,5 @@ class Chip1_router < Generic_router_2x64b
       i.connect "#{i.name}_2" unless i.name =~ /clk/
     end
   end
+end
 end

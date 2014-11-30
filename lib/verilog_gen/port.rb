@@ -13,10 +13,11 @@ module VerilogGen
                       }
 
     # Construct a port.
-    # @param [String] name of the port
-    # @param [String] direction of the port
-    # @param [Integer] left hand side digit
-    # @param [Integer] right hahd side digit
+    # @param [Hash] params properties of the port
+    # @option params [String] :name name of the port
+    # @option params [String] :direction By default input
+    # @option params [Integer]:left By default 0 
+    # @option params [Integer] right hand digit. By default 0.
     # @note If lhs and rhs are 0 then it is a scalar port else vector type.
     def initialize(name, params = {})
       @@DEFAULT_PARAMS.each do |key, value|
@@ -27,8 +28,9 @@ module VerilogGen
       @name = name
 
       params.each do |key, value|
-        raise ArgumentError, "invalid value of port field '#{key}' with '#{value}'" \
-                    unless @@DEFAULT_PARAMS.has_key? key
+        raise ArgumentError, 
+          "invalid value of port field '#{key}' with '#{value}'" \
+           unless @@DEFAULT_PARAMS.has_key? key
         instance_variable_set("@#{key}", value)
       end
 
@@ -40,7 +42,7 @@ module VerilogGen
     end
 
     # Equaltiy of port
-    # @param [Port] rhs port
+    # @param [Object] other port instance
     # @return [Boolean] comparion result
     def ==(other)
       return false unless other.instance_of?(self.class)
@@ -49,7 +51,7 @@ module VerilogGen
     end
 
     # Well behaved hash keys
-    # @param [Port] rhs
+    # @param [Object] other port instance
     # @return [Boolean] true/false
     # @note if a.eql?(b) then a.hash = b.hash
     def eql?(other)

@@ -1,33 +1,38 @@
 #!/usr/bin/env ruby
-
+require 'pp'
 require 'optparse'
+
+# FIXME: Required till we install the gem
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
+require 'verilog_gen'
 
 options = {}
 option_parser = OptionParser.new do |opts|
   executable_name = File.basename($PROGRAM_NAME)
   opts.banner = "Verilog RTL Generator
 
-    Usage: #{executable_name} [options] ruby_hdl_design
+    Usage: #{executable_name} [options] ruby_build_script
   "
-  opts.on("-t", "--top", "top level module name") do |top|
-    options[:top_module_name] =  top
+  opts.on("-t top", "--top", "top level class name") do |top|
+    options[:top_class_name] =  top
   end
-  opts.on("-o", "--output", "output verilog file name") do |output|
-    options[:output_filename] = output
+  opts.on("-o", "--outdir", "output directory name") do |outdir|
+    options[:output_dirname] = output
   end
 end
 
 option_parser.parse!
-
-options[:module_template] = "module_template.erb"
-options[:output_filename] = "#{options[:top_module_name]}.v" unless options.has_key?(options[:output_filename])
-
-hdl_files = []
-if ARGV.empty?
-  puts "error: you must supply a list of hdl modules in ruby format"
+unless options.key?(:top_class_name)
+  puts "error: you must supply the top level class name"
   exit 1
-else
-  hdl_files = @ARGV
 end
 
-VerilogGen.main(options, hdl_files)
+if ARGV.empty?
+  puts "error: you must supply the ruby build script."
+  exit 1
+else
+  eval(File.open(ARGV[0]).read)
+  klass = Object.const_get(options[:top_class_name])
+  puts klass.render
+end
+
