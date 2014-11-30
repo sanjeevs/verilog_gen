@@ -5,6 +5,10 @@ require 'fileutils'
 
 # FIXME: Required till we install the gem
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
+
+# By default load the build directory
+$LOAD_PATH.unshift("#{FileUtils.pwd}/build")
+
 require 'verilog_gen'
 
 options = {}
