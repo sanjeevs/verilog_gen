@@ -3,25 +3,26 @@ require 'spec_helper'
 # Check that ports can be added to a verilog module.
 # If we want to reuse the ports from existing module then use clone.
 #
-class Leaf1 < VerilogGen::HdlModule
-  (0..5).each do |i|
-    add_port("port#{i}")
-  end
-end
-class Leaf2 < VerilogGen::HdlModule; 
-  (6..10).each do |i|
-    add_port("port#{i}")
-  end
-end
-
-class Leaf3 < VerilogGen::HdlModule
-  @ports = Leaf2.ports.clone
-  (11..16).each do |i|
-    add_port("port#{i}")
-  end
-end
-
 describe VerilogGen::HdlModule do
+  before(:all) do
+    class Leaf1 < VerilogGen::HdlModule
+      (0..5).each do |i|
+        add_port("port#{i}")
+      end
+    end
+    class Leaf2 < VerilogGen::HdlModule; 
+      (6..10).each do |i|
+        add_port("port#{i}")
+      end
+    end
+
+    class Leaf3 < VerilogGen::HdlModule
+      @ports = Leaf2.ports.clone
+      (11..16).each do |i|
+        add_port("port#{i}")
+      end
+    end
+  end
   it "should have unique ports on leaf1" do
     expect(Leaf1.ports.size).to eq(6)
   end

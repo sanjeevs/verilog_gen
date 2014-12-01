@@ -42,8 +42,8 @@ module VerilogGen
       # FIXME: Hack lhs and rhs
       unless @packed == ""
         m = /\[\s*(\d+)\s*:\s*(\d+)\s*\]/.match @packed
-        @lhs = m.captures[0]
-        @rhs = m.captures[1]
+        @lhs = m.captures[0].to_i
+        @rhs = m.captures[1].to_i
       end 
     end
 
@@ -80,6 +80,11 @@ module VerilogGen
     # @return [Integer] Width of the port
     def width
       (lhs > rhs) ? lhs - rhs + 1 : rhs - lhs + 1
+    end
+
+    def update_width(range)
+      @lhs = range[0] 
+      @rhs = range[1] 
     end
 
     # Utility routine to return the port declaration 

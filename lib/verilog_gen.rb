@@ -6,4 +6,5 @@ require "templates/helpers"
 require "verilog_gen/hdl_module"
 require "verilog_gen/string"
 require "verilog_gen/proxy"
+require "verilog_gen/hookup"
 

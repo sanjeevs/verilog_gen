@@ -1,0 +1,1430 @@
+vgen -t Router -o out/generic_router build/generic_router.rb 
+Running vscan DEPTH=4 -class Fifo_ctrl_4d rtl/fifo_ctrl.v
+Running vscan DEPTH=4 WIDTH=64 -class Generic_mem_4x64 rtl/generic_mem.v
+Running vscan DEPTH=8 -class Fifo_ctrl_8d rtl/fifo_ctrl.v
+Running vscan DEPTH=8 WIDTH=64 -class Generic_mem_8x64 rtl/generic_mem.v
+Running vscan  -class Rr_arb rtl/rr_arb.v
+Running vscan WIDTH=64 -class Router_ctrl_64bit rtl/router_ctrl.v
+Running create pins depth first #<Fifo_4x64:0x8e82120>
++	child create pins depth first #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>
+Running create pins depth first #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>
+>>>Leaf create pins depth first #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>
++	child create pins depth first #<VerilogGen::Generic_mem_4x64:0x8e3c698>
+Running create pins depth first #<VerilogGen::Generic_mem_4x64:0x8e3c698>
+>>>Leaf create pins depth first #<VerilogGen::Generic_mem_4x64:0x8e3c698>
+Create default ports for Fifo_4x64
+ChildPinsConnectivity: {"fifo_ctrl_inst"=>#<VerilogGen::Fifo_ctrl_4d:0x8e3c828 @instance_name="fifo_ctrl_inst", @pins={"clk"=>#<VerilogGen::Pin:0x8ea0aa8 @port=#<VerilogGen::Port:0x8e1da18 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "empty"=>#<VerilogGen::Pin:0x8ea0a80 @port=#<VerilogGen::Port:0x8e1d4b4 @name="empty", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="empty", @type="reg", @lhs=0, @rhs=0, @direction="output">, "full"=>#<VerilogGen::Pin:0x8ea0a58 @port=#<VerilogGen::Port:0x8e1cfdc @name="full", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="full", @type="reg", @lhs=0, @rhs=0, @direction="output">, "mem_rd_addr"=>#<VerilogGen::Pin:0x8ea0a30 @port=#<VerilogGen::Port:0x8e1caa0 @name="mem_rd_addr", @direction="output", @lhs="1", @rhs="0", @type="reg", @packed="[1:0]", @unpacked="">, @name="mem_rd_addr", @type="reg", @lhs="1", @rhs="0", @direction="output">, "mem_rd_en"=>#<VerilogGen::Pin:0x8ea0a08 @port=#<VerilogGen::Port:0x8e1c4c4 @name="mem_rd_en", @direction="output", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_rd_en", @type="wire", @lhs=0, @rhs=0, @direction="output">, "mem_wr_addr"=>#<VerilogGen::Pin:0x8ea09e0 @port=#<VerilogGen::Port:0x8e23f6c @name="mem_wr_addr", @direction="output", @lhs="1", @rhs="0", @type="reg", @packed="[1:0]", @unpacked="">, @name="mem_wr_addr", @type="reg", @lhs="1", @rhs="0", @direction="output">, "mem_wr_en"=>#<VerilogGen::Pin:0x8ea09b8 @port=#<VerilogGen::Port:0x8e23954 @name="mem_wr_en", @direction="output", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_wr_en", @type="wire", @lhs=0, @rhs=0, @direction="output">, "pop"=>#<VerilogGen::Pin:0x8ea0990 @port=#<VerilogGen::Port:0x8e23454 @name="pop", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="pop", @type="wire", @lhs=0, @rhs=0, @direction="input">, "push"=>#<VerilogGen::Pin:0x8ea0968 @port=#<VerilogGen::Port:0x8e22f7c @name="push", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="push", @type="wire", @lhs=0, @rhs=0, @direction="input">, "reset"=>#<VerilogGen::Pin:0x8ea0940 @port=#<VerilogGen::Port:0x8e22acc @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">}>, "memory_inst"=>#<VerilogGen::Generic_mem_4x64:0x8e3c698 @instance_name="memory_inst", @pins={"clk"=>#<VerilogGen::Pin:0x8ea0814 @port=#<VerilogGen::Port:0x8e20bb4 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_rd_addr"=>#<VerilogGen::Pin:0x8ea07ec @port=#<VerilogGen::Port:0x8e20358 @name="mem_rd_addr", @direction="input", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="mem_rd_addr", @type="wire", @lhs="1", @rhs="0", @direction="input">, "mem_rd_data"=>#<VerilogGen::Pin:0x8ea07c4 @port=#<VerilogGen::Port:0x8e3f974 @name="mem_rd_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_rd_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_rd_en"=>#<VerilogGen::Pin:0x8ea079c @port=#<VerilogGen::Port:0x8e3ef24 @name="mem_rd_en", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_rd_en", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_wr_addr"=>#<VerilogGen::Pin:0x8ea0774 @port=#<VerilogGen::Port:0x8e3e704 @name="mem_wr_addr", @direction="input", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="mem_wr_addr", @type="wire", @lhs="1", @rhs="0", @direction="input">, "mem_wr_data"=>#<VerilogGen::Pin:0x8ea074c @port=#<VerilogGen::Port:0x8e3dd90 @name="mem_wr_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_wr_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_wr_en"=>#<VerilogGen::Pin:0x8ea0724 @port=#<VerilogGen::Port:0x8e3d14c @name="mem_wr_en", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_wr_en", @type="wire", @lhs=0, @rhs=0, @direction="input">}>}
+"Child: #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>"
+**Pushing clk for fifo_ctrl_inst
+**Pushing empty for fifo_ctrl_inst
+**Pushing full for fifo_ctrl_inst
+**Pushing mem_rd_addr for fifo_ctrl_inst
+**Pushing mem_rd_en for fifo_ctrl_inst
+**Pushing mem_wr_addr for fifo_ctrl_inst
+**Pushing mem_wr_en for fifo_ctrl_inst
+**Pushing pop for fifo_ctrl_inst
+**Pushing push for fifo_ctrl_inst
+**Pushing reset for fifo_ctrl_inst
+"Child: #<VerilogGen::Generic_mem_4x64:0x8e3c698>"
+**Pushing clk for memory_inst
+**Pushing mem_rd_addr for memory_inst
+**Pushing mem_rd_data for memory_inst
+**Pushing mem_rd_en for memory_inst
+**Pushing mem_wr_addr for memory_inst
+**Pushing mem_wr_data for memory_inst
+**Pushing mem_wr_en for memory_inst
+{"clk"=>
+  [#<VerilogGen::Port:0x8e1da18
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e20bb4
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "empty"=>
+  [#<VerilogGen::Port:0x8e1d4b4
+    @direction="output",
+    @lhs=0,
+    @name="empty",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "full"=>
+  [#<VerilogGen::Port:0x8e1cfdc
+    @direction="output",
+    @lhs=0,
+    @name="full",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "mem_rd_addr"=>
+  [#<VerilogGen::Port:0x8e1caa0
+    @direction="output",
+    @lhs="1",
+    @name="mem_rd_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e20358
+    @direction="input",
+    @lhs="1",
+    @name="mem_rd_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_rd_en"=>
+  [#<VerilogGen::Port:0x8e1c4c4
+    @direction="output",
+    @lhs=0,
+    @name="mem_rd_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3ef24
+    @direction="input",
+    @lhs=0,
+    @name="mem_rd_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_addr"=>
+  [#<VerilogGen::Port:0x8e23f6c
+    @direction="output",
+    @lhs="1",
+    @name="mem_wr_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3e704
+    @direction="input",
+    @lhs="1",
+    @name="mem_wr_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_en"=>
+  [#<VerilogGen::Port:0x8e23954
+    @direction="output",
+    @lhs=0,
+    @name="mem_wr_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3d14c
+    @direction="input",
+    @lhs=0,
+    @name="mem_wr_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "pop"=>
+  [#<VerilogGen::Port:0x8e23454
+    @direction="input",
+    @lhs=0,
+    @name="pop",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "push"=>
+  [#<VerilogGen::Port:0x8e22f7c
+    @direction="input",
+    @lhs=0,
+    @name="push",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "reset"=>
+  [#<VerilogGen::Port:0x8e22acc
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "mem_rd_data"=>
+  [#<VerilogGen::Port:0x8e3f974
+    @direction="input",
+    @lhs="63",
+    @name="mem_rd_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_data"=>
+  [#<VerilogGen::Port:0x8e3dd90
+    @direction="input",
+    @lhs="63",
+    @name="mem_wr_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">]}
+[#<VerilogGen::Port:0x8e1da18
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e20bb4
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e1da18>"
+[#<VerilogGen::Port:0x8e1d4b4
+  @direction="output",
+  @lhs=0,
+  @name="empty",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">]
+"Create output port #<VerilogGen::Port:0x8e1d4b4>"
+[#<VerilogGen::Port:0x8e1cfdc
+  @direction="output",
+  @lhs=0,
+  @name="full",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">]
+"Create output port #<VerilogGen::Port:0x8e1cfdc>"
+[#<VerilogGen::Port:0x8e1caa0
+  @direction="output",
+  @lhs="1",
+  @name="mem_rd_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e20358
+  @direction="input",
+  @lhs="1",
+  @name="mem_rd_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e1c4c4
+  @direction="output",
+  @lhs=0,
+  @name="mem_rd_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e3ef24
+  @direction="input",
+  @lhs=0,
+  @name="mem_rd_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e23f6c
+  @direction="output",
+  @lhs="1",
+  @name="mem_wr_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e3e704
+  @direction="input",
+  @lhs="1",
+  @name="mem_wr_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e23954
+  @direction="output",
+  @lhs=0,
+  @name="mem_wr_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e3d14c
+  @direction="input",
+  @lhs=0,
+  @name="mem_wr_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e23454
+  @direction="input",
+  @lhs=0,
+  @name="pop",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e23454>"
+[#<VerilogGen::Port:0x8e22f7c
+  @direction="input",
+  @lhs=0,
+  @name="push",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e22f7c>"
+[#<VerilogGen::Port:0x8e22acc
+  @direction="input",
+  @lhs=0,
+  @name="reset",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e22acc>"
+[#<VerilogGen::Port:0x8e3f974
+  @direction="input",
+  @lhs="63",
+  @name="mem_rd_data",
+  @packed="[63:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e3f974>"
+[#<VerilogGen::Port:0x8e3dd90
+  @direction="input",
+  @lhs="63",
+  @name="mem_wr_data",
+  @packed="[63:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e3dd90>"
+Running create pins depth first #<Fifo_4x64:0x8e81f90>
++	child create pins depth first #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>
+Running create pins depth first #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>
+>>>Leaf create pins depth first #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>
++	child create pins depth first #<VerilogGen::Generic_mem_4x64:0x8e3c698>
+Running create pins depth first #<VerilogGen::Generic_mem_4x64:0x8e3c698>
+>>>Leaf create pins depth first #<VerilogGen::Generic_mem_4x64:0x8e3c698>
+Create default ports for Fifo_4x64
+ChildPinsConnectivity: {"fifo_ctrl_inst"=>#<VerilogGen::Fifo_ctrl_4d:0x8e3c828 @instance_name="fifo_ctrl_inst", @pins={"clk"=>#<VerilogGen::Pin:0x8ea0aa8 @port=#<VerilogGen::Port:0x8e1da18 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "empty"=>#<VerilogGen::Pin:0x8ea0a80 @port=#<VerilogGen::Port:0x8e1d4b4 @name="empty", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="empty", @type="reg", @lhs=0, @rhs=0, @direction="output">, "full"=>#<VerilogGen::Pin:0x8ea0a58 @port=#<VerilogGen::Port:0x8e1cfdc @name="full", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="full", @type="reg", @lhs=0, @rhs=0, @direction="output">, "mem_rd_addr"=>#<VerilogGen::Pin:0x8ea0a30 @port=#<VerilogGen::Port:0x8e1caa0 @name="mem_rd_addr", @direction="output", @lhs="1", @rhs="0", @type="reg", @packed="[1:0]", @unpacked="">, @name="mem_rd_addr", @type="reg", @lhs="1", @rhs="0", @direction="output">, "mem_rd_en"=>#<VerilogGen::Pin:0x8ea0a08 @port=#<VerilogGen::Port:0x8e1c4c4 @name="mem_rd_en", @direction="output", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_rd_en", @type="wire", @lhs=0, @rhs=0, @direction="output">, "mem_wr_addr"=>#<VerilogGen::Pin:0x8ea09e0 @port=#<VerilogGen::Port:0x8e23f6c @name="mem_wr_addr", @direction="output", @lhs="1", @rhs="0", @type="reg", @packed="[1:0]", @unpacked="">, @name="mem_wr_addr", @type="reg", @lhs="1", @rhs="0", @direction="output">, "mem_wr_en"=>#<VerilogGen::Pin:0x8ea09b8 @port=#<VerilogGen::Port:0x8e23954 @name="mem_wr_en", @direction="output", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_wr_en", @type="wire", @lhs=0, @rhs=0, @direction="output">, "pop"=>#<VerilogGen::Pin:0x8ea0990 @port=#<VerilogGen::Port:0x8e23454 @name="pop", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="pop", @type="wire", @lhs=0, @rhs=0, @direction="input">, "push"=>#<VerilogGen::Pin:0x8ea0968 @port=#<VerilogGen::Port:0x8e22f7c @name="push", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="push", @type="wire", @lhs=0, @rhs=0, @direction="input">, "reset"=>#<VerilogGen::Pin:0x8ea0940 @port=#<VerilogGen::Port:0x8e22acc @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">}>, "memory_inst"=>#<VerilogGen::Generic_mem_4x64:0x8e3c698 @instance_name="memory_inst", @pins={"clk"=>#<VerilogGen::Pin:0x8ea0814 @port=#<VerilogGen::Port:0x8e20bb4 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_rd_addr"=>#<VerilogGen::Pin:0x8ea07ec @port=#<VerilogGen::Port:0x8e20358 @name="mem_rd_addr", @direction="input", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="mem_rd_addr", @type="wire", @lhs="1", @rhs="0", @direction="input">, "mem_rd_data"=>#<VerilogGen::Pin:0x8ea07c4 @port=#<VerilogGen::Port:0x8e3f974 @name="mem_rd_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_rd_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_rd_en"=>#<VerilogGen::Pin:0x8ea079c @port=#<VerilogGen::Port:0x8e3ef24 @name="mem_rd_en", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_rd_en", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_wr_addr"=>#<VerilogGen::Pin:0x8ea0774 @port=#<VerilogGen::Port:0x8e3e704 @name="mem_wr_addr", @direction="input", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="mem_wr_addr", @type="wire", @lhs="1", @rhs="0", @direction="input">, "mem_wr_data"=>#<VerilogGen::Pin:0x8ea074c @port=#<VerilogGen::Port:0x8e3dd90 @name="mem_wr_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_wr_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_wr_en"=>#<VerilogGen::Pin:0x8ea0724 @port=#<VerilogGen::Port:0x8e3d14c @name="mem_wr_en", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_wr_en", @type="wire", @lhs=0, @rhs=0, @direction="input">}>}
+"Child: #<VerilogGen::Fifo_ctrl_4d:0x8e3c828>"
+**Pushing clk for fifo_ctrl_inst
+**Pushing empty for fifo_ctrl_inst
+**Pushing full for fifo_ctrl_inst
+**Pushing mem_rd_addr for fifo_ctrl_inst
+**Pushing mem_rd_en for fifo_ctrl_inst
+**Pushing mem_wr_addr for fifo_ctrl_inst
+**Pushing mem_wr_en for fifo_ctrl_inst
+**Pushing pop for fifo_ctrl_inst
+**Pushing push for fifo_ctrl_inst
+**Pushing reset for fifo_ctrl_inst
+"Child: #<VerilogGen::Generic_mem_4x64:0x8e3c698>"
+**Pushing clk for memory_inst
+**Pushing mem_rd_addr for memory_inst
+**Pushing mem_rd_data for memory_inst
+**Pushing mem_rd_en for memory_inst
+**Pushing mem_wr_addr for memory_inst
+**Pushing mem_wr_data for memory_inst
+**Pushing mem_wr_en for memory_inst
+{"clk"=>
+  [#<VerilogGen::Port:0x8e1da18
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e20bb4
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "empty"=>
+  [#<VerilogGen::Port:0x8e1d4b4
+    @direction="output",
+    @lhs=0,
+    @name="empty",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "full"=>
+  [#<VerilogGen::Port:0x8e1cfdc
+    @direction="output",
+    @lhs=0,
+    @name="full",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "mem_rd_addr"=>
+  [#<VerilogGen::Port:0x8e1caa0
+    @direction="output",
+    @lhs="1",
+    @name="mem_rd_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e20358
+    @direction="input",
+    @lhs="1",
+    @name="mem_rd_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_rd_en"=>
+  [#<VerilogGen::Port:0x8e1c4c4
+    @direction="output",
+    @lhs=0,
+    @name="mem_rd_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3ef24
+    @direction="input",
+    @lhs=0,
+    @name="mem_rd_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_addr"=>
+  [#<VerilogGen::Port:0x8e23f6c
+    @direction="output",
+    @lhs="1",
+    @name="mem_wr_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3e704
+    @direction="input",
+    @lhs="1",
+    @name="mem_wr_addr",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_en"=>
+  [#<VerilogGen::Port:0x8e23954
+    @direction="output",
+    @lhs=0,
+    @name="mem_wr_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3d14c
+    @direction="input",
+    @lhs=0,
+    @name="mem_wr_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "pop"=>
+  [#<VerilogGen::Port:0x8e23454
+    @direction="input",
+    @lhs=0,
+    @name="pop",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "push"=>
+  [#<VerilogGen::Port:0x8e22f7c
+    @direction="input",
+    @lhs=0,
+    @name="push",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "reset"=>
+  [#<VerilogGen::Port:0x8e22acc
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "mem_rd_data"=>
+  [#<VerilogGen::Port:0x8e3f974
+    @direction="input",
+    @lhs="63",
+    @name="mem_rd_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_data"=>
+  [#<VerilogGen::Port:0x8e3dd90
+    @direction="input",
+    @lhs="63",
+    @name="mem_wr_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">]}
+[#<VerilogGen::Port:0x8e1da18
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e20bb4
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e1da18>"
+[#<VerilogGen::Port:0x8e1d4b4
+  @direction="output",
+  @lhs=0,
+  @name="empty",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">]
+"Create output port #<VerilogGen::Port:0x8e1d4b4>"
+[#<VerilogGen::Port:0x8e1cfdc
+  @direction="output",
+  @lhs=0,
+  @name="full",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">]
+"Create output port #<VerilogGen::Port:0x8e1cfdc>"
+[#<VerilogGen::Port:0x8e1caa0
+  @direction="output",
+  @lhs="1",
+  @name="mem_rd_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e20358
+  @direction="input",
+  @lhs="1",
+  @name="mem_rd_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e1c4c4
+  @direction="output",
+  @lhs=0,
+  @name="mem_rd_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e3ef24
+  @direction="input",
+  @lhs=0,
+  @name="mem_rd_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e23f6c
+  @direction="output",
+  @lhs="1",
+  @name="mem_wr_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e3e704
+  @direction="input",
+  @lhs="1",
+  @name="mem_wr_addr",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e23954
+  @direction="output",
+  @lhs=0,
+  @name="mem_wr_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e3d14c
+  @direction="input",
+  @lhs=0,
+  @name="mem_wr_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e23454
+  @direction="input",
+  @lhs=0,
+  @name="pop",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e23454>"
+[#<VerilogGen::Port:0x8e22f7c
+  @direction="input",
+  @lhs=0,
+  @name="push",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e22f7c>"
+[#<VerilogGen::Port:0x8e22acc
+  @direction="input",
+  @lhs=0,
+  @name="reset",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e22acc>"
+[#<VerilogGen::Port:0x8e3f974
+  @direction="input",
+  @lhs="63",
+  @name="mem_rd_data",
+  @packed="[63:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e3f974>"
+[#<VerilogGen::Port:0x8e3dd90
+  @direction="input",
+  @lhs="63",
+  @name="mem_wr_data",
+  @packed="[63:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e3dd90>"
+Running create pins depth first #<VerilogGen::Rr_arb:0x8e931c8>
+>>>Leaf create pins depth first #<VerilogGen::Rr_arb:0x8e931c8>
+Create default ports for VerilogGen::Rr_arb
+ChildPinsConnectivity: {}
+{}
+Running create pins depth first #<VerilogGen::Router_ctrl_64bit:0x8ea0ef4>
+>>>Leaf create pins depth first #<VerilogGen::Router_ctrl_64bit:0x8ea0ef4>
+Create default ports for VerilogGen::Router_ctrl_64bit
+ChildPinsConnectivity: {}
+{}
+Running create pins depth first #<Fifo_8x64:0x8ea0e18>
++	child create pins depth first #<VerilogGen::Fifo_ctrl_8d:0x8e823dc>
+Running create pins depth first #<VerilogGen::Fifo_ctrl_8d:0x8e823dc>
+>>>Leaf create pins depth first #<VerilogGen::Fifo_ctrl_8d:0x8e823dc>
++	child create pins depth first #<VerilogGen::Generic_mem_8x64:0x8e82288>
+Running create pins depth first #<VerilogGen::Generic_mem_8x64:0x8e82288>
+>>>Leaf create pins depth first #<VerilogGen::Generic_mem_8x64:0x8e82288>
+Create default ports for Fifo_8x64
+ChildPinsConnectivity: {"fifo_ctrl_inst"=>#<VerilogGen::Fifo_ctrl_8d:0x8e823dc @instance_name="fifo_ctrl_inst", @pins={"clk"=>#<VerilogGen::Pin:0x90132c8 @port=#<VerilogGen::Port:0x8e69f80 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "empty"=>#<VerilogGen::Pin:0x90132a0 @port=#<VerilogGen::Port:0x8e69a94 @name="empty", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="empty", @type="reg", @lhs=0, @rhs=0, @direction="output">, "full"=>#<VerilogGen::Pin:0x9013278 @port=#<VerilogGen::Port:0x8e695d0 @name="full", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="full", @type="reg", @lhs=0, @rhs=0, @direction="output">, "mem_rd_addr"=>#<VerilogGen::Pin:0x9013250 @port=#<VerilogGen::Port:0x8e68c70 @name="mem_rd_addr", @direction="output", @lhs="2", @rhs="0", @type="reg", @packed="[2:0]", @unpacked="">, @name="mem_rd_addr", @type="reg", @lhs="2", @rhs="0", @direction="output">, "mem_rd_en"=>#<VerilogGen::Pin:0x9013228 @port=#<VerilogGen::Port:0x8e684a0 @name="mem_rd_en", @direction="output", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_rd_en", @type="wire", @lhs=0, @rhs=0, @direction="output">, "mem_wr_addr"=>#<VerilogGen::Pin:0x9013200 @port=#<VerilogGen::Port:0x8e79098 @name="mem_wr_addr", @direction="output", @lhs="2", @rhs="0", @type="reg", @packed="[2:0]", @unpacked="">, @name="mem_wr_addr", @type="reg", @lhs="2", @rhs="0", @direction="output">, "mem_wr_en"=>#<VerilogGen::Pin:0x90131d8 @port=#<VerilogGen::Port:0x8e7bbcc @name="mem_wr_en", @direction="output", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_wr_en", @type="wire", @lhs=0, @rhs=0, @direction="output">, "pop"=>#<VerilogGen::Pin:0x901319c @port=#<VerilogGen::Port:0x8e7b618 @name="pop", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="pop", @type="wire", @lhs=0, @rhs=0, @direction="input">, "push"=>#<VerilogGen::Pin:0x9013174 @port=#<VerilogGen::Port:0x8e7b0a0 @name="push", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="push", @type="wire", @lhs=0, @rhs=0, @direction="input">, "reset"=>#<VerilogGen::Pin:0x9013138 @port=#<VerilogGen::Port:0x8e7ab00 @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">}>, "memory_inst"=>#<VerilogGen::Generic_mem_8x64:0x8e82288 @instance_name="memory_inst", @pins={"clk"=>#<VerilogGen::Pin:0x901300c @port=#<VerilogGen::Port:0x8e78cd8 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_rd_addr"=>#<VerilogGen::Pin:0x9012fe4 @port=#<VerilogGen::Port:0x8e78710 @name="mem_rd_addr", @direction="input", @lhs="2", @rhs="0", @type="wire", @packed="[2:0]", @unpacked="">, @name="mem_rd_addr", @type="wire", @lhs="2", @rhs="0", @direction="input">, "mem_rd_data"=>#<VerilogGen::Pin:0x9012fbc @port=#<VerilogGen::Port:0x8e7806c @name="mem_rd_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_rd_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_rd_en"=>#<VerilogGen::Pin:0x9012f94 @port=#<VerilogGen::Port:0x8e83d68 @name="mem_rd_en", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_rd_en", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_wr_addr"=>#<VerilogGen::Pin:0x9012f6c @port=#<VerilogGen::Port:0x8e83714 @name="mem_wr_addr", @direction="input", @lhs="2", @rhs="0", @type="wire", @packed="[2:0]", @unpacked="">, @name="mem_wr_addr", @type="wire", @lhs="2", @rhs="0", @direction="input">, "mem_wr_data"=>#<VerilogGen::Pin:0x9012f44 @port=#<VerilogGen::Port:0x8e83048 @name="mem_wr_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_wr_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_wr_en"=>#<VerilogGen::Pin:0x9012f1c @port=#<VerilogGen::Port:0x8e829b8 @name="mem_wr_en", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="mem_wr_en", @type="wire", @lhs=0, @rhs=0, @direction="input">}>}
+"Child: #<VerilogGen::Fifo_ctrl_8d:0x8e823dc>"
+**Pushing clk for fifo_ctrl_inst
+**Pushing empty for fifo_ctrl_inst
+**Pushing full for fifo_ctrl_inst
+**Pushing mem_rd_addr for fifo_ctrl_inst
+**Pushing mem_rd_en for fifo_ctrl_inst
+**Pushing mem_wr_addr for fifo_ctrl_inst
+**Pushing mem_wr_en for fifo_ctrl_inst
+**Pushing pop for fifo_ctrl_inst
+**Pushing push for fifo_ctrl_inst
+**Pushing reset for fifo_ctrl_inst
+"Child: #<VerilogGen::Generic_mem_8x64:0x8e82288>"
+**Pushing clk for memory_inst
+**Pushing mem_rd_addr for memory_inst
+**Pushing mem_rd_data for memory_inst
+**Pushing mem_rd_en for memory_inst
+**Pushing mem_wr_addr for memory_inst
+**Pushing mem_wr_data for memory_inst
+**Pushing mem_wr_en for memory_inst
+{"clk"=>
+  [#<VerilogGen::Port:0x8e69f80
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e78cd8
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "empty"=>
+  [#<VerilogGen::Port:0x8e69a94
+    @direction="output",
+    @lhs=0,
+    @name="empty",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "full"=>
+  [#<VerilogGen::Port:0x8e695d0
+    @direction="output",
+    @lhs=0,
+    @name="full",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "mem_rd_addr"=>
+  [#<VerilogGen::Port:0x8e68c70
+    @direction="output",
+    @lhs="2",
+    @name="mem_rd_addr",
+    @packed="[2:0]",
+    @rhs="0",
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e78710
+    @direction="input",
+    @lhs="2",
+    @name="mem_rd_addr",
+    @packed="[2:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_rd_en"=>
+  [#<VerilogGen::Port:0x8e684a0
+    @direction="output",
+    @lhs=0,
+    @name="mem_rd_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e83d68
+    @direction="input",
+    @lhs=0,
+    @name="mem_rd_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_addr"=>
+  [#<VerilogGen::Port:0x8e79098
+    @direction="output",
+    @lhs="2",
+    @name="mem_wr_addr",
+    @packed="[2:0]",
+    @rhs="0",
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e83714
+    @direction="input",
+    @lhs="2",
+    @name="mem_wr_addr",
+    @packed="[2:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_en"=>
+  [#<VerilogGen::Port:0x8e7bbcc
+    @direction="output",
+    @lhs=0,
+    @name="mem_wr_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e829b8
+    @direction="input",
+    @lhs=0,
+    @name="mem_wr_en",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "pop"=>
+  [#<VerilogGen::Port:0x8e7b618
+    @direction="input",
+    @lhs=0,
+    @name="pop",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "push"=>
+  [#<VerilogGen::Port:0x8e7b0a0
+    @direction="input",
+    @lhs=0,
+    @name="push",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "reset"=>
+  [#<VerilogGen::Port:0x8e7ab00
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "mem_rd_data"=>
+  [#<VerilogGen::Port:0x8e7806c
+    @direction="input",
+    @lhs="63",
+    @name="mem_rd_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_data"=>
+  [#<VerilogGen::Port:0x8e83048
+    @direction="input",
+    @lhs="63",
+    @name="mem_wr_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">]}
+[#<VerilogGen::Port:0x8e69f80
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e78cd8
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e69f80>"
+[#<VerilogGen::Port:0x8e69a94
+  @direction="output",
+  @lhs=0,
+  @name="empty",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">]
+"Create output port #<VerilogGen::Port:0x8e69a94>"
+[#<VerilogGen::Port:0x8e695d0
+  @direction="output",
+  @lhs=0,
+  @name="full",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">]
+"Create output port #<VerilogGen::Port:0x8e695d0>"
+[#<VerilogGen::Port:0x8e68c70
+  @direction="output",
+  @lhs="2",
+  @name="mem_rd_addr",
+  @packed="[2:0]",
+  @rhs="0",
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e78710
+  @direction="input",
+  @lhs="2",
+  @name="mem_rd_addr",
+  @packed="[2:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e684a0
+  @direction="output",
+  @lhs=0,
+  @name="mem_rd_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e83d68
+  @direction="input",
+  @lhs=0,
+  @name="mem_rd_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e79098
+  @direction="output",
+  @lhs="2",
+  @name="mem_wr_addr",
+  @packed="[2:0]",
+  @rhs="0",
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e83714
+  @direction="input",
+  @lhs="2",
+  @name="mem_wr_addr",
+  @packed="[2:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e7bbcc
+  @direction="output",
+  @lhs=0,
+  @name="mem_wr_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e829b8
+  @direction="input",
+  @lhs=0,
+  @name="mem_wr_en",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+[#<VerilogGen::Port:0x8e7b618
+  @direction="input",
+  @lhs=0,
+  @name="pop",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e7b618>"
+[#<VerilogGen::Port:0x8e7b0a0
+  @direction="input",
+  @lhs=0,
+  @name="push",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e7b0a0>"
+[#<VerilogGen::Port:0x8e7ab00
+  @direction="input",
+  @lhs=0,
+  @name="reset",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e7ab00>"
+[#<VerilogGen::Port:0x8e7806c
+  @direction="input",
+  @lhs="63",
+  @name="mem_rd_data",
+  @packed="[63:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e7806c>"
+[#<VerilogGen::Port:0x8e83048
+  @direction="input",
+  @lhs="63",
+  @name="mem_wr_data",
+  @packed="[63:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e83048>"
+Top level pins to port for Router
+ChildPinsConnectivity: {"src_fifo_0"=>#<Fifo_4x64:0x8e82120 @instance_name="src_fifo_0", @pins={"clk"=>#<VerilogGen::Pin:0x8fca6e0 @port=#<VerilogGen::Port:0x8e1da18 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "empty"=>#<VerilogGen::Pin:0x8fca6b8 @port=#<VerilogGen::Port:0x8e1d4b4 @name="empty", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="empty", @type="reg", @lhs=0, @rhs=0, @direction="output">, "full"=>#<VerilogGen::Pin:0x8fca690 @port=#<VerilogGen::Port:0x8e1cfdc @name="full", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="full", @type="reg", @lhs=0, @rhs=0, @direction="output">, "pop"=>#<VerilogGen::Pin:0x8fca668 @port=#<VerilogGen::Port:0x8e23454 @name="pop", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="pop", @type="wire", @lhs=0, @rhs=0, @direction="input">, "push"=>#<VerilogGen::Pin:0x8fca640 @port=#<VerilogGen::Port:0x8e22f7c @name="push", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="push", @type="wire", @lhs=0, @rhs=0, @direction="input">, "reset"=>#<VerilogGen::Pin:0x8fca618 @port=#<VerilogGen::Port:0x8e22acc @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_rd_data"=>#<VerilogGen::Pin:0x8fca5f0 @port=#<VerilogGen::Port:0x8e3f974 @name="mem_rd_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_rd_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_wr_data"=>#<VerilogGen::Pin:0x8fca5c8 @port=#<VerilogGen::Port:0x8e3dd90 @name="mem_wr_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_wr_data", @type="wire", @lhs="63", @rhs="0", @direction="input">}>, "src_fifo_1"=>#<Fifo_4x64:0x8e81f90 @instance_name="src_fifo_1", @pins={"clk"=>#<VerilogGen::Pin:0x90125e4 @port=#<VerilogGen::Port:0x8e1da18 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "empty"=>#<VerilogGen::Pin:0x901260c @port=#<VerilogGen::Port:0x8e1d4b4 @name="empty", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="empty", @type="reg", @lhs=0, @rhs=0, @direction="output">, "full"=>#<VerilogGen::Pin:0x9012814 @port=#<VerilogGen::Port:0x8e1cfdc @name="full", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="full", @type="reg", @lhs=0, @rhs=0, @direction="output">, "pop"=>#<VerilogGen::Pin:0x901283c @port=#<VerilogGen::Port:0x8e23454 @name="pop", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="pop", @type="wire", @lhs=0, @rhs=0, @direction="input">, "push"=>#<VerilogGen::Pin:0x9012a58 @port=#<VerilogGen::Port:0x8e22f7c @name="push", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="push", @type="wire", @lhs=0, @rhs=0, @direction="input">, "reset"=>#<VerilogGen::Pin:0x9012b20 @port=#<VerilogGen::Port:0x8e22acc @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_rd_data"=>#<VerilogGen::Pin:0x9012da0 @port=#<VerilogGen::Port:0x8e3f974 @name="mem_rd_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_rd_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_wr_data"=>#<VerilogGen::Pin:0x9012dc8 @port=#<VerilogGen::Port:0x8e3dd90 @name="mem_wr_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_wr_data", @type="wire", @lhs="63", @rhs="0", @direction="input">}>, "arb"=>#<VerilogGen::Rr_arb:0x8e931c8 @instance_name="arb", @pins={"clk"=>#<VerilogGen::Pin:0x90139f8 @port=#<VerilogGen::Port:0x8e80d20 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "cycle"=>#<VerilogGen::Pin:0x9013ac0 @port=#<VerilogGen::Port:0x8e8076c @name="cycle", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="cycle", @type="wire", @lhs=0, @rhs=0, @direction="input">, "gnt"=>#<VerilogGen::Pin:0x9013d2c @port=#<VerilogGen::Port:0x8e801b8 @name="gnt", @direction="output", @lhs="1", @rhs="0", @type="reg", @packed="[1:0]", @unpacked="">, @name="gnt", @type="reg", @lhs="1", @rhs="0", @direction="output">, "req"=>#<VerilogGen::Pin:0x9013f48 @port=#<VerilogGen::Port:0x8e93e70 @name="req", @direction="input", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="req", @type="wire", @lhs="1", @rhs="0", @direction="input">, "reset"=>#<VerilogGen::Pin:0x9013f70 @port=#<VerilogGen::Port:0x8e93790 @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">}>, "router_ctrl"=>#<VerilogGen::Router_ctrl_64bit:0x8ea0ef4 @instance_name="router_ctrl", @pins={"empty"=>#<VerilogGen::Pin:0x8ea0d64 @port=#<VerilogGen::Port:0x8ea3a8c @name="empty", @direction="input", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="src_fifo_empty", @type="wire", @lhs="1", @rhs="0", @direction="input">, "pop"=>#<VerilogGen::Pin:0x8ea0cec @port=#<VerilogGen::Port:0x8ea27a4 @name="pop", @direction="output", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="src_fifo_pop", @type="wire", @lhs="1", @rhs="0", @direction="output">, "data_in"=>#<VerilogGen::Pin:0x8ea0c74 @port=#<VerilogGen::Port:0x8e90630 @name="data_in", @direction="input", @lhs="127", @rhs="0", @type="wire", @packed="[127:0]", @unpacked="">, @name="src_fifo_data", @type="wire", @lhs="127", @rhs="0", @direction="input">, "clk"=>#<VerilogGen::Pin:0x9013a98 @port=#<VerilogGen::Port:0x8e9115c @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "cycle"=>#<VerilogGen::Pin:0x9013a70 @port=#<VerilogGen::Port:0x8e90bf8 @name="cycle", @direction="output", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="cycle", @type="wire", @lhs=0, @rhs=0, @direction="output">, "data_out"=>#<VerilogGen::Pin:0x9013a34 @port=#<VerilogGen::Port:0x8ea2218 @name="data_out", @direction="output", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="data_out", @type="wire", @lhs="63", @rhs="0", @direction="output">, "full"=>#<VerilogGen::Pin:0x90139bc @port=#<VerilogGen::Port:0x8ea33fc @name="full", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="full", @type="wire", @lhs=0, @rhs=0, @direction="input">, "gnt"=>#<VerilogGen::Pin:0x9013994 @port=#<VerilogGen::Port:0x8ea2e48 @name="gnt", @direction="input", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="gnt", @type="wire", @lhs="1", @rhs="0", @direction="input">, "push"=>#<VerilogGen::Pin:0x9013958 @port=#<VerilogGen::Port:0x8ea2100 @name="push", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="push", @type="reg", @lhs=0, @rhs=0, @direction="output">, "req"=>#<VerilogGen::Pin:0x9013930 @port=#<VerilogGen::Port:0x8ea1b38 @name="req", @direction="output", @lhs="1", @rhs="0", @type="wire", @packed="[1:0]", @unpacked="">, @name="req", @type="wire", @lhs="1", @rhs="0", @direction="output">, "reset"=>#<VerilogGen::Pin:0x9013908 @port=#<VerilogGen::Port:0x8ea13cc @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">}>, "dst_fifo"=>#<Fifo_8x64:0x8ea0e18 @instance_name="dst_fifo", @pins={"clk"=>#<VerilogGen::Pin:0x8f706b8 @port=#<VerilogGen::Port:0x8e69f80 @name="clk", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="clk", @type="wire", @lhs=0, @rhs=0, @direction="input">, "empty"=>#<VerilogGen::Pin:0x8f70690 @port=#<VerilogGen::Port:0x8e69a94 @name="empty", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="empty", @type="reg", @lhs=0, @rhs=0, @direction="output">, "full"=>#<VerilogGen::Pin:0x8f70668 @port=#<VerilogGen::Port:0x8e695d0 @name="full", @direction="output", @lhs=0, @rhs=0, @type="reg", @packed="", @unpacked="">, @name="full", @type="reg", @lhs=0, @rhs=0, @direction="output">, "pop"=>#<VerilogGen::Pin:0x8f70640 @port=#<VerilogGen::Port:0x8e7b618 @name="pop", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="pop", @type="wire", @lhs=0, @rhs=0, @direction="input">, "push"=>#<VerilogGen::Pin:0x8f70618 @port=#<VerilogGen::Port:0x8e7b0a0 @name="push", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="push", @type="wire", @lhs=0, @rhs=0, @direction="input">, "reset"=>#<VerilogGen::Pin:0x8f705f0 @port=#<VerilogGen::Port:0x8e7ab00 @name="reset", @direction="input", @lhs=0, @rhs=0, @type="wire", @packed="", @unpacked="">, @name="reset", @type="wire", @lhs=0, @rhs=0, @direction="input">, "mem_rd_data"=>#<VerilogGen::Pin:0x8f705c8 @port=#<VerilogGen::Port:0x8e7806c @name="mem_rd_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_rd_data", @type="wire", @lhs="63", @rhs="0", @direction="input">, "mem_wr_data"=>#<VerilogGen::Pin:0x8f705a0 @port=#<VerilogGen::Port:0x8e83048 @name="mem_wr_data", @direction="input", @lhs="63", @rhs="0", @type="wire", @packed="[63:0]", @unpacked="">, @name="mem_wr_data", @type="wire", @lhs="63", @rhs="0", @direction="input">}>}
+"Child: #<Fifo_4x64:0x8e82120>"
+**Pushing clk for src_fifo_0
+**Pushing empty for src_fifo_0
+**Pushing full for src_fifo_0
+**Pushing pop for src_fifo_0
+**Pushing push for src_fifo_0
+**Pushing reset for src_fifo_0
+**Pushing mem_rd_data for src_fifo_0
+**Pushing mem_wr_data for src_fifo_0
+"Child: #<Fifo_4x64:0x8e81f90>"
+**Pushing clk for src_fifo_1
+**Pushing empty for src_fifo_1
+**Pushing full for src_fifo_1
+**Pushing pop for src_fifo_1
+**Pushing push for src_fifo_1
+**Pushing reset for src_fifo_1
+**Pushing mem_rd_data for src_fifo_1
+**Pushing mem_wr_data for src_fifo_1
+"Child: #<VerilogGen::Rr_arb:0x8e931c8>"
+**Pushing clk for arb
+**Pushing cycle for arb
+**Pushing gnt for arb
+**Pushing req for arb
+**Pushing reset for arb
+"Child: #<VerilogGen::Router_ctrl_64bit:0x8ea0ef4>"
+**Pushing src_fifo_empty for router_ctrl
+**Pushing src_fifo_pop for router_ctrl
+**Pushing src_fifo_data for router_ctrl
+**Pushing clk for router_ctrl
+**Pushing cycle for router_ctrl
+**Pushing data_out for router_ctrl
+**Pushing full for router_ctrl
+**Pushing gnt for router_ctrl
+**Pushing push for router_ctrl
+**Pushing req for router_ctrl
+**Pushing reset for router_ctrl
+"Child: #<Fifo_8x64:0x8ea0e18>"
+**Pushing clk for dst_fifo
+**Pushing empty for dst_fifo
+**Pushing full for dst_fifo
+**Pushing pop for dst_fifo
+**Pushing push for dst_fifo
+**Pushing reset for dst_fifo
+**Pushing mem_rd_data for dst_fifo
+**Pushing mem_wr_data for dst_fifo
+{"clk"=>
+  [#<VerilogGen::Port:0x8e1da18
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e1da18
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e80d20
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e9115c
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e69f80
+    @direction="input",
+    @lhs=0,
+    @name="clk",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "empty"=>
+  [#<VerilogGen::Port:0x8e1d4b4
+    @direction="output",
+    @lhs=0,
+    @name="empty",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e1d4b4
+    @direction="output",
+    @lhs=0,
+    @name="empty",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8ea3a8c
+    @direction="input",
+    @lhs="1",
+    @name="empty",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e69a94
+    @direction="output",
+    @lhs=0,
+    @name="empty",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "full"=>
+  [#<VerilogGen::Port:0x8e1cfdc
+    @direction="output",
+    @lhs=0,
+    @name="full",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e1cfdc
+    @direction="output",
+    @lhs=0,
+    @name="full",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8ea33fc
+    @direction="input",
+    @lhs=0,
+    @name="full",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e695d0
+    @direction="output",
+    @lhs=0,
+    @name="full",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">],
+ "pop"=>
+  [#<VerilogGen::Port:0x8e23454
+    @direction="input",
+    @lhs=0,
+    @name="pop",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e23454
+    @direction="input",
+    @lhs=0,
+    @name="pop",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8ea27a4
+    @direction="output",
+    @lhs="1",
+    @name="pop",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e7b618
+    @direction="input",
+    @lhs=0,
+    @name="pop",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "push"=>
+  [#<VerilogGen::Port:0x8e22f7c
+    @direction="input",
+    @lhs=0,
+    @name="push",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e22f7c
+    @direction="input",
+    @lhs=0,
+    @name="push",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8ea2100
+    @direction="output",
+    @lhs=0,
+    @name="push",
+    @packed="",
+    @rhs=0,
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e7b0a0
+    @direction="input",
+    @lhs=0,
+    @name="push",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "reset"=>
+  [#<VerilogGen::Port:0x8e22acc
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e22acc
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e93790
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8ea13cc
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e7ab00
+    @direction="input",
+    @lhs=0,
+    @name="reset",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "mem_rd_data"=>
+  [#<VerilogGen::Port:0x8e3f974
+    @direction="input",
+    @lhs="63",
+    @name="mem_rd_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3f974
+    @direction="input",
+    @lhs="63",
+    @name="mem_rd_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e7806c
+    @direction="input",
+    @lhs="63",
+    @name="mem_rd_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "mem_wr_data"=>
+  [#<VerilogGen::Port:0x8e3dd90
+    @direction="input",
+    @lhs="63",
+    @name="mem_wr_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e3dd90
+    @direction="input",
+    @lhs="63",
+    @name="mem_wr_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e83048
+    @direction="input",
+    @lhs="63",
+    @name="mem_wr_data",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "cycle"=>
+  [#<VerilogGen::Port:0x8e8076c
+    @direction="input",
+    @lhs=0,
+    @name="cycle",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8e90bf8
+    @direction="output",
+    @lhs=0,
+    @name="cycle",
+    @packed="",
+    @rhs=0,
+    @type="wire",
+    @unpacked="">],
+ "gnt"=>
+  [#<VerilogGen::Port:0x8e801b8
+    @direction="output",
+    @lhs="1",
+    @name="gnt",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="reg",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8ea2e48
+    @direction="input",
+    @lhs="1",
+    @name="gnt",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "req"=>
+  [#<VerilogGen::Port:0x8e93e70
+    @direction="input",
+    @lhs="1",
+    @name="req",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">,
+   #<VerilogGen::Port:0x8ea1b38
+    @direction="output",
+    @lhs="1",
+    @name="req",
+    @packed="[1:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "data_in"=>
+  [#<VerilogGen::Port:0x8e90630
+    @direction="input",
+    @lhs="127",
+    @name="data_in",
+    @packed="[127:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">],
+ "data_out"=>
+  [#<VerilogGen::Port:0x8ea2218
+    @direction="output",
+    @lhs="63",
+    @name="data_out",
+    @packed="[63:0]",
+    @rhs="0",
+    @type="wire",
+    @unpacked="">]}
+[#<VerilogGen::Port:0x8e1da18
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e1da18
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e80d20
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e9115c
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e69f80
+  @direction="input",
+  @lhs=0,
+  @name="clk",
+  @packed="",
+  @rhs=0,
+  @type="wire",
+  @unpacked="">]
+"Create input port #<VerilogGen::Port:0x8e1da18>"
+[#<VerilogGen::Port:0x8e1d4b4
+  @direction="output",
+  @lhs=0,
+  @name="empty",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e1d4b4
+  @direction="output",
+  @lhs=0,
+  @name="empty",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8ea3a8c
+  @direction="input",
+  @lhs="1",
+  @name="empty",
+  @packed="[1:0]",
+  @rhs="0",
+  @type="wire",
+  @unpacked="">,
+ #<VerilogGen::Port:0x8e69a94
+  @direction="output",
+  @lhs=0,
+  @name="empty",
+  @packed="",
+  @rhs=0,
+  @type="reg",
+  @unpacked="">]

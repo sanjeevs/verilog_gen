@@ -41,7 +41,10 @@ if ARGV.empty?
 else
   eval(File.open(ARGV[0]).read)
   klass = Object.const_get(options[:top_class_name])
+  
   # Connect the ports and pins
+  VerilogGen.hookup klass
+
   # Write out all the subclasses of hdl modules.
   VerilogGen::HdlModule.get_subclasses.each do |sub_class|
     unless sub_class.proxy

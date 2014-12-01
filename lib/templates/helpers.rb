@@ -39,6 +39,20 @@ module DisplayHelpers
     return output
   end
 
+  def v2k_port_instance(port_name, hdl_instance)
+    output = ""
+    if hdl_instance.pins.key? port_name
+      pin = hdl_instance.pins[port_name]
+      if not pin.port.scalar?
+        output = ".#{port_name}(#{pin.name}"
+        output += "[#{pin.lhs}:#{pin.rhs}])"
+      else
+        output = ".#{port_name}(#{pin.name})"
+      end
+    else
+      output = ".#{port_name}()"
+    end
+  end
   # Render child instances.  
   # @return [String] verilog decl
   # @example
@@ -56,19 +70,11 @@ module DisplayHelpers
       output += " #{p}" unless p == ""
       output += " #{instance_name}(\n"
       hdl_instance.class.ports.keys[0..-2].each do |port_name|
-        if hdl_instance.pins.key? port_name
-          output += "    .#{port_name}(#{hdl_instance.pins[port_name].name}),\n"
-        else
-          output += "    .#{port_name}(),\n"
-        end
+        output += "    #{v2k_port_instance(port_name, hdl_instance)},\n"
       end
       port_name = hdl_instance.class.ports.keys.last
       if port_name
-        if hdl_instance.pins.key? port_name
-          output += "    .#{port_name}(#{hdl_instance.pins[port_name].name})\n"
-        else
-          output += "    .#{port_name}()\n"
-        end
+        output   += "    #{v2k_port_instance(port_name, hdl_instance)}\n"
       end
       output += "  );\n"
     end
