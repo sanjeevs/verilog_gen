@@ -16,10 +16,8 @@ class Fifo_4x64 < VerilogGen::HdlModule
   add_child_instance "memory_inst", Generic_mem_4x64
 
   # Connect pins to ports that do not match.
-  def self.connect
-    memory_inst.mem_wr_data.connect "push_data"
-    memory_inst.mem_rd_data.connect "pop_data"
-  end
+  memory_inst.mem_wr_data.connect "push_data"
+  memory_inst.mem_rd_data.connect "pop_data"
 
 end
 
@@ -35,22 +33,24 @@ class Fifo_8x64 < VerilogGen::HdlModule
                                     parameter: "DEPTH=8 WIDTH=64")
   add_child_instance "fifo_ctrl_inst", Fifo_ctrl_8d
   add_child_instance "memory_inst", Generic_mem_8x64
+
   # Connect pins to ports that do not match.
-  def self.connect
-    memory_inst.mem_wr_data.connect "push_data"
-    memory_inst.mem_rd_data.connect "pop_data"
-  end
+  memory_inst.mem_wr_data.connect "push_data"
+  memory_inst.mem_rd_data.connect "pop_data"
 end
 
 # Create a router with src fifo, router ctrl and dst fifo.
 class Router < VerilogGen::HdlModule
-  clients = 2
-  width = 64
 
+  class << self
+    attr_accessor :clients, :width, :src_fifo_lst
+  end
+  @clients = 2
+  @width = 64
+  @src_fifo_lst = []
   set_module_name "generic_router"
 
   # Create 2 instances of src fifo.
-  src_fifo_lst = []
   clients.times do |i|
     src_fifo_lst << add_child_instance("src_fifo_#{i}", Fifo_4x64)
   end
@@ -70,23 +70,25 @@ class Router < VerilogGen::HdlModule
   # Hook its output to the dst fifo.
   add_child_instance "dst_fifo", Fifo_8x64
 
-  router_ctrl.empty.connect "src_fifo_empty"
-  router_ctrl.pop.connect "src_fifo_pop"
-  router_ctrl.data_in.connect "src_fifo_data"
+  def self.connect
+    router_ctrl.empty.connect "src_fifo_empty"
+    router_ctrl.pop.connect "src_fifo_pop"
+    router_ctrl.data_in.connect "src_fifo_data"
 
-  dst_fifo.push_data.connect "data_out"
-  clients.times do |i|
-    src_fifo_lst[i].empty.connect "src_fifo_empty", lhs: i, rhs: i 
-    src_fifo_lst[i].pop.connect "src_fifo_pop", lhs: i, rhs: i 
-    rhs = width * i
-    lhs = rhs + width - 1
-    src_fifo_lst[i].pop_data.connect "src_fifo_data", lhs: lhs, rhs: rhs
-    src_fifo_lst[i].push_data.connect "client_data", lhs: lhs, rhs: rhs
-    src_fifo_lst[i].push.connect "client_push", lhs: i, rhs: i
-    src_fifo_lst[i].empty.connect "client_empty", lhs: i, rhs: i
+    dst_fifo.push_data.connect "data_out"
+    clients.times do |i|
+      src_fifo_lst[i].empty.connect "src_fifo_empty", lhs: i, rhs: i 
+      src_fifo_lst[i].pop.connect "src_fifo_pop", lhs: i, rhs: i 
+      rhs = width * i
+      lhs = rhs + width - 1
+      src_fifo_lst[i].pop_data.connect "src_fifo_data", lhs: lhs, rhs: rhs
+      src_fifo_lst[i].push_data.connect "client_data", lhs: lhs, rhs: rhs
+      src_fifo_lst[i].push.connect "client_push", lhs: i, rhs: i
+      src_fifo_lst[i].empty.connect "client_empty", lhs: i, rhs: i
+    end
+    dst_fifo.empty.connect "router_empty"
+    dst_fifo.pop.connect "router_pop"
+    dst_fifo.pop_data.connect "router_data"
   end
-  dst_fifo.empty.connect "router_empty"
-  dst_fifo.pop.connect "router_pop"
-  dst_fifo.pop_data.connect "router_data"
 
 end
