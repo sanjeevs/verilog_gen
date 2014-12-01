@@ -2,31 +2,32 @@ require 'spec_helper'
 
 # Render the ruby code to verilog.
 #
+module HdlOutput
 describe VerilogGen::HdlModule do
  before(:all) do
-class Leaf < VerilogGen::HdlModule
-  set_module_name "leaf"
-  add_port "clk"
-end
+  class Leaf < VerilogGen::HdlModule
+    set_module_name "leaf"
+    add_port "clk"
+  end
 
-class Node < VerilogGen::HdlModule; 
-  leaf = add_child_instance "leaf", Leaf
-  # Connect port 'clk' of instance 'leaf' to net sclk
-  leaf.clk.connect "sclk" 
-end
+  class Node < VerilogGen::HdlModule; 
+    leaf = add_child_instance "leaf", Leaf
+    # Connect port 'clk' of instance 'leaf' to net sclk
+    leaf.clk.connect "sclk" 
+  end
 
-class ParameterLeaf < VerilogGen::HdlModule
-  set_module_name "parameter_leaf"
-  add_port "clk"
-  set_parameter DEPTH: 8
-  set_parameter WIDTH: 16 
-end
+  class ParameterLeaf < VerilogGen::HdlModule
+    set_module_name "parameter_leaf"
+    add_port "clk"
+    set_parameter DEPTH: 8
+    set_parameter WIDTH: 16 
+  end
 
-class ParameterNode < VerilogGen::HdlModule; 
-  leaf = add_child_instance "parameter_leaf", ParameterLeaf
-  # Connect port 'clk' of instance 'leaf' to net sclk
-  parameter_leaf.clk.connect "sclk" 
-end
+  class ParameterNode < VerilogGen::HdlModule; 
+    leaf = add_child_instance "parameter_leaf", ParameterLeaf
+    # Connect port 'clk' of instance 'leaf' to net sclk
+    parameter_leaf.clk.connect "sclk" 
+  end
  end
   let(:leaf) { Leaf.new("leaf") }
   let(:leaf_verilog) { """module leaf (
@@ -83,4 +84,5 @@ endmodule
   it "should render node to verilog" do
     expect(ParameterNode.render).to eql(node_verilog)
   end
+end
 end

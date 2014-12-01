@@ -19,7 +19,7 @@ module generic_mem
   input wire [WIDTH-1:0]  mem_wr_data,
   input wire              mem_rd_en,
   input wire [AWIDTH-1:0] mem_rd_addr,
-  input wire [WIDTH-1:0]  mem_rd_data
+  output wire [WIDTH-1:0]  mem_rd_data
 );
 
 // The memory declaration

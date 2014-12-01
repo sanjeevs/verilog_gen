@@ -66,6 +66,25 @@ module VerilogGenTest
                         invalid_attribute: "value") }.to raise_exception
       end
     end
-
   end
+
+  describe "create" do
+    before(:all) do
+       @p = VerilogGen::Port.new("port", lhs: 9, rhs: 0,  type: "logic", 
+                                                          direction: "output")
+       @new_p = @p.create_connect_port("new_name", 43, 45)
+    end
+    it "should not affect the orig port" do
+      expect(@p.name).to eq("port")
+      expect(@p.lhs).to eq(9)
+      expect(@p.rhs).to eq(0)
+    end
+    it "should change the cloned port" do
+      expect(@new_p.name).to eq("new_name")
+      expect(@new_p.lhs).to eq(43)
+      expect(@new_p.rhs).to eq(45)
+      expect(@new_p.type).to eq("logic")
+    end
+  end
+
 end

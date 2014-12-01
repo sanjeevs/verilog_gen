@@ -204,11 +204,13 @@ module VerilogGen
     def method_missing(name, *args)
       string_name = name.to_s
       if self.class.ports.has_key? string_name 
-        if pins.has_key?(string_name)
-          pin = pins[string_name]
+        port_name = string_name
+        if pins.has_key?(port_name)
+          pin = pins[port_name]
         else
-          pin = Pin.new(self.class.ports[string_name])
-          @pins[string_name] = pin
+          # Create a default pin
+          pin = Pin.new(self.class.ports[port_name])
+          @pins[port_name] = pin
         end
         return pin
       elsif self.class.child_instances.has_key?(string_name)
@@ -265,5 +267,8 @@ module VerilogGen
       @hdl_subclasses
     end
 
+    def self.connect
+     # Empty for derived classes to customize 
+    end
   end
 end

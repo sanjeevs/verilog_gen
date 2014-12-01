@@ -47,16 +47,6 @@ module VerilogGen
       end 
     end
 
-    def clone(params = {})
-      p = Port.new(name, direction: @direction, lhs: @lhs, rhs: @rhs, type: @type,
-                   packed: @packed, unpacked: @unpacked)
-      
-      params.each do |key, value|
-        p.key = value
-      end
-      p
-    end
-
     # Equaltiy of port
     # @param [Object] other port instance
     # @return [Boolean] comparion result
@@ -92,11 +82,6 @@ module VerilogGen
       (lhs > rhs) ? lhs - rhs + 1 : rhs - lhs + 1
     end
 
-    def update_width(range)
-      @lhs = range[0] 
-      @rhs = range[1] 
-    end
-
     # Utility routine to return the port declaration 
     # @return [String] 
     def type
@@ -111,5 +96,14 @@ module VerilogGen
       end
     end
 
+    # HACK for creating a connect port.
+    # Want to create  a port that is identical to the current port but
+    # has a different name and width.
+    # @note : This is a hack for getting the demo to work.
+    def create_connect_port(new_name, new_lhs, new_rhs)
+      p = Port.new(new_name,  direction: direction, 
+                   lhs: new_lhs , rhs: new_rhs, type: type,
+                   packed: "", unpacked: "")
+    end
   end
 end
