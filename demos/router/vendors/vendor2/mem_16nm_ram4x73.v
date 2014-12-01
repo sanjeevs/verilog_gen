@@ -15,7 +15,7 @@ module mem_16nm_ram4x73
   input  wire [72:0] ram_wr_data,
   input  wire        ram_rd_en,
   input  wire [1:0]  ram_rd_addr,
-  input  wire [72:0] ram_rd_data,
+  output wire [72:0] ram_rd_data,
 
   input  wire        bist_clk,
   input  wire        bist_en,

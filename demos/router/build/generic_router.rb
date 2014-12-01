@@ -75,20 +75,22 @@ class Router < VerilogGen::HdlModule
     router_ctrl.pop.connect "src_fifo_pop"
     router_ctrl.data_in.connect "src_fifo_data"
 
+    dst_fifo.empty.connect "router_empty"
+    dst_fifo.pop.connect "router_pop"
+    dst_fifo.pop_data.connect "router_data"
     dst_fifo.push_data.connect "data_out"
+
     clients.times do |i|
       src_fifo_lst[i].empty.connect "src_fifo_empty", lhs: i, rhs: i 
       src_fifo_lst[i].pop.connect "src_fifo_pop", lhs: i, rhs: i 
       rhs = width * i
       lhs = rhs + width - 1
       src_fifo_lst[i].pop_data.connect "src_fifo_data", lhs: lhs, rhs: rhs
-      src_fifo_lst[i].push_data.connect "client_data", lhs: lhs, rhs: rhs
-      src_fifo_lst[i].push.connect "client_push", lhs: i, rhs: i
-      src_fifo_lst[i].empty.connect "client_empty", lhs: i, rhs: i
+
+      src_fifo_lst[i].full.connect "client_#{i}_full"
+      src_fifo_lst[i].push.connect "client_#{i}_push"
+      src_fifo_lst[i].push_data.connect "client_#{i}_data"
     end
-    dst_fifo.empty.connect "router_empty"
-    dst_fifo.pop.connect "router_pop"
-    dst_fifo.pop_data.connect "router_data"
   end
 
 end

@@ -35,13 +35,13 @@ class Router
     # Wire to input FIFO memories
     2.times do |i|
       child_instance = child_instances["src_fifo_#{i}"]
-      child_instance.memory_inst.bist_en.connect "bist_en_#{i}"
-      child_instance.memory_inst.bist_addr.connect "bist_addr_#{i}"
-      child_instance.memory_inst.bist_wr_data.connect "bist_wr_data_#{i}"
-      child_instance.memory_inst.bist_rd_data.connect "bist_rd_data_#{i}"
+      child_instance.bist_en.connect "bist_en_#{i}"
+      child_instance.bist_addr.connect "bist_addr_#{i}"
+      child_instance.bist_wr_data.connect "bist_wr_data_#{i}"
+      child_instance.bist_rd_data.connect "bist_rd_data_#{i}"
     end
     # Wire to output FIFO memory
-    dst_fifo.memory_inst.pins.each do |name, pin|
+    dst_fifo.pins.each do |name, pin|
       if name =~ /bist/
         pin.connect "#{name}_2" unless name =~ /clk/
       end
