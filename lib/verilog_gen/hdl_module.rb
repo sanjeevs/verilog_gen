@@ -37,6 +37,11 @@ module VerilogGen
     # Convert the hierarical path to the instance.
     # @param [String] hier_path Complete hierarichal path.
     # @return [Object, Nil] if no parent then return nil
+    # @note Path is the absolute path from the current level.
+    # @example 
+    #     a.b.c means that the current class child instance a.
+    #     Then inside the class A look for instance b.
+    #     Then inside the class B look for instance c. 
     def self.get_module_instance(hier_path)
       if child_instances.has_key?(hier_path[0])
         parent = child_instances[hier_path[0]]
@@ -89,6 +94,33 @@ module VerilogGen
       end
     end   
 
+    # Replace a instance to the design.
+    # @param [String] hier_name instance path
+    # @param [Object] klass new child class name 
+    # @return [Object] child instance added.
+    # @example
+    #    Replace an instance "fifo_inst" of class Fifo 
+    #    replace_child_instance("fifo_inst", Fifo) 
+    #
+    #    Replace an instance at hier "a.b"  
+    #    replace_child_instance("a.b.fifo_inst", Fifo)
+    #
+    # @note Raises exception if the child instance is not found.
+    def self.replace_child_instance(hier_name, klass)
+      parent = nil
+      hier_path = hier_name.split('.')
+      name = hier_path[-1]
+      parent = get_module_instance(hier_path[0..-2]) if hier_path.size > 1
+      parent_class = parent ? parent.class : self
+
+      unless parent_class.child_instances.keys.include?(name)
+        raise ArgumentError, 
+          "Could not find module instance name '#{name}'  in '#{hier_path}"
+      else
+        parent_class.child_instances[name] = klass.new(name) 
+        child = parent_class.child_instances[name]
+      end
+    end   
 
 
     # Get the module name
@@ -105,6 +137,7 @@ module VerilogGen
     end
 
     # Get the proxy.
+    # @note should have a suffix of ?
     def self.proxy
       @proxy ||= false
     end
@@ -161,8 +194,11 @@ module VerilogGen
       @pins =  {}
     end
 
-    # Check If the method name matches a port or child instance name.
+    # Instance method that return either the instance or the pin attached.
     # @return [Pin, Instance] if the name matches a port/child instance.
+    # @example
+    #     instance.a.b.c could return either the child instance c
+    #     or it could return the pin attached to port c.
     # @note if the method matches a port name that does not have a pin, then
     # a default pin is added.
     def method_missing(name, *args)

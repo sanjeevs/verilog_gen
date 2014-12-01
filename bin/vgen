@@ -1,9 +1,14 @@
 #!/usr/bin/env ruby
 require 'pp'
 require 'optparse'
+require 'fileutils'
 
 # FIXME: Required till we install the gem
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
+
+# By default load the build directory
+$LOAD_PATH.unshift("#{FileUtils.pwd}/build")
+
 require 'verilog_gen'
 
 options = {}
@@ -16,8 +21,9 @@ option_parser = OptionParser.new do |opts|
   opts.on("-t top", "--top", "top level class name") do |top|
     options[:top_class_name] =  top
   end
-  opts.on("-o", "--outdir", "output directory name") do |outdir|
-    options[:output_dirname] = output
+  opts.on("-o outdir", "--outdir", "output directory name") do |outdir|
+    options[:output_dirname] = outdir
+    FileUtils.mkdir_p outdir
   end
 end
 
@@ -35,7 +41,10 @@ if ARGV.empty?
 else
   eval(File.open(ARGV[0]).read)
   klass = Object.const_get(options[:top_class_name])
+  
   # Connect the ports and pins
+  VerilogGen.hookup klass
+
   # Write out all the subclasses of hdl modules.
   VerilogGen::HdlModule.get_subclasses.each do |sub_class|
     unless sub_class.proxy

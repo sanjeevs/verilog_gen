@@ -49,6 +49,12 @@ module VerilogGenTest
       it "should have the correct width" do
         expect(port.width).to equal(10)
       end
+      it "should have the correct lhs" do
+        expect(port.lhs).to equal(9)
+      end
+      it "should have the correct rhs" do
+        expect(port.rhs).to equal(0)
+      end
       it "should have the correct direction" do
         expect(port.direction).to eq("output")
       end
