@@ -47,6 +47,16 @@ module VerilogGen
       end 
     end
 
+    def clone(params = {})
+      p = Port.new(name, direction: @direction, lhs: @lhs, rhs: @rhs, type: @type,
+                   packed: @packed, unpacked: @unpacked)
+      
+      params.each do |key, value|
+        p.key = value
+      end
+      p
+    end
+
     # Equaltiy of port
     # @param [Object] other port instance
     # @return [Boolean] comparion result
