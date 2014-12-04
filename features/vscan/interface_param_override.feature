@@ -12,7 +12,7 @@ Feature: convert a system verilog format to ruby.
   """
   And a file named "expect.rb" with:
   """
-  class Intf_wide < HdlInterface
+  class Intf_wide < VerilogGen::HdlInterface
     set_proxy true
     set_file_name "leaf.sv"
     set_interface_name "intf"

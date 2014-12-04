@@ -23,14 +23,14 @@ Feature: convert a system verilog format to ruby.
   """
   And a file named "expect.rb" with:
   """
-  class Leaf < HdlModule
+  class Leaf < VerilogGen::HdlModule
     set_proxy true
     set_file_name "leaf.sv"
     set_module_name "leaf"
     add_port "clk", direction: "input", type: "wire"
     add_interface "port_interface", type: "intf"
   end
-  class Intf < HdlInterface
+  class Intf < VerilogGen::HdlInterface
     set_proxy true
     set_file_name "leaf.sv"
     set_interface_name "intf"
@@ -40,7 +40,7 @@ Feature: convert a system verilog format to ruby.
     add_interface "s1", type: "sub_intf"
     add_interface "s2", type: "sub_intf"
   end
-  class Sub_intf < HdlInterface
+  class Sub_intf < VerilogGen::HdlInterface
     set_proxy true
     set_file_name "leaf.sv"
     set_interface_name "sub_intf"

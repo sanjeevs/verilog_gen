@@ -269,11 +269,10 @@ sub Print_Interface {
     ## Make sure classs name is all lower case with first letter capitalized
     $class_name =~ tr/A-Z/a-z/;
     $class_name = ucfirst( $class_name );
-    print "class $class_name < HdlInterface\n";
-    print "  def initialize\n";
-    print "    proxy = true\n";
-    print "    file_name = \"${src_file}\"\n";
-    print "    interface_name = \"${interface_name}\"\n";
+    print "class $class_name < VerilogGen::HdlInterface\n";
+    print "  set_proxy true\n";
+    print "  set_file_name \"${src_file}\"\n";
+    print "  set_interface_name \"${interface_name}\"\n";
 
     return;
 }

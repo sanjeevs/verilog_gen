@@ -10,7 +10,7 @@ Feature: convert a verilog 1364 format to ruby.
   """
   And a file named "expect.rb" with:
   """
-  class Leaf < HdlModule
+  class Leaf < VerilogGen::HdlModule
     set_proxy true
     set_file_name "leaf.v"
     set_module_name "leaf"

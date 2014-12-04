@@ -21,14 +21,14 @@ Feature: convert a system verilog format to ruby.
   """
   And a file named "expect.rb" with:
   """
-  class Leaf < HdlModule
+  class Leaf < VerilogGen::HdlModule
     set_proxy true
     set_file_name "leaf.sv"
     set_module_name "leaf"
     add_port "clk", direction: "input", type: "wire"
     add_interface "port_interface", type: "intf"
   end
-  class Intf < HdlInterface
+  class Intf < VerilogGen::HdlInterface
     set_proxy true
     set_file_name "leaf.sv"
     set_interface_name "intf"
@@ -36,10 +36,10 @@ Feature: convert a system verilog format to ruby.
     add_port "in2", direction: "output", type: "logic", packed: "[3:0]"
     add_port "out", direction: "output", type: "logic", packed: "[2:0]"
   end
-  class Sub_intf < HdlInterface
-    set_proxy = true
-    set_file_name = "leaf.sv"
-    set_interface_name = "sub_intf"
+  class Sub_intf < VerilogGen::HdlInterface
+    set_proxy true
+    set_file_name "leaf.sv"
+    set_interface_name "sub_intf"
   end
   """
   When I run `csh -c '../../bin/vscan leaf.sv > leaf.rb'`
