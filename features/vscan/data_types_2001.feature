@@ -18,9 +18,9 @@ Feature: convert a verilog 1364-2001 format to ruby.
   And a file named "expect.rb" with:
   """
   class Leaf < VerilogGen::HdlModule
-    @proxy = true
-    @file_name = "leaf.v"
-    @module_name = "leaf"
+    set_proxy true
+    set_file_name "leaf.v"
+    set_module_name "leaf"
     add_port "o_wire_bit", direction: "output", type: "wire"
     add_port "o_wire_vector", direction: "output", packed: "[10:-4]", type: "wire"
     add_port "o_reg_bit", direction: "output", type: "reg"
@@ -30,7 +30,7 @@ Feature: convert a verilog 1364-2001 format to ruby.
     add_port "o_realtime", direction: "output", type: "realtime"
   end
   """
-  When I run `vscan leaf.v`
+  When I run `csh -c '../../bin/vscan leaf.v > leaf.rb'`
   Then a file named "leaf.rb" should exist 
   When I run `hdl_equal expect.rb leaf.rb`
   Then the exit status should be 0

@@ -18,7 +18,7 @@ Feature: Check that module name and file name match
    add_port "out", direction: "output", type: "wire"
   end
   """
-  When I run `vscan leaf.v`
+  When I run `csh -c '../../bin/vscan leaf.v > leaf.rb'`
   Then a file named "leaf.rb" should exist
   When I run `hdl_equal expect.rb leaf.rb`
   Then the exit status should be 0

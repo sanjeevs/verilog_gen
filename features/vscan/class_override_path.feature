@@ -10,14 +10,14 @@ Feature: Check that class name can be overridden
   And a file named "expect.rb" with:
   """
   class Trunk < VerilogGen::HdlModule
-    @proxy = true
-    @file_name = "leaf.v"
-    @module_name = "leaf"
+    set_proxy true
+    set_file_name "leaf.v"
+    set_module_name "leaf"
     add_port "in", direction: "input", type: "wire"
     add_port "out", direction: "output", type: "wire"
   end
   """
-  When I run `vscan -class trunk subdir1/leaf.v`
+  When I run `csh -c '../../bin/vscan -class trunk subdir1/leaf.v > subdir1/trunk.rb'`
   Then a file named "subdir1/trunk.rb" should exist
   When I run `hdl_equal expect.rb subdir1/trunk.rb`
   Then the exit status should be 0

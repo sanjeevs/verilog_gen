@@ -54,8 +54,8 @@ Feature: convert a verilog 1364-2001 format to ruby.
     add_port "out2", direction: "output", packed: "[8:3]", type: "wire"
   end
   """
-  When I run `vscan OUT2_MSB=10 OUT2_LSB=5 WIDTH=256 -class leaf_wide leaf.v`
-  And I run `vscan OUT1_MSB=4 OUT1_LSB=2 WIDTH=32 -class leaf_narrow leaf.v`
+  When I run `csh -c '../../bin/vscan OUT2_MSB=10 OUT2_LSB=5 WIDTH=256 -class leaf_wide leaf.v > leaf_wide.rb'`
+  And I run `csh -c '../../bin/vscan OUT1_MSB=4 OUT1_LSB=2 WIDTH=32 -class leaf_narrow leaf.v > leaf_narrow.rb'`
   Then a file named "leaf_wide.rb" should exist 
   And a file named "leaf_narrow.rb" should exist 
   When I run `hdl_equal expect_wide.rb leaf_wide.rb`

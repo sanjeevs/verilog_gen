@@ -25,7 +25,7 @@ Feature: convert a verilog 1364-2001 format to ruby.
     add_port "out2", direction: "output", type: "reg", packed: "[8:3][2:0]", unpacked: "[1:0]"
   end
   """
-  When I run `vscan leaf.sv`
+  When I run `csh -c '../../bin/vscan leaf.sv > leaf.rb'`
   Then a file named "leaf.rb" should exist 
   When I run `hdl_equal expect.rb leaf.rb`
   Then the exit status should be 0

@@ -26,11 +26,10 @@ use File::Basename;
 use Verilog::Netlist;
 use strict;
 
-my $VERSION = "0.3.2";
+my $VERSION = "0.4.0";
 my %PARAMETERS;
 my $class_override = "";
 my $verilog_file = "";
-my $ruby_file = "";
 
 while( @ARGV ) {
     my $option = shift @ARGV;
@@ -46,26 +45,13 @@ while( @ARGV ) {
     else {
         die "error: too many command line arguments.\n" if( $verilog_file );
         $verilog_file = $option;
-        $ruby_file = $verilog_file;
-        $ruby_file =~ s/\.(.*?)v$/.rb/;
     }
 }
 die "error: you must supply a leaf verilog module.\n" unless( $verilog_file );
 die "error: file $verilog_file does not exist.\n" unless( -f $verilog_file );
-my $file_no_path_no_extension;
-if( $verilog_file =~ /^.*\/(.*?)\.(.*?)v.*$/ ) {
-    ## path includes hierarchy
-    $file_no_path_no_extension = $1;
-    $ruby_file =~ s/\/${file_no_path_no_extension}\.rb$/\/${class_override}\.rb/ if( $class_override );
-} else {
-    ## file is in CWD
-    $file_no_path_no_extension = $verilog_file;
-    $file_no_path_no_extension =~ s/\.(.*?)v$//;
-    $ruby_file = "${class_override}.rb" if( $class_override );
-}
 
 ## And then process the Verilog file
-&Convert_Verilog_To_Ruby( $class_override, $verilog_file, $ruby_file );
+&Convert_Verilog_To_Ruby( $class_override, $verilog_file );
 exit(0);
 
 ## --------------------------------------------------
@@ -75,15 +61,10 @@ exit(0);
 sub Convert_Verilog_To_Ruby {
     my $class_override = shift @_;
     my $in_file = shift @_;
-    my $out_file = shift @_;
 
     ## Prepare for reading in verilog netlists
     my $netlist = new Verilog::Netlist();
     $netlist->read_file( filename=>$in_file );
-
-    ## Open the output file for writing
-    #open( RUBY, "> $out_file" ) or die "error: can't write file $out_file: $!\n";
-    open( RUBY, ">&STDOUT" ) or die "error: can't dup stdout: $!\n";
 
     ## And print any startup text needed
     &Print_Header($VERSION);
@@ -253,8 +234,8 @@ sub Resolve_Expression {
 ## --------------------------------------------------
 ## Ruby file header text
 sub Print_Header {
-    print RUBY "# vscan v${VERSION}\n";
-    print RUBY "\n";
+    print "# vscan v${VERSION}\n";
+    print "\n";
     return;
 }
 
@@ -264,15 +245,15 @@ sub Print_Module {
     my $src_file = shift @_;
     my $class_name = shift @_;
     my $module_name = shift @_;
-    print RUBY "# --------------------------------------------------\n";
+    print "# --------------------------------------------------\n";
     ## Make sure class name is all lower case with first letter capitalized
     $class_name =~ tr/A-Z/a-z/;
     $class_name = ucfirst( $class_name );
     my $file_name = basename($src_file);
-    print RUBY "class $class_name < VerilogGen::HdlModule\n";
-    print RUBY "  set_proxy true\n";
-    print RUBY "  set_file_name \"${file_name}\"\n";
-    print RUBY "  set_module_name \"${module_name}\"\n";
+    print "class $class_name < VerilogGen::HdlModule\n";
+    print "  set_proxy true\n";
+    print "  set_file_name \"${file_name}\"\n";
+    print "  set_module_name \"${module_name}\"\n";
 
     return;
 }
@@ -283,16 +264,16 @@ sub Print_Interface {
     my $src_file = shift @_;
     my $class_name = shift @_;
     my $interface_name = shift @_;
-    print RUBY "\n";
-    print RUBY "# --------------------------------------------------\n";
+    print "\n";
+    print "# --------------------------------------------------\n";
     ## Make sure classs name is all lower case with first letter capitalized
     $class_name =~ tr/A-Z/a-z/;
     $class_name = ucfirst( $class_name );
-    print RUBY "class $class_name < HdlInterface\n";
-    print RUBY "  def initialize\n";
-    print RUBY "    proxy = true\n";
-    print RUBY "    file_name = \"${src_file}\"\n";
-    print RUBY "    interface_name = \"${interface_name}\"\n";
+    print "class $class_name < HdlInterface\n";
+    print "  def initialize\n";
+    print "    proxy = true\n";
+    print "    file_name = \"${src_file}\"\n";
+    print "    interface_name = \"${interface_name}\"\n";
 
     return;
 }
@@ -305,7 +286,7 @@ sub Print_Parameters {
     foreach my $override (sort keys %PARAMETERS) {
 	my $net = $object->find_net($override);
 	if( $net ) {
-	    print RUBY "  set_parameter ${override}: " . $PARAMETERS{$override} . "\n" if( $net->decl_type eq "parameter" );
+	    print "  set_parameter ${override}: " . $PARAMETERS{$override} . "\n" if( $net->decl_type eq "parameter" );
 	}
     }
 
@@ -327,18 +308,18 @@ sub Print_Port {
     ## if 'inout', already in correct format
 
     if( $port_dir eq "interface" ) {
-	print RUBY "  add_interface \"${port_name}\", type: \"${port_type}\"\n";
+	print "  add_interface \"${port_name}\", type: \"${port_type}\"\n";
     }
     else {
 	## Print out the line of interest
-	print RUBY "  add_port \"${port_name}\", direction: \"${port_dir}\", type: \"${port_type}\"";
+	print "  add_port \"${port_name}\", direction: \"${port_dir}\", type: \"${port_type}\"";
 	
 	## Print out the packed side of the array and unpacked side of the array if they exist
-	print RUBY ", packed: \"${packed_string}\"" if( $packed_string );
-	print RUBY ", unpacked: \"${unpacked_string}\"" if( $unpacked_string );
+	print ", packed: \"${packed_string}\"" if( $packed_string );
+	print ", unpacked: \"${unpacked_string}\"" if( $unpacked_string );
 	
 	## Finish with carriage return
-	print RUBY "\n";
+	print "\n";
     }
 
     return;
@@ -347,8 +328,8 @@ sub Print_Port {
 ## --------------------------------------------------
 ## Ruby file trailer text
 sub Print_Trailer {
-    print RUBY "end\n";
-    print RUBY "\n";
+    print "end\n";
+    print "\n";
 
     return;
 }

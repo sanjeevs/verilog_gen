@@ -41,7 +41,7 @@ module VerilogGen
 
       # FIXME: Hack lhs and rhs
       unless @packed == ""
-        m = /\[\s*(\d+)\s*:\s*(\d+)\s*\]/.match @packed
+        m = /\[\s*(-*\d+)\s*:\s*(-*\d+)\s*\]/.match @packed
         @lhs = m.captures[0].to_i
         @rhs = m.captures[1].to_i
       end 

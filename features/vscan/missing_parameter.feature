@@ -17,7 +17,7 @@ Feature: convert a verilog 1364-2001 format to ruby.
   );
   endmodule
   """
-  When I run `vscan leaf.v`
+  When I run `csh -c '../../bin/vscan leaf.v > leaf.rb'`
   Then it should fail with:
   """
   error: I/O declaration using undefined parameter.
