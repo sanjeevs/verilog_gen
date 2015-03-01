@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "verilog_gen"
   spec.version       = VerilogGen::VERSION
   spec.authors       = ["sanjeev singh"]
-  spec.email         = ["spsingh2@ncsu.edu"]
+  spec.email         = ["snjvsingh123@gmail.com"]
   spec.summary       = %q{Generate verilog RTL hierarchy.}
   spec.description   = %q{Writing portable RTL design in verilog is challenging due to limitations of verilog language. Hence would like to write the leaf modules of the design in verilog but use Ruby to stich different views of the design.}
   spec.homepage      = ""
